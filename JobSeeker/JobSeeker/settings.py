@@ -1,4 +1,4 @@
-
+import os
 from pathlib import Path
 from decouple import config
 
@@ -18,7 +18,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.130.155', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -38,10 +38,17 @@ INSTALLED_APPS = [
     'JobSeekerProfile',
     'Job',
     'Notification',
+    'UI',
+
+    #third party apps
+    'rest_framework',
+    'corsheaders',
+
 
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -51,12 +58,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+
+
 ROOT_URLCONF = 'JobSeeker.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,3 +139,24 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://192.168.130.155:5173",
+    
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://192.168.130.155:5173",
+    
+    
+]
+CORS_ALLOW_CREDENTIALS = True
