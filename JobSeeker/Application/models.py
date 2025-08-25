@@ -14,4 +14,7 @@ class Application(models.Model):
     applied_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=50, default="pending")
     cover_letter_text = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return str(self.job_seeker_profile)
 
