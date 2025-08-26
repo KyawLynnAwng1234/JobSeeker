@@ -8,54 +8,67 @@ from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
 from .serializers import *
 from .utils import send_verification_code
-from rest_framework.response import Response
 from django.contrib.auth import get_user_model,login,logout
 from Accounts.models import CustomUser
-
-
-
 User = get_user_model()
 
-#job-seeker-register
+
+#job-seeker-sigin
 @api_view(['POST'])
-def register_jobseeker_api(request, role):
-    print(role)
-    serializer = JobSeekerRegisterSerializer(data=request.data)
+def sigin_jobseeker_api(request, role):
+    serializer = JobSeekerSignInSerializer(data=request.data)
     if serializer.is_valid():
         email = serializer.validated_data['email']
+
+        if not email:
+            return Response(
+                {"error": "Please enter your email."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        username = email.split('@')[0]
+
+        # ✅ get_or_create သုံးပြီး တူညီတဲ့ email ရှိမရှိစစ်
+        user, created = CustomUser.objects.get_or_create(
+            email=email,
+            defaults={
+                "username": username,
+                "role": role,           # parameter ထဲက role ကိုသုံး
+                "is_active": True
+            }
+        )
+
+        # inactive ဆိုရင် error ပြ
+        if not user.is_active:
+            return Response(
+                {"error": "Your account is not active. Please contact support."},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # Verification code generate & send
         code = send_verification_code(email)
         request.session['verification_code'] = code
         request.session['email'] = email
+        request.session['user_id'] = str(user.id)
 
-        username = email.split('@')[0]
-        random_password = get_random_string(length=6)
+        if created:
+            msg = f"Account created and verification code sent to {email}"
+        else:
+            msg = f"Verification code sent to {email}"
 
-        if not username:
-            return Response({"error": "Please enter your email"}, status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            user = CustomUser.objects.create_user(
-                username=username,
-                password=random_password,
-                email=email,
-                role=role,
-                is_active=False
-            )
-            request.session['user_id'] = user.id
-            return Response(
-                {"message": "User created successfully. Please verify your email."},
-                status=status.HTTP_201_CREATED
-            )
-        except IntegrityError as e:
-            if "Duplicate entry" in str(e):
-                return Response({"error": "Email or username already exists."}, status=status.HTTP_400_BAD_REQUEST)
-            return Response({"error": "An unexpected error occurred."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(
+            {"message": msg, "user": {"id": str(user.id), "email": user.email, "role": user.role}},
+            status=status.HTTP_200_OK
+        )
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#end job-seeker-register
+
+
+    # Validation failed
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#job-seeker-sigin-end
 
 #job-seeker-email-verify 
-
 @api_view(['POST'])
 def email_verify_jobseeker_api(request):
     input_code = request.data.get('code')
@@ -88,52 +101,9 @@ def email_verify_jobseeker_api(request):
             {"error": "Invalid verification code."},
             status=status.HTTP_400_BAD_REQUEST
         )
-# end job-seeker-register
+# end job-seeker-email-verify
 
-#job-seeker-sigin
 
-@api_view(['POST'])
-def sigin_jobseeker_api(request, role):
-    serializer = JobSeekerSignInSerializer(data=request.data)
-    if serializer.is_valid():
-        email = serializer.validated_data['email']
-
-        if not email:
-            return Response(
-                {"error": "Please enter your email."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        username = email.split('@')[0]
-
-        try:
-            user = CustomUser.objects.get(email=email)
-            if not user.is_active:
-                return Response(
-                    {"error": "Your account is not active. Please register first."},
-                    status=status.HTTP_403_FORBIDDEN
-                )
-
-            # Generate verification code & send
-            code = send_verification_code(email)
-            request.session['verification_code'] = code
-            request.session['email'] = email
-            request.session['user_id'] = user.id
-
-            return Response(
-                {"message": f"Verification code sent to {email}"},
-                status=status.HTTP_200_OK
-            )
-
-        except User.DoesNotExist:
-            return Response(
-                {"error": "This email is not registered. Please register first."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-    # Validation failed
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#job-seeker-register
 
 
 
