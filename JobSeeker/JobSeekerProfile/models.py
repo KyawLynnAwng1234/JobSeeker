@@ -1,7 +1,13 @@
 from django.db import models
 from Accounts.models import CustomUser
+import uuid
 
 class JobseekerProfile(models.Model):
+    id = models.UUIDField(
+        primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
+        default=uuid.uuid4,    # Auto-generate UUID v4
+        editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
+    )
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=150)
     phone = models.CharField(max_length=20, blank=True)
@@ -14,6 +20,11 @@ class JobseekerProfile(models.Model):
 
 
 class Resume(models.Model):
+    id = models.UUIDField(
+        primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
+        default=uuid.uuid4,    # Auto-generate UUID v4
+        editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
+    )
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     file_url = models.CharField(max_length=255)
@@ -23,6 +34,11 @@ class Resume(models.Model):
 
 
 class Education(models.Model):
+    id = models.UUIDField(
+        primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
+        default=uuid.uuid4,    # Auto-generate UUID v4
+        editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
+    )
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
     school_name = models.CharField(max_length=255)
     degree = models.CharField(max_length=100)
@@ -32,6 +48,11 @@ class Education(models.Model):
 
 
 class Experience(models.Model):
+    id = models.UUIDField(
+        primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
+        default=uuid.uuid4,    # Auto-generate UUID v4
+        editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
+    )
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=255)
     position = models.CharField(max_length=100)
@@ -41,12 +62,22 @@ class Experience(models.Model):
 
 
 class Language(models.Model):
+    id = models.UUIDField(
+        primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
+        default=uuid.uuid4,    # Auto-generate UUID v4
+        editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
+    )
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     proficiency = models.CharField(max_length=50)
 
 
 class Skill(models.Model):
+    id = models.UUIDField(
+        primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
+        default=uuid.uuid4,    # Auto-generate UUID v4
+        editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
+    )
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     proficiency = models.CharField(max_length=50)

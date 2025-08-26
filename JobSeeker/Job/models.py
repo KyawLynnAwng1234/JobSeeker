@@ -1,7 +1,13 @@
 from django.db import models
 from EmployerProfile.models import EmployerProfile
+import uuid
 
 class JobCategory(models.Model):
+    id = models.UUIDField(
+        primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
+        default=uuid.uuid4,    # Auto-generate UUID v4
+        editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
+    )
     name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
@@ -9,6 +15,11 @@ class JobCategory(models.Model):
 
 
 class Jobs(models.Model):
+    id = models.UUIDField(
+        primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
+        default=uuid.uuid4,    # Auto-generate UUID v4
+        editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
+    )
     employer = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)
     title = models.CharField(max_length=150)
     description = models.TextField()
