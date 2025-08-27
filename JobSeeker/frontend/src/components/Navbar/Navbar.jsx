@@ -1,64 +1,13 @@
 import { useState, useEffect } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import axios from "axios";
+import { useAuth } from "../../hooks/userAuth";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-  const API_URL= import.meta.env.VITE_API_URL;
+  const {user, loading, logout} = useAuth();
 
-  // Check login user from backend
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (token) {
-          const res = await axios.get(`${API_URL}/current-user/`,{
-            headers: {
-            Authorization: `Bearer ${token}`,
-             
-            },
-             withCredentials: true,
-          });
-          console.log("Current user API response:", res.data);
-          setUser(res.data); // User data returned from the backend
-        }
-      } catch (err) {
-        console.error("Auth check failed:", err);
-        setUser(null);
-      }
-    };
-    fetchUser();
-  }, []);
-
-  // Logout
-
-  const handleLogout = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (token) {
-      await axios.post(
-        `${API_URL}/logout-jobseeker/`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        }
-      );
-    }
-  } catch (err) {
-    console.error("Logout error:", err);
-  }
-  localStorage.removeItem("token");
-  setUser(null);
-  setDropdownOpen(false);
-  navigate("/");
-};
 
   const navLinks = [
     { name: "Home", path: "/" },
@@ -95,7 +44,7 @@ export default function Navbar() {
 
           {/* Right Side Desktop */}
           <div className="hidden md:flex items-center space-x-4 relative">
-            {!user ? (
+            {!user && !loading ? (
               <>
                 <NavLink
                   to="/sign-in"
@@ -126,7 +75,7 @@ export default function Navbar() {
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="text-blue-600 font-semibold flex items-center gap-1 focus:outline-none"
                   >
-                    {user.name ||user.username || user || "AC Name"} ▼
+                    {loading ? "loading" : user.name ||user.username || "AC Name"} ▼
                   </button>
 
                   {dropdownOpen && (
@@ -139,7 +88,7 @@ export default function Navbar() {
                         Profile
                       </NavLink>
                       <button
-                        onClick={handleLogout}
+                        onClick={logout}
                         className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                       >
                         Logout
@@ -196,7 +145,7 @@ export default function Navbar() {
 
                 <li className="border-t my-2"></li>
 
-                {!user ? (
+                {!user && !loading ? (
                   <>
                     <li>
                       <NavLink
@@ -232,7 +181,7 @@ export default function Navbar() {
                         className="block text-blue-600 font-semibold cursor-pointer"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                       >
-                        {user.name ||user.username || user || "AC Name"} ▼
+                        {loading ? "Loading" : user.name ||user.username || "AC Name"} ▼
                       </span>
                       {dropdownOpen && (
                         <ul className="ml-4 space-y-2">
@@ -247,7 +196,7 @@ export default function Navbar() {
                           </li>
                           <li>
                             <button
-                              onClick={handleLogout}
+                              onClick={logout}
                               className="block text-gray-700 hover:text-blue-600"
                             >
                               Logout

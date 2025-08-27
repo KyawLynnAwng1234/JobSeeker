@@ -5,6 +5,7 @@ import {
   signInAPI,
   verifyOTPAPI,
   fetchProfileAPI,
+  logoutAPI,
 } from "../utils/api";
 
 // ⛔ Old (error ဖြစ်နေတဲ့အခြေအနေ)
@@ -49,12 +50,12 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setMessage("");
     try {
-      const { token, name } = await verifyOTPAPI(otp);
+      const { token, user } = await verifyOTPAPI(otp);
 
       // Save Token
       localStorage.setItem("token", token);
       // Update User
-      setUser({ name: name || "Job Seeker", email });
+      setUser(user);
 
       setMessage("Verification successful!");
       navigate("/", { replace: true });
@@ -75,13 +76,27 @@ export const AuthProvider = ({ children }) => {
     if (token && !user) {
       fetchProfileAPI()
         .then((data) => setUser(data))
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
+        .finally(() => setLoading(false));
     }
   }, [user]);
 
+  // ✅ Logout
+  const logout = async () => {
+    try {
+      await logoutAPI();
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      localStorage.removeItem("token");
+      setUser(null);
+      navigate("/");
+    }
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, setUser, loading, message, signIn, verifyOTP }}
+      value={{ user, setUser, loading, message, signIn, verifyOTP, logout }}
     >
       {children}
     </AuthContext.Provider>
