@@ -22,9 +22,12 @@ const SignIn = () => {
         <div className="bg-blue-50 rounded-lg py-15 px-8 w-full max-w-xl shadow-md">
           <p className="text-center text-sm mb-1">
             Are you looking for an{" "}
-            <a href="#" className="text-blue-600 hover:underline">
-              employer?
-            </a>
+            <Link
+              to="/employer/sign-in"
+              className="text-blue-600 hover:underline"
+            >
+              employer?{" "}
+            </Link>
           </p>
           <h2 className="text-center text-3xl font-extrabold mb-6">Sign In</h2>
 

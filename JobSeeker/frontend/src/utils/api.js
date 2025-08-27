@@ -49,8 +49,22 @@ export async function verifyOTPAPI(otp) {
   return res.data;
 }
 
-// ✅ Load Profile API
+// ✅ Current User
 export async function fetchProfileAPI() {
-  const res = await axios.get(`${API_URL}/profile/`, { withCredentials: true });
+  const token = localStorage.getItem("token");
+  const res = await axios.get(`${API_URL}/current-user/`, {
+    headers: { Authorization: `Bearer ${token}` },
+    withCredentials: true,
+  });
   return res.data;
+}
+
+// ✅ Logout
+export async function logoutAPI() {
+  const token = localStorage.getItem("token");
+  return axios.post(
+    `${API_URL}/logout-jobseeker/`,
+    {},
+    { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
+  );
 }
