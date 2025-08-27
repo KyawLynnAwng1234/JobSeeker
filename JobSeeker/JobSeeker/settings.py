@@ -126,6 +126,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / "JobSeeker" / "static"]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -156,7 +157,9 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://192.168.130.155:5173",
-    
-    
+
 ]
 CORS_ALLOW_CREDENTIALS = True
+
+DEFAULT_FROM_EMAIL = 'JobSeeker <no-reply@yourdomain.com>'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
