@@ -19,8 +19,9 @@ export function getCookie(name) {
 }
 
 // ✅ SignIn API
-export async function signInAPI(email) {
-  const res = await fetch(`${API_URL}/signin-jobseeker/job_seeker/`, {
+export async function signInAPI(email){
+  
+  const res = await fetch(`${API_URL}/accounts-jobseeker/jobseeker/signin/jobseeker/`, {
     method: "POST",
     credentials: "include",
     headers: {
@@ -38,7 +39,7 @@ export async function signInAPI(email) {
 // ✅ Verify OTP API
 export async function verifyOTPAPI(otp) {
   const res = await axios.post(
-    `${API_URL}/email-verify-jobseeker/`,
+    `${API_URL}/accounts-jobseeker/jobseeker/emailverify/`,
     { code: otp },
     {
       withCredentials: true,
