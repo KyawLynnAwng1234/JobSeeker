@@ -1,6 +1,6 @@
 // src/api.js
 import axios from "axios";
-import { API_URL } from "./constants";
+import { API_URL } from "../constants/jobseekerConstants";
 
 // ✅ Cookie getter (CSRF token)
 export function getCookie(name) {
