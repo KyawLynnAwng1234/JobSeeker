@@ -20,7 +20,7 @@ export default function EmployerRegister() {
     try {
       await register({ email, password });
       alert("Register success ✅ Now fill company detail.");
-      navigate("/employer/company-detail");
+      navigate("/employer/company/detail/");
     } catch (err) {
       alert("Register failed ❌ " + err.message);
     }
