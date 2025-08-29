@@ -8,7 +8,7 @@ class EmployerProfile(models.Model):
         default=uuid.uuid4,    # Auto-generate UUID v4
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE,related_name="employerprofile")
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     business_name = models.CharField(max_length=255)

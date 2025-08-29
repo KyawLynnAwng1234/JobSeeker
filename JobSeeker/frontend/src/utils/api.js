@@ -19,8 +19,7 @@ export function getCookie(name) {
 }
 
 // ✅ SignIn API
-export async function signInAPI(email){
-  
+export async function signInAPI(email) {
   const res = await fetch(`${API_URL}/accounts-jobseeker/jobseeker/signin/jobseeker/`, {
     method: "POST",
     credentials: "include",
@@ -52,7 +51,7 @@ export async function verifyOTPAPI(otp) {
 // ✅ Current User
 export async function fetchProfileAPI() {
   const token = localStorage.getItem("token");
-  const res = await axios.get(`${API_URL}/current-user/`, {
+  const res = await axios.get(`${API_URL}/accounts-jobseeker/jobseeker/currentuser/`,{
     headers: { Authorization: `Bearer ${token}` },
     withCredentials: true,
   });
@@ -61,10 +60,13 @@ export async function fetchProfileAPI() {
 
 // ✅ Logout
 export async function logoutAPI() {
-  const token = localStorage.getItem("token");
+  const csrftoken = getCookie("csrftoken");
   return axios.post(
-    `${API_URL}/logout-jobseeker/`,
+    `${API_URL}/accounts-jobseeker/jobseeker/signout/`,
     {},
-    { headers: { Authorization: `Bearer ${token}` }, withCredentials: true }
+    {
+      headers: { "X-CSRFToken": csrftoken },
+      withCredentials: true,
+    }
   );
 }
