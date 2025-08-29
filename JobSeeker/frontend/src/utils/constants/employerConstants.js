@@ -1,7 +1,8 @@
 export const EMPLOYER_API = {
-  REGISTER: "/auth/employer/register/",
-  SIGNIN: "/auth/employer/signin/",
+  REGISTER: "/accounts-employer/employer/preregister/",
+  LOGIN: "/accounts-employer/employer/login/",
+
   PROFILE: "/auth/employer/profile/",
-  COMPANY_DETAIL: "/employer/company-detail/",
+  COMPANY_DETAIL: "/accounts-employer/employer/register/",
   LOGOUT: "/auth/logout/",
 };

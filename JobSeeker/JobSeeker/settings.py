@@ -5,6 +5,14 @@ from decouple import config
 
 AUTH_USER_MODEL = 'Accounts.CustomUser'
 
+#tell dj-rest-auth / django-allauth that remove user from custom model
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None    
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -39,10 +47,21 @@ INSTALLED_APPS = [
     'Job',
     'Notification',
     'UI',
+    
+    # Allauth
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 
     #third party apps
     'rest_framework',
     'corsheaders',
+    
+    'rest_framework.authtoken', 
+
+    
+    
 
 
 ]
@@ -54,6 +73,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -141,6 +161,35 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
+#contine with google
+SOCIALACCOUNT_PROVIDERS = {
+        'google': {
+            'APP': {
+                'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+                'secret': os.getenv('GOOGLE_SECRET'),
+                'key': ''  # Usually not required for OAuth2 providers
+            },
+            'SCOPE': [
+                'profile',
+                'email',
+            ],
+            'AUTH_PARAMS': {
+                'access_type': 'online',
+                'prompt': 'select_account'
+            }
+        }
+    }
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        # or SimpleJWT if you installed it:
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
+
+TOKEN_MODEL = None
 
 
 CORS_ALLOWED_ORIGINS = [

@@ -11,11 +11,13 @@ from .utils import send_verification_code
 from django.contrib.auth import get_user_model,login,logout
 from Accounts.models import CustomUser
 User = get_user_model()
+from django.views.decorators.csrf import csrf_exempt
 
 
 #job-seeker-sigin
+@csrf_exempt
 @api_view(['POST'])
-def sigin_jobseeker_api(request, role):
+def signin_jobseeker_api(request, role):
     serializer = JobSeekerSignInSerializer(data=request.data)
     if serializer.is_valid():
         email = serializer.validated_data['email']
@@ -32,7 +34,6 @@ def sigin_jobseeker_api(request, role):
         user, created = CustomUser.objects.get_or_create(
             email=email,
             defaults={
-                "username": username,
                 "role": role,           # parameter ထဲက role ကိုသုံး
                 "is_active": True
             }
@@ -61,11 +62,6 @@ def sigin_jobseeker_api(request, role):
             status=status.HTTP_200_OK
         )
 
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    # Validation failed
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 #job-seeker-sigin-end
 
 #job-seeker-email-verify 

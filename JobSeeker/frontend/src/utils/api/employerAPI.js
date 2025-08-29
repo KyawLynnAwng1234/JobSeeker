@@ -12,6 +12,7 @@ const getCSRFToken = () => {
 
 const EMPLOYER_API_URL = import.meta.env.VITE_API_URL;
 
+
 // 👉 Register
 export const employerRegisterAPI = async (data) => {
   const res = await axios.post(
@@ -28,6 +29,7 @@ export const employerRegisterAPI = async (data) => {
   return res.data;
 };
 
+
 // 👉 Login
 export const employerSignInAPI =  async (data) => {
   const res = await axios.post(
@@ -43,6 +45,9 @@ export const employerSignInAPI =  async (data) => {
   );
   return res.data;
 };
+
+
+
 
 // 👉 Fetch profile
 export const employerProfileAPI = async (token) => {
