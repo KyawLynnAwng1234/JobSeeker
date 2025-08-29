@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { employerCompanyDetailAPI, employerProfileAPI } from "../../utils/api/employerAPI";
+import {
+  employerCompanyDetailAPI,
+  employerProfileAPI,
+} from "../../utils/api/employerAPI";
 
 const EmployerCompanyDetail = () => {
   const [formData, setFormData] = useState({
@@ -46,7 +49,12 @@ const EmployerCompanyDetail = () => {
       const res = await employerCompanyDetailAPI(payload, token);
 
       console.log("Company detail submitted:", res);
-      alert("Company detail submitted successfully!");
+      if (res.emailVerified) {
+        alert("Company detail submitted successfully!");
+        navigate("/employer/dashboard");
+      } else {
+        alert("Please verify your email before accessing the dashboard.");
+      }
     } catch (error) {
       console.error("Error submitting company detail:", error);
       alert("Failed to submit company detail.");
