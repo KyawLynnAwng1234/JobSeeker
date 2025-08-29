@@ -29,7 +29,7 @@ export const employerRegisterAPI = async (data) => {
 };
 
 // 👉 Login
-export const employerSignInAPI = async (data) => {
+export const employerSignInAPI =  async (data) => {
   const res = await axios.post(
     `${EMPLOYER_API_URL}${EMPLOYER_API.SIGNIN}`,
     data,
