@@ -30,6 +30,24 @@ export const employerRegisterAPI = async (data) => {
 };
 
 
+// 👉 Login
+export const employerSignInAPI =  async (data) => {
+  const res = await axios.post(
+    `${EMPLOYER_API_URL}${EMPLOYER_API.SIGNIN}`,
+    data,
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCSRFToken(),
+      },
+      withCredentials: true,
+    }
+  );
+  return res.data;
+};
+
+
+
 
 // 👉 Fetch profile
 export const employerProfileAPI = async (token) => {
