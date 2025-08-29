@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { employerCompanyDetailAPI, employerProfileAPI } from "../../utils/api/employerAPI";
 
 const EmployerCompanyDetail = () => {
   const [formData, setFormData] = useState({
     fullName: "",
-    gaveName: "",
+    lastName: "",
     companyName: "",
-    country: "",
     city: "",
-    phone: "",
   });
 
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    // Register လုပ်ပြီး localStorage ထဲသိမ်းထားတဲ့ email ကိုယူမယ်
-    const registeredEmail = localStorage.getItem("employerEmail");
-    if (registeredEmail) setEmail(registeredEmail);
+    const token = localStorage.getItem("employerToken");
+    if (token) {
+      employerProfileAPI(token)
+        .then((data) => {
+          if (data?.email) setEmail(data.email);
+        })
+        .catch((err) => {
+          console.error("Failed to load employer profile:", err);
+        });
+    }
   }, []);
 
   const handleChange = (e) => {
@@ -26,9 +32,25 @@ const EmployerCompanyDetail = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  // 👉 Company Detail API ပို့မယ်
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // 👉 API ပို့မယ်
+    try {
+      const token = localStorage.getItem("employerToken");
+      if (!token) {
+        alert("You need to login again!");
+        return;
+      }
+
+      const payload = { ...formData, email };
+      const res = await employerCompanyDetailAPI(payload, token);
+
+      console.log("Company detail submitted:", res);
+      alert("Company detail submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting company detail:", error);
+      alert("Failed to submit company detail.");
+    }
   };
 
   return (
@@ -57,7 +79,7 @@ const EmployerCompanyDetail = () => {
             {/* Email */}
             <div>
               <label className="block text-gray-700 mb-1">Email</label>
-              <p className="text-gray-500">{email || "Youremail@gmail.com"}</p>
+              <p className="text-gray-500">{email || "Loading..."}</p>
             </div>
 
             {/* Full name & Gave name */}
@@ -73,11 +95,11 @@ const EmployerCompanyDetail = () => {
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-1">Gave name</label>
+                <label className="block text-gray-700 mb-1">Last name</label>
                 <input
                   type="text"
-                  name="gaveName"
-                  value={formData.gaveName}
+                  name="lastName"
+                  value={formData.lastName}
                   onChange={handleChange}
                   className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
                 />
@@ -97,22 +119,6 @@ const EmployerCompanyDetail = () => {
               />
             </div>
 
-            {/* Country */}
-            <div>
-              <label className="block text-gray-700 mb-1">Country</label>
-              <select
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                className="w-full border rounded px-3 py-2"
-              >
-                <option value="">Select Country</option>
-                <option value="Myanmar">Myanmar</option>
-                <option value="Singapore">Singapore</option>
-                <option value="Thailand">Thailand</option>
-              </select>
-            </div>
-
             {/* City */}
             <div>
               <label className="block text-gray-700 mb-1">City</label>
@@ -121,19 +127,6 @@ const EmployerCompanyDetail = () => {
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
-                className="w-full border rounded px-3 py-2"
-              />
-            </div>
-
-            {/* Phone */}
-            <div>
-              <label className="block text-gray-700 mb-1">Phone Number</label>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Phone number"
                 className="w-full border rounded px-3 py-2"
               />
             </div>
