@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import {
-  employerLoginAPI,
+  employerSignInAPI,
   employerRegisterAPI,
   employerProfileAPI,
   employerLogoutAPI,
@@ -34,9 +34,9 @@ export const EmployerAuthProvider = ({ children }) => {
     return res;
   };
 
-  // 👉 Login
-  const login = async (data) => {
-    const res = await employerLoginAPI(data);
+  // 👉 SignIn
+  const signin = async (data) => {
+    const res = await employerSignInAPI(data);
     localStorage.setItem("employerToken", res.token);
     setEmployer(res.user);
     return res;
@@ -52,7 +52,7 @@ export const EmployerAuthProvider = ({ children }) => {
 
   return (
     <EmployerAuthContext.Provider
-      value={{ employer, register, login, logout, loading }}
+      value={{ employer, register, signin, logout, loading }}
     >
       {children}
     </EmployerAuthContext.Provider>
