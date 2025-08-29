@@ -56,13 +56,14 @@ const EmployerCompanyDetail = () => {
         alert("Please verify your email before accessing the dashboard.");
       }
     } catch (error) {
+      
       console.error("Error submitting company detail:", error);
       alert("Failed to submit company detail.");
     }
   };
 
   return (
-    
+
     <div className="min-h-screen bg-white flex flex-col">
       <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
