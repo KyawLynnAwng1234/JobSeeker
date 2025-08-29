@@ -11,7 +11,7 @@ const SignIn = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           <NavLink to="/" className="text-2xl font-bold text-blue-600">
             Jobseeker
           </NavLink>
@@ -29,7 +29,7 @@ const SignIn = () => {
               employer?{" "}
             </Link>
           </p>
-          <h2 className="text-center text-3xl font-extrabold mb-6">Sign In</h2>
+          <h2 className="text-center text-3xl font-extrabold mb-6">Sign In as an JobSeeker</h2>
 
           <label htmlFor="email" className="block mb-1 font-medium">
             Email Address

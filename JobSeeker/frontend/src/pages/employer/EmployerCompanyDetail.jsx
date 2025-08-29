@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { NavLink } from "react-router-dom";
 
 const EmployerCompanyDetail = () => {
   const [formData, setFormData] = useState({
@@ -31,125 +32,129 @@ const EmployerCompanyDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-4 border-b">
-        <h1 className="text-2xl font-bold text-blue-800">Seek Employer</h1>
-        <div className="text-blue-700 cursor-pointer">AC Name ▾</div>
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <NavLink to="/" className="text-2xl font-bold text-blue-600">
+            Jobseeker
+          </NavLink>
+        </div>
       </header>
 
       {/* Main Section */}
-      <main className="max-w-2xl mx-auto px-6 py-10">
-        <h2 className="text-2xl font-semibold mb-2">
-          Your employer Account Create
-        </h2>
-        <p className="text-gray-600 mb-4">
-          You’re almost done! We need some details about your business to verify
-          your account. We won’t share your details with anyone.
-        </p>
+      <main className="flex-grow flex justify-center items-center px-4 mt-25">
+        <div className="bg-blue-50 rounded-lg py-10 px-8 w-full max-w-xl shadow-md">
+          <h2 className="text-center text-xl mb-1">
+            Your employer Account Create
+          </h2>
+          <p className="text-gray-600 mb-4">
+            You’re almost done! We need some details about your business to
+            verify your account. We won’t share your details with anyone.
+          </p>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email */}
-          <div>
-            <label className="block text-gray-700 mb-1">Email</label>
-            <p className="text-gray-500">{email || "Youremail@gmail.com"}</p>
-          </div>
-
-          {/* Full name & Gave name */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Email */}
             <div>
-              <label className="block text-gray-700 mb-1">Full name</label>
+              <label className="block text-gray-700 mb-1">Email</label>
+              <p className="text-gray-500">{email || "Youremail@gmail.com"}</p>
+            </div>
+
+            {/* Full name & Gave name */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-gray-700 mb-1">Full name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-1">Gave name</label>
+                <input
+                  type="text"
+                  name="gaveName"
+                  value={formData.gaveName}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                />
+              </div>
+            </div>
+
+            {/* Company Name */}
+            <div>
+              <label className="block text-gray-700 mb-1">Company Name</label>
               <input
                 type="text"
-                name="fullName"
-                value={formData.fullName}
+                name="companyName"
+                value={formData.companyName}
                 onChange={handleChange}
+                placeholder="We need your registered company name to verify your account."
                 className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
               />
             </div>
+
+            {/* Country */}
             <div>
-              <label className="block text-gray-700 mb-1">Gave name</label>
+              <label className="block text-gray-700 mb-1">Country</label>
+              <select
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                className="w-full border rounded px-3 py-2"
+              >
+                <option value="">Select Country</option>
+                <option value="Myanmar">Myanmar</option>
+                <option value="Singapore">Singapore</option>
+                <option value="Thailand">Thailand</option>
+              </select>
+            </div>
+
+            {/* City */}
+            <div>
+              <label className="block text-gray-700 mb-1">City</label>
               <input
                 type="text"
-                name="gaveName"
-                value={formData.gaveName}
+                name="city"
+                value={formData.city}
                 onChange={handleChange}
-                className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                className="w-full border rounded px-3 py-2"
               />
             </div>
-          </div>
 
-          {/* Company Name */}
-          <div>
-            <label className="block text-gray-700 mb-1">Company Name</label>
-            <input
-              type="text"
-              name="companyName"
-              value={formData.companyName}
-              onChange={handleChange}
-              placeholder="We need your registered company name to verify your account."
-              className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
-            />
-          </div>
+            {/* Phone */}
+            <div>
+              <label className="block text-gray-700 mb-1">Phone Number</label>
+              <input
+                type="text"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                placeholder="Phone number"
+                className="w-full border rounded px-3 py-2"
+              />
+            </div>
 
-          {/* Country */}
-          <div>
-            <label className="block text-gray-700 mb-1">Country</label>
-            <select
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
+            {/* Button */}
+            <button
+              type="submit"
+              className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700"
             >
-              <option value="">Select Country</option>
-              <option value="Myanmar">Myanmar</option>
-              <option value="Singapore">Singapore</option>
-              <option value="Thailand">Thailand</option>
-            </select>
-          </div>
+              Create New Account
+            </button>
+          </form>
 
-          {/* City */}
-          <div>
-            <label className="block text-gray-700 mb-1">City</label>
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className="w-full border rounded px-3 py-2"
-            />
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label className="block text-gray-700 mb-1">Phone Number</label>
-            <input
-              type="text"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              placeholder="Phone number"
-              className="w-full border rounded px-3 py-2"
-            />
-          </div>
-
-          {/* Button */}
-          <button
-            type="submit"
-            className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700"
-          >
-            Create New Account
-          </button>
-        </form>
-
-        {/* Link */}
-        <p className="mt-6 text-gray-600">
-          Looking for a job?{" "}
-          <a href="#" className="text-blue-600 underline">
-            Visit Jobseeker Search
-          </a>
-        </p>
+          {/* Link */}
+          <p className="mt-6 text-gray-600">
+            Looking for a job?{" "}
+            <a href="#" className="text-blue-600 underline">
+              Visit Jobseeker Search
+            </a>
+          </p>
+        </div>
       </main>
 
       {/* Footer */}
