@@ -1,4 +1,5 @@
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import EmployerPreRegisterSerializer
@@ -59,7 +60,6 @@ def register_employer_api(request, role):
         # create user
         user = User.objects.create(
             email=email,
-            username=username,
             role=role,
             password=make_password(raw_password),
             is_active=False,
@@ -111,7 +111,7 @@ def emailverify_employer_api(request, uidb64, token):
     except (User.DoesNotExist, ValueError, TypeError, OverflowError):
         user = None
 
-    if user is not None and default_token_generator.check_token(user, token):
+    if user is not None and default_token_generator.check_token(user,token):
         if not user.is_active:
             user.is_active = True
             user.is_verified=True
@@ -127,3 +127,44 @@ def emailverify_employer_api(request, uidb64, token):
             status=status.HTTP_400_BAD_REQUEST
         )
 #end email verify
+
+#resend verification email
+@api_view(["POST"])
+@permission_classes([AllowAny])  # not logged in — fine
+def resend_verification_api(request):
+    """
+    Resend verification email.
+    Priority:
+      1) email from session (pre-register stored it as 'user_email')
+      2) email from POST body
+    """
+    # 1) get email from session first
+    email = (request.session.get("user_email") or "").strip()
+
+    # 2) if no session email, accept from POST body
+    if not email:
+        email = (request.data.get("email") or "").strip()
+
+    if not email:
+        return Response({"detail": "Email required."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # 3) look up user case-insensitively
+    try:
+        user = User.objects.get(email__iexact=email)
+    except User.DoesNotExist:
+        # don’t reveal whether an email exists
+        return Response({"detail": "If your account exists, we sent a verification email."}, status=200)
+
+    # 4) already verified?
+    if getattr(user, "is_verified", False):
+        return Response({"detail": "Your email is already verified."}, status=200)
+
+    # 5) send email
+    send_verification_email(request, user)
+
+    # optional: flag to show UI hints
+    request.session["pending_activation"] = True
+
+    return Response({"detail": "Verification email sent."}, status=200)
+#end resend email verification link
+

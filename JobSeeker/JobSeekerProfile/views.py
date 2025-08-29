@@ -34,7 +34,6 @@ def signin_jobseeker_api(request, role):
         user, created = CustomUser.objects.get_or_create(
             email=email,
             defaults={
-                "username": username,
                 "role": role,           # parameter ထဲက role ကိုသုံး
                 "is_active": True
             }

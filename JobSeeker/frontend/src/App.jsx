@@ -7,24 +7,54 @@ import Home from "./pages/homepage/Home";
 import SignIn from "./pages/jobseeker/SignIn";
 import VerifyOTP from "./pages/jobseeker/VerifyOTP";
 
+// Auth Employer
+import EmployerSignIn from "./pages/employer/EmployerSignIn";
+import EmployerRegister from "./pages/employer/EmployerRegister";
+import EmployerCompanyDetail from "./pages/employer/EmployerCompanyDetail";
+
+// Employer Layout & Pages
+import EmployerDashboardLayout from "./pages/employer/dashboard/EmployerDashboard";
+import Overview from "./pages/employer/dashboard/OverView";
+import MyJobs from "./pages/employer/dashboard/MyJobs";
+
 // ✅ Auth Context import
 import { AuthProvider } from "./context/AuthContext";
+import { EmployerAuthProvider } from "./context/EmployerAuthContext";
 
 function App() {
   return (
     // ✅ Wrap whole app with AuthProvider
 
     <AuthProvider>
-      <Routes>
-        <Route path="/" element={<MainLayout />}>
-          {/* Home */}
-          <Route index element={<Home />} />
-        </Route>
+      <EmployerAuthProvider>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            {/* Home */}
+            <Route index element={<Home />} />
+          </Route>
 
-        {/* Jobseeker Auth */}
-        <Route path="sign-in" element={<SignIn />} />
-        <Route path="verify" element={<VerifyOTP />} />
-      </Routes>
+          {/* Jobseeker Auth */}
+          <Route path="sign-in" element={<SignIn />} />
+          <Route path="verify" element={<VerifyOTP />} />
+
+          {/* Employer Auth */}
+          <Route path="employer/sign-in" element={<EmployerSignIn />} />
+          <Route path="employer/register" element={<EmployerRegister />} />
+          <Route
+            path="employer/company/detail"
+            element={<EmployerCompanyDetail />}
+          />
+
+          {/* Employer Auth */}
+          <Route
+            path="/employer/dashboard"
+            element={<EmployerDashboardLayout />}
+          >
+            <Route index element={<Overview />} />
+            <Route path="my-jobs" element={<MyJobs />} />
+          </Route>
+        </Routes>
+      </EmployerAuthProvider>
     </AuthProvider>
   );
 }
