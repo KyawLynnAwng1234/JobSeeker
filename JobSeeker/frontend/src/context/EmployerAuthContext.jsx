@@ -4,7 +4,6 @@ import {
   employerRegisterAPI,
   employerProfileAPI,
   employerLogoutAPI,
-  
 } from "../utils/api/employerAPI";
 
 export const EmployerAuthContext = createContext();
@@ -32,6 +31,10 @@ export const EmployerAuthProvider = ({ children }) => {
   // 👉 Register
   const register = async (data) => {
     const res = await employerRegisterAPI(data);
+    if (res.token) {
+      localStorage.setItem("employerToken", res.token);
+      setEmployer(res.user);
+    }
     return res;
   };
 
