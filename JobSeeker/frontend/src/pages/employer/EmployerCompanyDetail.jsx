@@ -40,6 +40,7 @@ const EmployerCompanyDetail = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("employerToken");
+      console.log("Submitting company detail with token:", token);
       if (!token) {
         alert("You need to login again!");
         return;

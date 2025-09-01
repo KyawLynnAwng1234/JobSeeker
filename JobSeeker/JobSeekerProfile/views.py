@@ -36,6 +36,10 @@ def signin_jobseeker_api(request, role):
             "is_active": True,
         }
     )
+    response_data = JobSeekerSignInSerializer(user).data
+    print("=== RESPONSE DATA ===")
+    print(response_data)
+    print("=====================")
 
     if not user.is_active:
         return Response({"error": "Your account is not active. Please contact support."},
@@ -57,7 +61,7 @@ def signin_jobseeker_api(request, role):
            if created else "Verification code sent to ") + email
 
     return Response(
-        {"message": msg, "user": {"id": str(user.id), "email": user.email, "role": user.role}},
+        {"message": msg, "user": {"id": str(user.id), "email": user.email, "role": user.role,"username": user.email.split('@')[0]}},
         status=status.HTTP_200_OK
     )
 # job-seeker-signin-end
@@ -69,8 +73,6 @@ def email_verify_jobseeker_api(request):
     code = request.session.get('verification_code')
  
     user_id = request.session.get('user_id')
-    print(input_code)
-    print(code)
     if input_code ==code and user_id:
         try:
             user = User.objects.get(id=user_id)
