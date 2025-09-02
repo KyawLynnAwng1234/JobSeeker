@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEmployerAuth } from "../../hooks/useEmployerAuth";
 
-export default function EmployerCompanyDetail() {
+export default function EmployerCompanyDetail(){
   const location = useLocation();
   const navigate = useNavigate();
   const { submitCompanyDetail } = useEmployerAuth();
