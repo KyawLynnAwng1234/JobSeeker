@@ -18,7 +18,7 @@ User = get_user_model()
 #job-seeker-register
 @api_view(['POST'])
 def register_jobseeker_api(request,role):
-    form = jobseekerRegisterForm(request.data)
+    form = jobseekerRegisterForm(request.data)                                                                                                                                                 
     if form.is_valid():
         email = form.cleaned_data['email']
         code = send_verification_code(email)
