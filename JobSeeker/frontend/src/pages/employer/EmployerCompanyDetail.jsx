@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEmployerAuth } from "../../hooks/useEmployerAuth";
 
+
+
 export default function EmployerCompanyDetail() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -22,6 +24,7 @@ export default function EmployerCompanyDetail() {
     e.preventDefault();
 
     setLoading(true);
+
     const profile = {
       first_name: e.target.first_name.value,
       last_name: e.target.last_name.value,
@@ -41,16 +44,17 @@ export default function EmployerCompanyDetail() {
       const res = await employerCompanyDetailAPI(payload, token);
 
 
-    try {
-      await submitCompanyDetail(profile);
-      alert("Account created successfully!");
-      navigate("/employer/dashboard");
-    } catch (err) {
-      console.error("Error 👉", err);
-      alert("Failed: " + JSON.stringify(err.message || err));
-    } finally {
-      setLoading(false);
-    }
+      try {
+        await submitCompanyDetail(profile);
+        alert("Account created successfully!");
+        navigate("/employer/dashboard");
+      } catch (err) {
+        console.error("Error 👉", err);
+        alert("Failed: " + JSON.stringify(err.message || err));
+      } finally {
+        setLoading(false);
+      }
+    };
   };
 
   return (

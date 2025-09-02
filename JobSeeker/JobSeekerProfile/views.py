@@ -17,8 +17,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django_ratelimit.decorators import ratelimit
 
 
-
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def signin_jobseeker_api(request, role):
