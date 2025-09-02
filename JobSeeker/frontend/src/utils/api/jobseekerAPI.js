@@ -38,7 +38,7 @@ export async function signInAPI(email) {
 // ✅ Verify OTP API
 export async function verifyOTPAPI(otp) {
   const res = await axios.post(
-    `${API_URL}/accounts-jobseeker/jobseeker/emailverify/`,
+    `${API_URL}/accounts-jobseeker/jobseeker/send/otp/`,
     { code: otp },
     {
       withCredentials: true,

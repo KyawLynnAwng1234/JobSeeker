@@ -1,5 +1,4 @@
 # Accounts/models.py
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 import uuid
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -36,10 +35,10 @@ class CustomUser(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None # completely remove username
     email = models.EmailField(unique=True)
-    email = models.EmailField(unique=True)# <-- make email unique
     role = models.CharField(
         max_length=20,
         choices=(("employer", "Employer"), ("jobseeker", "Jobseeker")),
+        default="jobseeker",
     )
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
