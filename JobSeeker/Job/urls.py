@@ -1,4 +1,5 @@
 from django.urls import path
+
 from . import views
 
 urlpatterns = [
@@ -22,3 +23,6 @@ urlpatterns = [
 
 
 ]
+
+path('jobseeker/register',name="jobeekerpage")
+

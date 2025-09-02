@@ -1,3 +1,4 @@
+
 from django.urls import path
 from . import views
 
@@ -9,3 +10,6 @@ urlpatterns = [
     path('notifications/update/<int:pk>/', views.notification_update, name='notifications-update'),
     path('notifications/delete/<int:pk>/', views.notification_delete, name='notifications-delete'),
 ]
+
+
+
