@@ -17,7 +17,7 @@ export default function EmployerDashboardLayout() {
         setUser(parsedUser);
 
         // ✅ Backend ထဲမှ latest user data လှမ်းယူ
-        const res = await fetch(`http://localhost:8000/api/employers/${parsedUser.id}/`);
+        const res = await fetch("http://127.0.0.1:8000/accounts-jobseeker/jobseeker/currentuser/");
         const data = await res.json();
 
         setUser(data);

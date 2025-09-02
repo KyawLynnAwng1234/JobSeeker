@@ -1,7 +1,7 @@
 #jobseeker
 http://127.0.0.1:8000/accounts-jobseeker/jobseeker/sigin/jobseeker/
-http://127.0.0.1:8000/accounts-jobseeker/jobseeker/send/otp
-http://127.0.0.1:8000/accounts-jobseeker/jobseeker/resend/otp
+http://127.0.0.1:8000/accounts-jobseeker/jobseeker/send/otp/
+http://127.0.0.1:8000/accounts-jobseeker/jobseeker/resend/otp/
 http://127.0.0.1:8000/accounts-jobseeker/jobseeker/sigout/
 http://127.0.0.1:8000/accounts-jobseeker/jobseeker/currentuser/
 
