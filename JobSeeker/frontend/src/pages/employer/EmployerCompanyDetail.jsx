@@ -21,12 +21,15 @@ export default function EmployerCompanyDetail() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     const profile = {
       first_name: e.target.first_name.value,
       last_name: e.target.last_name.value,
       business_name: e.target.business_name.value,
       city: e.target.city.value,
     };
+
+
 
     try {
       await submitCompanyDetail(profile);
@@ -37,6 +40,7 @@ export default function EmployerCompanyDetail() {
       alert("Failed: " + JSON.stringify(err.message || err));
     } finally {
       setLoading(false);
+
     }
   };
 
@@ -45,9 +49,7 @@ export default function EmployerCompanyDetail() {
       {/* Header */}
       <header className="flex justify-between items-center px-8 py-4 shadow-sm">
         <h1 className="text-2xl font-bold text-blue-900">Seek Employer</h1>
-        <div className="text-gray-700 cursor-pointer">
-          {user?.username || user?.email || "Employer"} ▼
-        </div>
+        <div className="text-gray-700 cursor-pointer">{user?.username || user?.email || "Employer"} ▼</div>
       </header>
 
       {/* Main Form */}

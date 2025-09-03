@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEmployerAuth } from "../../hooks/useEmployerAuth";
 
 export default function EmployerRegister() {
@@ -29,15 +29,17 @@ export default function EmployerRegister() {
       <div className="bg-blue-50 rounded-2xl shadow-md w-full max-w-md p-8 text-center">
         <p className="text-gray-600 mb-2">
           Are you looking for{" "}
-          <a href="#" className="text-blue-600">
+          <Link to="/sign-in" className="text-blue-600">
             a job?
-          </a>
+          </Link>
         </p>
         <h2 className="text-2xl font-bold mb-6">Register as an employer</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
-            <label className="block text-sm font-medium mb-1">Email Address</label>
+            <label className="block text-sm font-medium mb-1">
+              Email Address
+            </label>
             <input
               type="email"
               placeholder="Email Address"
@@ -75,7 +77,12 @@ export default function EmployerRegister() {
 
         <p className="mt-4 text-sm text-gray-600">
           Already have your account?{" "}
-          <a href="#" className="text-blue-600 hover:underline">Sign In</a>
+          <Link
+            to="/employer/sign-in"
+            className="text-blue-600 hover:underline"
+          >
+            Sign In
+          </Link>
         </p>
       </div>
 

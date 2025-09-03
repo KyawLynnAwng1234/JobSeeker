@@ -9,4 +9,7 @@ urlpatterns = [
     path('employer/login/',views.login_api,name="employerlogoutpage"),
     path('employer/emailverify/<uidb64>/<token>/',views.emailverify_employer_api,name="employer-emailverifypage"),
     path('employer/resend-verification-email/',views.resend_verification_api,name="employer-resend-verification-emailpage"),
+
+    #dashboard
+    path('employer/dashboard/',views.employer_dashboard,name="employer-dashboard")
 ]

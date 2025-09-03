@@ -38,18 +38,16 @@ const EmployerSignIn = () => {
 
       {/* Card */}
       <main className="flex-grow flex justify-center items-center px-4">
-        <div className="bg-blue-50 rounded-xl py-15 px-8 w-full max-w-md shadow-sm">
-          <p className="text-sm text-gray-600 mb-1">
-            Are you looking for{" "}
-            <Link to="/sign-in" className="text-blue-600 hover:underline">
-              a job?
-            </Link>
-          </p>
-          <h2 className="text-center text-2xl font-bold mb-6">
-            Sign In as an Employer
-          </h2>
+        <div className="bg-blue-50 rounded-2xl shadow-md w-full max-w-md p-8 text-center">
+        <p className="text-gray-600 mb-2">
+          Are you looking for{" "}
+          <Link to="/sign-in" className="text-blue-600">
+            a job?
+          </Link>
+        </p>
+        <h2 className="text-2xl font-bold mb-6">Sign In as an employer</h2>
 
-          <form className="space-y-4" onSubmit={handleSubmit}>
+          <form className="space-y-4 text-left" onSubmit={handleSubmit}>
             <div>
               <label className="block text-sm font-medium mb-1">Email</label>
               <input
