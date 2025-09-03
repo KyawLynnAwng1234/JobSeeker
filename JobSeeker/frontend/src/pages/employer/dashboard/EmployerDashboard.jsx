@@ -1,47 +1,35 @@
 import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Briefcase, FileText, User, Settings, LogOut } from "lucide-react";
+import { useEmployerAuth } from "../../../hooks/useEmployerAuth";
+
+export const sidebarItems = [
+  { route: "/employer/dashboard", label: "Dashboard", icon: Briefcase },
+  { route: "/employer/dashboard/my-jobs", label: "My Job", icon: FileText },
+  {
+    route: "/employer/dashboard/applications",
+    label: "Job Application",
+    icon: User,
+  },
+  { route: "/employer/dashboard/profile", label: "Profile", icon: User },
+  { route: "/employer/dashboard/settings", label: "Settings", icon: Settings },
+];
 
 export default function EmployerDashboardLayout() {
-  const [user, setUser] = useState(null);
+  const { employer, logout, resendEmail, loading } = useEmployerAuth();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <span>Loading...</span>
+      </div>
+    );
+  }
 
- useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      const savedUser = localStorage.getItem("employerUser");
-      if (savedUser) {
-        const parsedUser = JSON.parse(savedUser);
-        setUser(parsedUser);
-
-        // ✅ Backend ထဲမှ latest user data လှမ်းယူ
-        const res = await fetch("http://127.0.0.1:8000/accounts-jobseeker/jobseeker/currentuser/");
-        const data = await res.json();
-
-        setUser(data);
-
-        // ✅ localStorage ထဲကို update လုပ်
-        localStorage.setItem("employerUser", JSON.stringify(data));
-      }
-    } catch (err) {
-      console.error("Failed to fetch user:", err);
-    }
-  };
-
-  fetchUser();
-}, []);
-
-
-
-  const logout = () => {
-    localStorage.removeItem("employerUser");
-    navigate("/");
-  };
-
-  const emailNotVerified = !user?.is_verified;
-  console.log(emailNotVerified)
+  const emailNotVerified = !employer?.is_verified;
+  console.log(emailNotVerified);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -49,71 +37,27 @@ export default function EmployerDashboardLayout() {
       <aside className="w-64 bg-white shadow-md">
         <div className="p-6 text-2xl font-bold text-blue-700">Employer</div>
         <nav className="space-y-2 p-4">
-          <NavLink
-            to="/employer/dashboard"
-            end
-            className={({ isActive }) =>
-              `flex items-center p-2 rounded ${
-                isActive
-                  ? "bg-blue-100 text-blue-700 font-semibold"
-                  : "hover:bg-gray-100"
-              } ${emailNotVerified ? "pointer-events-none opacity-50" : ""}`
-            }
-          >
-            <Briefcase className="mr-2" size={18} /> Dashboard
-          </NavLink>
-
-          <NavLink
-            to="/employer/dashboard/my-jobs"
-            className={({ isActive }) =>
-              `flex items-center p-2 rounded ${
-                isActive
-                  ? "bg-blue-100 text-blue-700 font-semibold"
-                  : "hover:bg-gray-100"
-              } ${emailNotVerified ? "pointer-events-none opacity-50" : ""}`
-            }
-          >
-            <FileText className="mr-2" size={18} /> My Job
-          </NavLink>
-
-          <NavLink
-            to="/employer/dashboard/applications"
-            className={({ isActive }) =>
-              `flex items-center p-2 rounded ${
-                isActive
-                  ? "bg-blue-100 text-blue-700 font-semibold"
-                  : "hover:bg-gray-100"
-              } ${emailNotVerified ? "pointer-events-none opacity-50" : ""}`
-            }
-          >
-            <User className="mr-2" size={18} /> Job Application
-          </NavLink>
-
-          <NavLink
-            to="/employer/dashboard/profile"
-            className={({ isActive }) =>
-              `flex items-center p-2 rounded ${
-                isActive
-                  ? "bg-blue-100 text-blue-700 font-semibold"
-                  : "hover:bg-gray-100"
-              } ${emailNotVerified ? "pointer-events-none opacity-50" : ""}`
-            }
-          >
-            <User className="mr-2" size={18} />Profile
-          </NavLink>
-
-          <NavLink
-            to="/employer/dashboard/settings"
-            className={({ isActive }) =>
-              `flex items-center p-2 rounded ${
-                isActive
-                  ? "bg-blue-100 text-blue-700 font-semibold"
-                  : "hover:bg-gray-100"
-              } ${emailNotVerified ? "pointer-events-none opacity-50" : ""}`
-            }
-          >
-            <Settings className="mr-2" size={18} /> Setting
-          </NavLink>
+          {sidebarItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.route}
+                to={`/employer/dashboard/${
+                  item.route === "dashboard" ? "" : item.route
+                }`}
+                className={({ isActive }) =>
+                  `flex items-center p-2 rounded ${
+                    isActive
+                      ? "bg-blue-100 text-blue-700 font-semibold"
+                      : "hover:bg-gray-100"
+                  } ${emailNotVerified ? "pointer-events-none opacity-50" : ""}`
+                }
+              >
+                <Icon className="mr-2" size={18} />
+                {item.label}
+              </NavLink>
+            );
+          })}
         </nav>
       </aside>
 
@@ -132,7 +76,9 @@ export default function EmployerDashboardLayout() {
                 className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded hover:bg-gray-200"
               >
                 <User size={18} />
-                <span>{user?.username || user?.email || "Employer"}</span>
+                <span>
+                  {employer?.username || employer?.email || "Employer"}
+                </span>
               </button>
 
               {dropdownOpen && (
@@ -157,8 +103,14 @@ export default function EmployerDashboardLayout() {
 
         <main className="p-6">
           {emailNotVerified && (
-            <div className="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4">
+            <div className="flex justify-between items-center p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4">
               <span>Please verify your email to access the dashboard.</span>
+              <button
+                onClick={resendEmail}
+                className="ml-4 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+              >
+                Resend Email
+              </button>
             </div>
           )}
           <Outlet />
