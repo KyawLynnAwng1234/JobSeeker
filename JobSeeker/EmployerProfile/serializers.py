@@ -5,6 +5,7 @@ from Job.models import Jobs
 
 
 class EmployerPreRegisterSerializer(serializers.Serializer):
+    
     email = serializers.EmailField(
         max_length=254,
         required=True
@@ -26,5 +27,4 @@ class EmployerRegisterSerializer(serializers.Serializer):
     # Only validate profile input
     profile = EmployerProfileSerializer(write_only=True)
 
-
-        
+    

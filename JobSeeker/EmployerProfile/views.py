@@ -9,6 +9,7 @@ from .utils import send_verification_email
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login,authenticate
+from django.db import IntegrityError
 
 #serializers
 from .serializers import EmployerRegisterSerializer, EmployerPreRegisterSerializer
@@ -50,7 +51,7 @@ def preregister_employer_api(request):
 @api_view(["POST"])
 def register_employer_api(request, role):
     serializer = EmployerRegisterSerializer(data=request.data)
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=True):
         profile_data = serializer.validated_data["profile"]
         # email & password from session (pre-register step)
         email = request.session.get("user_email")
@@ -60,8 +61,10 @@ def register_employer_api(request, role):
                 {"error": "Session expired. Please pre-register again."},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
         username = email.split("@")[0]
         # create user
+       
         user = User.objects.create(
             email=email,
             role=role,
@@ -71,6 +74,7 @@ def register_employer_api(request, role):
         )
         user.set_password(raw_password)   # <-- correct way
         user.save()
+     
         # create employer profile
         employer_profile = EmployerProfile.objects.create(user=user, **profile_data)
         # log them in (session)
