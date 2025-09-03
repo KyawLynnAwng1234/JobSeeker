@@ -7,6 +7,7 @@ http://127.0.0.1:8000/accounts-jobseeker/jobseeker/sigout/
 #employer
 http://127.0.0.1:8000/accounts-employer/employer/preregister/
 http://127.0.0.1:8000/accounts-employer/employer/register/
+http://127.0.0.1:8000/accounts-employer/employer/login/
 
 
 

@@ -37,7 +37,7 @@ export default function EmployerCompanyDetail() {
       alert("Failed: " + JSON.stringify(err.message || err));
     } finally {
       setLoading(false);
-    }
+      }
   };
 
   return (
