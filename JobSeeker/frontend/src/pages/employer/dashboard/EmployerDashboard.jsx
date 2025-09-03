@@ -1,15 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { Briefcase, FileText, User, Settings, LogOut } from "lucide-react";
-import { useEmployerAuth } from "../../../hooks/useEmployerAuth";
 
 export default function EmployerDashboardLayout() {
-  const { user, logout } = useEmployerAuth();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // ✅ email verify မလုပ်ရသေးရင် flag
-  const emailNotVerified = !user?.emailVerified;
+
+ useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const savedUser = localStorage.getItem("employerUser");
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+
+        // ✅ Backend ထဲမှ latest user data လှမ်းယူ
+        const res = await fetch(`http://localhost:8000/api/employers/${parsedUser.id}/`);
+        const data = await res.json();
+
+        setUser(data);
+
+        // ✅ localStorage ထဲကို update လုပ်
+        localStorage.setItem("employerUser", JSON.stringify(data));
+      }
+    } catch (err) {
+      console.error("Failed to fetch user:", err);
+    }
+  };
+
+  fetchUser();
+}, []);
+
+
+
+  const logout = () => {
+    localStorage.removeItem("employerUser");
+    navigate("/");
+  };
+
+  const emailNotVerified = !user?.is_verified;
+  console.log(emailNotVerified)
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -19,7 +51,7 @@ export default function EmployerDashboardLayout() {
         <nav className="space-y-2 p-4">
           <NavLink
             to="/employer/dashboard"
-            end // ✅ "Overview" ကို open လုပ်တဲ့အချိန် Dashboard active ဖြစ်ဖို့
+            end
             className={({ isActive }) =>
               `flex items-center p-2 rounded ${
                 isActive
@@ -67,7 +99,7 @@ export default function EmployerDashboardLayout() {
               } ${emailNotVerified ? "pointer-events-none opacity-50" : ""}`
             }
           >
-            <User className="mr-2" size={18} /> Profile
+            <User className="mr-2" size={18} />Profile
           </NavLink>
 
           <NavLink
@@ -100,9 +132,9 @@ export default function EmployerDashboardLayout() {
                 className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded hover:bg-gray-200"
               >
                 <User size={18} />
-                {/* ✅ login ဖြစ်ပြီးရင် username / email ကိုပြမယ် */}
                 <span>{user?.username || user?.email || "Employer"}</span>
               </button>
+
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded shadow-lg">
                   <button
@@ -111,7 +143,6 @@ export default function EmployerDashboardLayout() {
                   >
                     <Briefcase className="mr-2" size={18} /> Dashboard
                   </button>
-
                   <button
                     onClick={logout}
                     className="flex items-center w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
@@ -126,14 +157,8 @@ export default function EmployerDashboardLayout() {
 
         <main className="p-6">
           {emailNotVerified && (
-            <div className="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
+            <div className="p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4">
               <span>Please verify your email to access the dashboard.</span>
-              <button
-                onClick={() => navigate("/employer/verify-email")}
-                className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-              >
-                Verify Email
-              </button>
             </div>
           )}
           <Outlet />

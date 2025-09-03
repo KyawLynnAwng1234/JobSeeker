@@ -1,90 +1,51 @@
 import axios from "axios";
 import { EMPLOYER_API } from "../constants/employerConstants";
 
-// CSRF token helper
-const getCSRFToken = () => {
-  const cookieValue = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("csrftoken="))
-    ?.split("=")[1];
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
   return cookieValue;
-};
+}
 
-const EMPLOYER_API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
-
-// 👉 Register
-export const employerRegisterAPI = async (data) => {
-  const res = await axios.post(
-    `${EMPLOYER_API_URL}${EMPLOYER_API.REGISTER}`,
-    data,
+export const registerEmployer = async (email, password) => {
+  const csrftoken = getCookie("csrftoken");
+  const response = await axios.post(
+    `${API_URL}${EMPLOYER_API.REGISTER}`,
+    { email, password },
     {
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
+        "X-CSRFToken": csrftoken,
       },
       withCredentials: true,
     }
   );
-  return res.data;
+  return response.data;
 };
 
-
-// 👉 Login
-export const employerSignInAPI =  async (data) => {
-  const res = await axios.post(
-    `${EMPLOYER_API_URL}${EMPLOYER_API.SIGNIN}`,
-    data,
+export const registerEmployerDetail = async (profile) => {
+  const csrftoken = getCookie("csrftoken");
+  const response = await axios.post(
+    `${API_URL}${EMPLOYER_API.REGISTER_DETAIL}`,
+    { profile },
     {
       headers: {
         "Content-Type": "application/json",
-        "X-CSRFToken": getCSRFToken(),
+        "X-CSRFToken": csrftoken,
       },
       withCredentials: true,
     }
   );
-  return res.data;
-};
-
-
-
-
-// 👉 Fetch profile
-export const employerProfileAPI = async (token) => {
-  const res = await axios.get(`${EMPLOYER_API_URL}${EMPLOYER_API.PROFILE}`, {
-    headers: { Authorization: `Bearer ${token}` },
-    withCredentials: true,
-  });
-  return res.data;
-};
-
-// 👉 Company Detail
-export const employerCompanyDetailAPI = async (data, token) => {
-  const res = await axios.post(
-    `${EMPLOYER_API_URL}${EMPLOYER_API.COMPANY_DETAIL}`,
-    data,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-CSRFToken": getCSRFToken(),
-      },
-      withCredentials: true,
-    }
-  );
-  return res.data;
-};
-
-// 👉 Logout
-export const employerLogoutAPI = async (token) => {
-  const res = await axios.post(
-    `${EMPLOYER_API_URL}${EMPLOYER_API.LOGOUT}`,
-    {},
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "X-CSRFToken": getCSRFToken(),
-      },
-    }
-  );
-  return res.data;
+  return response.data;
 };

@@ -1,63 +1,47 @@
-import React, { createContext, useState, useEffect } from "react";
-import {
-  employerSignInAPI,
-  employerRegisterAPI,
-  employerProfileAPI,
-  employerLogoutAPI,
-} from "../utils/api/employerAPI";
+import { createContext, useState, useEffect } from "react";
+import { registerEmployer } from "../utils/api/employerAPI";
+import { registerEmployerDetail } from "../utils/api/employerAPI";
 
 export const EmployerAuthContext = createContext();
 
 export const EmployerAuthProvider = ({ children }) => {
-  const [employer, setEmployer] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [employer, setEmployer] = useState(() => {
+    const saved = localStorage.getItem("employerUser");
+    return saved ? JSON.parse(saved) : null;
+  });
 
-  // 👉 Load profile from token
   useEffect(() => {
-    const token = localStorage.getItem("employerToken");
-    if (token) {
-      employerProfileAPI(token)
-        .then((data) => setEmployer(data))
-        .catch(() => {
-          localStorage.removeItem("employerToken");
-          setEmployer(null);
-        })
-        .finally(() => setLoading(false));
+    if (employer) {
+      localStorage.setItem("employerUser", JSON.stringify(employer));
     } else {
-      setLoading(false);
+      localStorage.removeItem("employerUser");
     }
-  }, []);
+  }, [employer]);
 
-  // 👉 Register
-  const register = async (data) => {
-    const res = await employerRegisterAPI(data);
-    if (res.token) {
-      localStorage.setItem("employerToken", res.token);
-      setEmployer(res.user);
+  const register = async (email, password) => {
+    try {
+      const data = await registerEmployer(email, password);
+      const newUser = { email: data.email, password, is_verified: false };
+      setEmployer(newUser);
+      return newUser;
+    } catch (err) {
+      throw err;
     }
-    return res;
   };
 
-  // 👉 SignIn
-  const signin = async (data) => {
-    const res = await employerSignInAPI(data);
-    localStorage.setItem("employerToken", res.token);
-    setEmployer(res.user);
-    return res;
+  const submitCompanyDetail = async (profile) => {
+    const data = await registerEmployerDetail(profile);
+    const updatedEmployer = { ...employer, ...profile, };
+    setEmployer(updatedEmployer);
+    return updatedEmployer;
   };
 
-  // 👉 Logout
-  const logout = async () => {
-    const token = localStorage.getItem("employerToken");
-    if (token) await employerLogoutAPI(token);
-    localStorage.removeItem("employerToken");
+  const logout = () => {
     setEmployer(null);
   };
 
   return (
-    <EmployerAuthContext.Provider
-      value={{ employer, register, signin, logout, loading }}
-    >
+    <EmployerAuthContext.Provider value={{ employer, register, submitCompanyDetail, logout }}>
       {children}
     </EmployerAuthContext.Provider>
   );
