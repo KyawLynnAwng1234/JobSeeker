@@ -37,7 +37,7 @@ export default function EmployerCompanyDetail() {
       alert("Failed: " + JSON.stringify(err.message || err));
     } finally {
       setLoading(false);
-      }
+    }
   };
 
   return (
@@ -45,7 +45,9 @@ export default function EmployerCompanyDetail() {
       {/* Header */}
       <header className="flex justify-between items-center px-8 py-4 shadow-sm">
         <h1 className="text-2xl font-bold text-blue-900">Seek Employer</h1>
-        <div className="text-gray-700 cursor-pointer">{user?.username || user?.email || "Employer"} ▼</div>
+        <div className="text-gray-700 cursor-pointer">
+          {user?.username || user?.email || "Employer"} ▼
+        </div>
       </header>
 
       {/* Main Form */}
