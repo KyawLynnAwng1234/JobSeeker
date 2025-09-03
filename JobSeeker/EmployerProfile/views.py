@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import EmployerPreRegisterSerializer
 from django.contrib.auth.hashers import make_password
+from django.shortcuts import redirect
 
 from django.contrib.auth import get_user_model
 
@@ -43,7 +44,7 @@ def preregister_employer_api(request):
 # Complete registration (collect profile info)
 
 
-#register employerprofile
+# register employerprofile
 @api_view(["POST"])
 def register_employer_api(request, role):
     serializer = EmployerRegisterSerializer(data=request.data)
@@ -54,9 +55,13 @@ def register_employer_api(request, role):
         email = request.session.get("user_email")
         raw_password = request.session.get("user_password")
         if not email or not raw_password:
-            return Response({"error": "Session expired. Please pre-register again."},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "Session expired. Please pre-register again."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         username = email.split("@")[0]
+
         # create user
         user = User.objects.create(
             email=email,
@@ -67,22 +72,41 @@ def register_employer_api(request, role):
         )
         user.set_password(raw_password)   # <-- correct way
         user.save()
+
         # create employer profile
-        EmployerProfile.objects.create(user=user, **profile_data)
+        employer_profile = EmployerProfile.objects.create(user=user, **profile_data)
+
+        # log them in (session)
         login(request, user)
+
         # send verification email
         send_verification_email(request, user)
         request.session["pending_activation"] = True
-        return Response(
-            {
+
+        # prepare response data
+        response_data = {
+           
+          
+            "profile": {
                 "message": "Employer registered successfully. Verification email sent.",
-                "user": {"id": str(user.id), "email": user.email, "role": user.role}
-            },
-            status=status.HTTP_201_CREATED
-        )
+                "id": str(employer_profile.id),
+                "first_name": employer_profile.first_name,
+                "last_name": employer_profile.last_name,
+                "business_name": employer_profile.business_name,
+                "city": employer_profile.city,
+
+                # add other fields you need to expose
+            }
+        }
+
+        # ✅ print for debugging (will show in Django runserver console)
+        print("➡️ Employer registration response:", response_data)
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#end register employerprofile
+# end register employerprofile
+
 
 #sign in employer
 @api_view(["POST"])
@@ -116,11 +140,10 @@ def emailverify_employer_api(request, uidb64, token):
             user.is_active = True
             user.is_verified=True
             user.save()
+        return redirect("/employer/dashboard")
 
-        return Response(
-            {"message": "Your email has been verified successfully! You can create job now"},
-            status=status.HTTP_200_OK
-        )
+        
+        
     else:
         return Response(
             {"error": "Verification link is invalid or expired."},

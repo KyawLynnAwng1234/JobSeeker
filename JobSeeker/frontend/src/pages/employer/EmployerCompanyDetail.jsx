@@ -20,6 +20,7 @@ export default function EmployerCompanyDetail() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setLoading(true);
     const profile = {
       first_name: e.target.first_name.value,
@@ -27,6 +28,18 @@ export default function EmployerCompanyDetail() {
       business_name: e.target.business_name.value,
       city: e.target.city.value,
     };
+
+    try {
+      const token = localStorage.getItem("employerToken");
+      console.log("Submitting company detail with token:", token);
+      if (!token) {
+        alert("You need to login again!");
+        return;
+      }
+
+      const payload = { ...formData, email };
+      const res = await employerCompanyDetailAPI(payload, token);
+
 
     try {
       await submitCompanyDetail(profile);

@@ -1,6 +1,7 @@
 # Create your views here.
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import IntegrityError
@@ -14,55 +15,56 @@ User = get_user_model()
 from django.views.decorators.csrf import csrf_exempt
 
 
-#job-seeker-sigin
-@csrf_exempt
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def signin_jobseeker_api(request, role):
     serializer = JobSeekerSignInSerializer(data=request.data)
-    if serializer.is_valid():
-        email = serializer.validated_data['email']
+    if not serializer.is_valid():
+        # ✅ Always return when invalid
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        if not email:
-            return Response(
-                {"error": "Please enter your email."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+    email = serializer.validated_data.get('email')
+    if not email:
+        return Response({"error": "Please enter your email."},
+                        status=status.HTTP_400_BAD_REQUEST)
 
-        username = email.split('@')[0]
+    # ✅ Create or get the user
+    user, created = CustomUser.objects.get_or_create(
+        email=email.lower(),
+        defaults={
+            "role": role,
+            "is_active": True,
+        }
+    )
+    response_data = JobSeekerSignInSerializer(user).data
+    print("=== RESPONSE DATA ===")
+    print(response_data)
+    print("=====================")
 
-        # ✅ get_or_create သုံးပြီး တူညီတဲ့ email ရှိမရှိစစ်
-        user, created = CustomUser.objects.get_or_create(
-            email=email,
-            defaults={
-                "role": role,           # parameter ထဲက role ကိုသုံး
-                "is_active": True
-            }
-        )
+    if not user.is_active:
+        return Response({"error": "Your account is not active. Please contact support."},
+                        status=status.HTTP_403_FORBIDDEN)
 
-        # inactive ဆိုရင် error ပြ
-        if not user.is_active:
-            return Response(
-                {"error": "Your account is not active. Please contact support."},
-                status=status.HTTP_403_FORBIDDEN
-            )
+    # ✅ Generate + send code (wrap to avoid NoneType due to exceptions)
+    try:
+        code = send_verification_code(email)   # <-- your function
+    except Exception:
+        return Response({"error": "Failed to send verification code."},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        # Verification code generate & send
-        code = send_verification_code(email)
-        request.session['verification_code'] = code
-        request.session['email'] = email
-        request.session['user_id'] = str(user.id)
+    # ✅ Save to session
+    request.session['verification_code'] = code
+    request.session['email'] = email
+    request.session['user_id'] = str(user.id)
 
-        if created:
-            msg = f"Account created and verification code sent to {email}"
-        else:
-            msg = f"Verification code sent to {email}"
+    msg = ("Account created and verification code sent to "
+           if created else "Verification code sent to ") + email
 
-        return Response(
-            {"message": msg, "user": {"id": str(user.id), "email": user.email, "role": user.role}},
-            status=status.HTTP_200_OK
-        )
-
-#job-seeker-sigin-end
+    return Response(
+        {"message": msg, "user": {"id": str(user.id), "email": user.email, "role": user.role,"username": user.email.split('@')[0]}},
+        status=status.HTTP_200_OK
+    )
+# job-seeker-signin-end
 
 #job-seeker-email-verify 
 @api_view(['POST'])
@@ -71,8 +73,6 @@ def email_verify_jobseeker_api(request):
     code = request.session.get('verification_code')
  
     user_id = request.session.get('user_id')
-    print(input_code)
-    print(code)
     if input_code ==code and user_id:
         try:
             user = User.objects.get(id=user_id)
