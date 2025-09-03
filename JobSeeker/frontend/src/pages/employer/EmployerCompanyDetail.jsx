@@ -1,43 +1,34 @@
-import React, { useState, useEffect } from "react";
-import { NavLink } from "react-router-dom";
-import {
-  employerCompanyDetailAPI,
-  employerProfileAPI,
-} from "../../utils/api/employerAPI";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEmployerAuth } from "../../hooks/useEmployerAuth";
 
-const EmployerCompanyDetail = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    lastName: "",
-    companyName: "",
-    city: "",
-  });
+export default function EmployerCompanyDetail() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { submitCompanyDetail } = useEmployerAuth();
+  const email = location.state?.email || "you@email.com";
 
-  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("employerToken");
-    if (token) {
-      employerProfileAPI(token)
-        .then((data) => {
-          if (data?.email) setEmail(data.email);
-        })
-        .catch((err) => {
-          console.error("Failed to load employer profile:", err);
-        });
+    const savedUser = localStorage.getItem("employerUser");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
     }
   }, []);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  // 👉 Company Detail API ပို့မယ်
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true);
+    const profile = {
+      first_name: e.target.first_name.value,
+      last_name: e.target.last_name.value,
+      business_name: e.target.business_name.value,
+      city: e.target.city.value,
+    };
+
     try {
       const token = localStorage.getItem("employerToken");
       console.log("Submitting company detail with token:", token);
@@ -49,165 +40,104 @@ const EmployerCompanyDetail = () => {
       const payload = { ...formData, email };
       const res = await employerCompanyDetailAPI(payload, token);
 
-      console.log("Company detail submitted:", res);
-      if (res.emailVerified) {
-        alert("Company detail submitted successfully!");
-        navigate("/employer/dashboard");
-      } else {
-        alert("Please verify your email before accessing the dashboard.");
-      }
-    } catch (error) {
-      
-      console.error("Error submitting company detail:", error);
-      alert("Failed to submit company detail.");
+
+    try {
+      await submitCompanyDetail(profile);
+      alert("Account created successfully!");
+      navigate("/employer/dashboard");
+    } catch (err) {
+      console.error("Error 👉", err);
+      alert("Failed: " + JSON.stringify(err.message || err));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-
     <div className="min-h-screen bg-white flex flex-col">
-      <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <NavLink to="/" className="text-2xl font-bold text-blue-600">
-            Jobseeker
-          </NavLink>
-        </div>
+      {/* Header */}
+      <header className="flex justify-between items-center px-8 py-4 shadow-sm">
+        <h1 className="text-2xl font-bold text-blue-900">Seek Employer</h1>
+        <div className="text-gray-700 cursor-pointer">{user?.username || user?.email || "Employer"} ▼</div>
       </header>
 
-      {/* Main Section */}
-      <main className="flex-grow flex justify-center items-center px-4 mt-25">
-        <div className="bg-blue-50 rounded-lg py-10 px-8 w-full max-w-xl shadow-md">
-          <h2 className="text-center text-xl mb-1">
+      {/* Main Form */}
+      <main className="flex flex-col items-center py-10">
+        <div className="w-full max-w-3xl">
+          <h2 className="text-2xl font-bold mb-2">
             Your employer Account Create
           </h2>
           <p className="text-gray-600 mb-4">
-            You’re almost done! We need some details about your business to
+            You're almost done! We need some details about your business to
             verify your account. We won’t share your details with anyone.
           </p>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email */}
             <div>
-              <label className="block text-gray-700 mb-1">Email</label>
-              <p className="text-gray-500">{email || "Loading..."}</p>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <p className="w-full px-3 py-2 bg-gray-100 text-gray-800">
+                {email}
+              </p>
             </div>
 
-            {/* Full name & Gave name */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Full name + Last name */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-gray-700 mb-1">Full name</label>
+                <label className="block text-sm font-medium">Full name</label>
                 <input
+                  name="first_name"
                   type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                  className="w-full border rounded-lg px-3 py-2"
+                  required
                 />
               </div>
               <div>
-                <label className="block text-gray-700 mb-1">Last name</label>
+                <label className="block text-sm font-medium">Last name</label>
                 <input
+                  name="last_name"
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                  className="w-full border rounded-lg px-3 py-2"
+                  required
                 />
               </div>
             </div>
 
             {/* Company Name */}
             <div>
-              <label className="block text-gray-700 mb-1">Company Name</label>
+              <label className="block text-sm font-medium">Company Name</label>
               <input
+                name="business_name"
                 type="text"
-                name="companyName"
-                value={formData.companyName}
-                onChange={handleChange}
                 placeholder="We need your registered company name to verify your account."
-                className="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-200"
+                className="w-full border rounded-lg px-3 py-2"
+                required
               />
             </div>
 
             {/* City */}
             <div>
-              <label className="block text-gray-700 mb-1">City</label>
+              <label className="block text-sm font-medium">City</label>
               <input
-                type="text"
                 name="city"
-                value={formData.city}
-                onChange={handleChange}
-                className="w-full border rounded px-3 py-2"
+                type="text"
+                className="w-full border rounded-lg px-3 py-2"
+                required
               />
             </div>
 
-            {/* Button */}
+            {/* Submit */}
             <button
               type="submit"
-              className="bg-orange-600 text-white px-6 py-2 rounded hover:bg-orange-700"
+              className="bg-orange-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-orange-700 transition"
             >
-              Create New Account
+              {loading ? "Creating..." : "Create New Account"}
             </button>
           </form>
-
-          {/* Link */}
-          <p className="mt-6 text-gray-600">
-            Looking for a job?{" "}
-            <a href="#" className="text-blue-600 underline">
-              Visit Jobseeker Search
-            </a>
-          </p>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-50 border-t mt-12">
-        <div className="max-w-6xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-6 px-6 py-10 text-sm text-gray-700">
-          <div>
-            <h4 className="font-semibold mb-2">Jobseeker</h4>
-            <ul className="space-y-1">
-              <li>Login</li>
-              <li>Register</li>
-              <li>Jobs Search</li>
-              <li>Saved jobs</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Employer</h4>
-            <ul className="space-y-1">
-              <li>Employer Account</li>
-              <li>Post a Job</li>
-              <li>Product & Prices</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">About My Jobs</h4>
-            <ul className="space-y-1">
-              <li>Overview</li>
-              <li>About Us</li>
-              <li>Contact My Jobs</li>
-              <li>Privacy Policy</li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-2">Contact</h4>
-            <ul className="space-y-1">
-              <li>Contact us</li>
-              <li className="flex gap-3 mt-2">
-                <span>🔵</span>
-                <span>📱</span>
-                <span>📷</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="text-center text-gray-500 text-xs py-4 border-t">
-          © 2023 Copyright: Tailwind.com
-        </div>
-      </footer>
     </div>
   );
-};
-
-export default EmployerCompanyDetail;
+}
