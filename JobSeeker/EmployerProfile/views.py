@@ -8,7 +8,8 @@ from django.contrib.auth import get_user_model
 from .utils import send_verification_email
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import login,authenticate
+from django.contrib.auth import login,logout,authenticate
+from django.db import IntegrityError
 
 #serializers
 from .serializers import EmployerRegisterSerializer, EmployerPreRegisterSerializer
@@ -50,7 +51,7 @@ def preregister_employer_api(request):
 @api_view(["POST"])
 def register_employer_api(request, role):
     serializer = EmployerRegisterSerializer(data=request.data)
-    if serializer.is_valid():
+    if serializer.is_valid(raise_exception=True):
         profile_data = serializer.validated_data["profile"]
         # email & password from session (pre-register step)
         email = request.session.get("user_email")
@@ -60,8 +61,10 @@ def register_employer_api(request, role):
                 {"error": "Session expired. Please pre-register again."},
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
         username = email.split("@")[0]
         # create user
+       
         user = User.objects.create(
             email=email,
             role=role,
@@ -71,6 +74,7 @@ def register_employer_api(request, role):
         )
         user.set_password(raw_password)   # <-- correct way
         user.save()
+     
         # create employer profile
         employer_profile = EmployerProfile.objects.create(user=user, **profile_data)
         # log them in (session)
@@ -96,7 +100,7 @@ def register_employer_api(request, role):
 
 #sign in employer
 @api_view(["POST"])
-def login_api(request):
+def login_employer_api(request):
     email = request.data.get("email")
     password = request.data.get("password")
     user = authenticate(request, email=email, password=password)
@@ -107,6 +111,13 @@ def login_api(request):
         return Response({"detail": "Login successful"}, status=status.HTTP_200_OK)
     return Response({"detail": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 #end sign in employer
+
+#sign out employer
+@api_view(["POST"])
+def logout_employer_api(request):
+    logout(request)
+    return Response({"detail": "Logged out successfully"}, status=status.HTTP_200_OK)
+#end sign out employer
 
 
 # employer Email verification

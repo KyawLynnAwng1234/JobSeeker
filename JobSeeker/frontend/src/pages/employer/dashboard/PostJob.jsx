@@ -1,74 +1,105 @@
 // src/components/PostJob.jsx
-import React from 'react';
+import React, { useState, useContext } from "react";
+import { createJob } from "../../../utils/api/jobAPI";
+import { EmployerAuthContext } from "../../../context/EmployerAuthContext";
 
 export default function PostJob({ onBack }) {
+  const { employer } = useContext(EmployerAuthContext);
+  const [formData, setFormData] = useState({
+    title: "",
+    function: "",
+    location: "",
+    salary: "",
+    postDate: "",
+    description: "",
+  });
+
+  // input fields configuration
+  const fields = [
+    { name: "title", label: "Job Title", type: "text", full: true },
+    { name: "function", label: "Job Function", type: "text" },
+    { name: "location", label: "Location", type: "text" },
+    { name: "salary", label: "Salary Range", type: "text" },
+    { name: "postDate", label: "Post Date", type: "date" },
+  ];
+
+  // handle input change
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // handle form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!employer) return alert("Please login to post a job!");
+
+    try {
+      const res = await createJob(formData);
+      console.log("✅ Job created:", res.data);
+      onBack();
+    } catch (err) {
+      console.error("❌ Error creating job:", err);
+      alert("Failed to create job.");
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-md p-6">
+    <form onSubmit={handleSubmit} className="bg-white rounded-xl shadow-md p-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Post your Job</h1>
-        <button onClick={onBack} className="text-blue-600 hover:text-blue-800">
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-blue-600 hover:text-blue-800"
+        >
           &larr; Back to My Jobs
         </button>
       </div>
 
-      <div className="grid gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Job Title</label>
-          <input
-            type="text"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10"
-          />
-        </div>
+      {/* grid layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* loop fields */}
+        {fields.map((field) => (
+          <div key={field.name} className={field.full ? "col-span-2" : ""}>
+            <label className="block text-sm font-medium text-gray-700">
+              {field.label}
+            </label>
+            <input
+              type={field.type}
+              name={field.name}
+              value={formData[field.name]}
+              onChange={handleChange}
+              className="mt-1 px-4 block w-full rounded-md border-gray-300 shadow-sm 
+                focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10"
+            />
+          </div>
+        ))}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Job Function</label>
-            <input
-              type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Location</label>
-            <input
-              type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Salary Range</label>
-            <input
-              type="text"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Post Date</label>
-            <input
-              type="date"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm h-10"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Job Description</label>
+        {/* Job Description */}
+        <div className="col-span-1 md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700">
+            Job Description
+          </label>
           <textarea
             rows="5"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="mt-1 px-4 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             placeholder="Description"
           ></textarea>
         </div>
 
-        <div className="flex justify-end mt-4">
-          <button className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-md">
+        <div className="flex justify-end col-span-1 md:col-span-2 mt-4">
+          <button
+            type="submit"
+            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2 rounded-md"
+          >
             Post a Job
           </button>
         </div>
       </div>
-    </div>
+    </form>
   );
 }

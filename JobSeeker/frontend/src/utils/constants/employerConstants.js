@@ -4,5 +4,5 @@ export const EMPLOYER_API = {
   SIGNIN: "/accounts-employer/employer/login/",
   CURRENT_USER: "/accounts-jobseeker/jobseeker/currentuser/",
   LOGOUT: "/accounts-employer/employer/logout/",
-  RESEND_EMAIL: "/accounts-jobseeker/jobseeker/send/otp/",
+  RESEND_EMAIL: "/accounts-employer/employer/resend-verification-email/",
 };
