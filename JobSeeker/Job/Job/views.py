@@ -11,8 +11,6 @@ from Accounts.decorators import role_required
 from django.shortcuts import get_object_or_404
 
 # Create your views here.
-
-
 # Category List (GET)
 @api_view(['GET'])
 def jobcategory_list_api(request):
@@ -130,7 +128,7 @@ def jobs_delete_api(request, pk):
         job = Jobs.objects.get(pk=pk)
     except Jobs.DoesNotExist:
         return Response({'error': 'Job not found'}, status=status.HTTP_404_NOT_FOUND)
-
+        
     job.delete()
     return Response({'message': 'Job deleted'}, status=status.HTTP_204_NO_CONTENT)
 
