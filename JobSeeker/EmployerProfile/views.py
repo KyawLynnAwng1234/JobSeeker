@@ -10,6 +10,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login,logout,authenticate
 from django.db import IntegrityError
+from django_ratelimit.decorators import ratelimit
 
 #serializers
 from .serializers import EmployerRegisterSerializer, EmployerPreRegisterSerializer
@@ -100,7 +101,12 @@ def register_employer_api(request, role):
 
 #sign in employer
 @api_view(["POST"])
+@ratelimit(key='ip', rate='5/m', block=False, method='POST')
 def login_employer_api(request):
+    # Check if rate limited
+    if getattr(request, 'limited', False):
+        return Response({"error": "Too many attempts, please wait one minute before trying again."}, status=status.HTTP_429_TOO_MANY_REQUESTS)
+    
     email = request.data.get("email")
     password = request.data.get("password")
     user = authenticate(request, email=email, password=password)

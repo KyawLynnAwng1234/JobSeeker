@@ -57,13 +57,7 @@ INSTALLED_APPS = [
     #third party apps
     'rest_framework',
     'corsheaders',
-    
     'rest_framework.authtoken', 
-
-    
-    
-
-
 ]
 
 MIDDLEWARE = [
@@ -76,6 +70,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'JobSeeker.middleware.RateLimitMiddleware',
 ]
 
 
