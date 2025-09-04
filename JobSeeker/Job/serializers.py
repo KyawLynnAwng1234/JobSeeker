@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 from rest_framework import serializers
 from .models import JobCategory, Jobs
 from Accounts.models import CustomUser
@@ -18,3 +19,17 @@ class JobsSerializer(serializers.ModelSerializer):
 
         read_only_fields = ['employer']
 
+=======
+# serializers.py
+from rest_framework import serializers
+from .models import Jobs
+
+class JobCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Jobs
+        # employer ကို client ကနေ မထည့်စေချင် → fields မှာ မထည့်
+        fields = ["title", "description", "location", "job_type",
+                  "salary", "category", "is_active", "deadline"]
+
+    
+>>>>>>> df9ff5ef6266e84a3e9a6258f21ac997f9f4a8f2

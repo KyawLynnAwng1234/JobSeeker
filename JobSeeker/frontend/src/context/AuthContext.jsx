@@ -6,22 +6,22 @@ import {
   verifyOTPAPI,
   fetchProfileAPI,
   logoutAPI,
-} from "../utils/api";
+} from "../utils/api/jobseekerAPI";
 
-// ⛔ Old (error ဖြစ်နေတဲ့အခြေအနေ)
-// const AuthContext = createContext();
-
-// ✅ New (named export ပြန်ပေးလိုက်ပါ)
+// Create Auth Context => so other components can consume it using useAuth()
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
+  // State to hold user data
   const [user, setUser] = useState(null);
+  // State to handle loading status (when API calls are in progress)
   const [loading, setLoading] = useState(false);
+  // State to display messages (success/error)
   const [message, setMessage] = useState("");
 
-  // Sign In Function
+  // ---------------------- Sign In Function ----------------------
   const signIn = async (email) => {
     if (!email) {
       setMessage("Please enter your email.");
@@ -30,8 +30,11 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setMessage("");
     try {
+      // Call backend API to send OTP
       await signInAPI(email);
+      // Show success message
       setMessage("SignIn successful! Check your email for OTP.");
+      // Redirect to verify page with email
       navigate("/verify", { state: { email } });
     } catch (err) {
       console.error(err);
@@ -41,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  //   VerifyOTP function
+   // ---------------------- Verify OTP Function ----------------------
   const verifyOTP = async (email, otp) => {
     if (otp.length !== 6) {
       setMessage("Enter the 6-digit code.");
@@ -50,19 +53,18 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     setMessage("");
     try {
+      // Call backend to verify OTP => should return token + user
       const { token, user } = await verifyOTPAPI(otp);
-
-      // Save Token
+      // Save token in localStorage
       localStorage.setItem("token", token);
-      // Update User
+      // Store user in state
       setUser(user);
-
       setMessage("Verification successful!");
+      // Redirect to homepage
       navigate("/", { replace: true });
       return true;
     } catch (err) {
       console.error(err);
-      setUser(res.data.user);
       setMessage(err.response?.data?.error || "Verification failed.");
       return false;
     } finally {
@@ -70,10 +72,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // load profile if token exits
+  // ---------------------- Auto Fetch User Profile ----------------------
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token && !user) {
+      // If token exists, fetch user profile and update state
+      setLoading(true);
       fetchProfileAPI()
         .then((data) => setUser(data))
         .catch((err) => console.error(err))
@@ -81,22 +85,35 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  // ✅ Logout
+  // ---------------------- Logout Function ----------------------
   const logout = async () => {
     try {
+      // Call backend logout API
       await logoutAPI();
     } catch (err) {
       console.error("Logout error:", err);
     } finally {
+      // Remove token from localStorage
       localStorage.removeItem("token");
+      // Reset user state
       setUser(null);
+      // Redirect to homepage
       navigate("/");
     }
   };
 
+   // ---------------------- Provide Context ----------------------
   return (
     <AuthContext.Provider
-      value={{ user, setUser, loading, message, signIn, verifyOTP, logout }}
+      value={{
+        user,
+        setUser,
+        loading,
+        message,
+        signIn,
+        verifyOTP,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

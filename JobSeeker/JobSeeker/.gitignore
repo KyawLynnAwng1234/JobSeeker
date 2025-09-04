@@ -1,1 +1,24 @@
 .env
+
+pycache/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.eggs/
+.dist/
+.build/
+.pytest_cache/
+.mypy_cache/
+
+Django
+.sqlite3
+media/
+staticfiles/
+
+Env & IDE
+.env
+.env.
+.vscode/
+.idea/

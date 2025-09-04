@@ -159,3 +159,5 @@ def current_user(request):
             "email": request.user.email,
         })
     return Response({"username": None, "email": None})
+
+
