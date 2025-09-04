@@ -4,15 +4,15 @@ import { Briefcase, FileText, User, Settings, LogOut } from "lucide-react";
 import { useEmployerAuth } from "../../../hooks/useEmployerAuth";
 
 export const sidebarItems = [
-  { route: "/employer/dashboard", label: "Dashboard", icon: Briefcase },
-  { route: "/employer/dashboard/my-jobs", label: "My Job", icon: FileText },
+  { route: "/", label: "Dashboard", icon: Briefcase },
+  { route: "/my-jobs", label: "My Job", icon: FileText },
   {
-    route: "/employer/dashboard/applications",
+    route: "/applications",
     label: "Job Application",
     icon: User,
   },
-  { route: "/employer/dashboard/profile", label: "Profile", icon: User },
-  { route: "/employer/dashboard/settings", label: "Settings", icon: Settings },
+  { route: "/profile", label: "Profile", icon: User },
+  { route: "/settings", label: "Settings", icon: Settings },
 ];
 
 export default function EmployerDashboardLayout() {
@@ -90,7 +90,12 @@ export default function EmployerDashboardLayout() {
                     <Briefcase className="mr-2" size={18} /> Dashboard
                   </button>
                   <button
-                    onClick={logout}
+                    onClick={
+                      () => {
+                        logout();
+                        navigate("/");
+                      }
+                    }
                     className="flex items-center w-full px-4 py-2 text-left text-red-600 hover:bg-gray-100"
                   >
                     <LogOut className="mr-2" size={18} /> Logout
