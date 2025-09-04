@@ -1,10 +1,10 @@
 # Create your views here.
-from rest_framework.decorators import api_view,permission_classes, throttle_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
-from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.throttling import ScopedRateThrottle
 from django.db import IntegrityError
 from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
@@ -19,7 +19,12 @@ from django_ratelimit.decorators import ratelimit
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
+@ratelimit(key='ip', rate='5/m', block=False, method='POST')
 def signin_jobseeker_api(request, role):
+    # Check if rate limited
+    if getattr(request, 'limited', False):
+        return Response({"error": "Too many attempts, please wait one minute before trying again."}, status=status.HTTP_429_TOO_MANY_REQUESTS)
+    
     serializer = JobSeekerSignInSerializer(data=request.data)
     if not serializer.is_valid():
         # ✅ Always return when invalid
@@ -36,12 +41,9 @@ def signin_jobseeker_api(request, role):
         defaults={
             "role": role,
             "is_active": True,  
-            
         }
     )
     response_data = JobSeekerSignInSerializer(user).data
-    
-
     if not user.is_active:
         return Response({"error": "Your account is not active. Please contact support."},
                         status=status.HTTP_403_FORBIDDEN)

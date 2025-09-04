@@ -20,7 +20,12 @@ const EmployerSignIn = () => {
       await signin({ email, password });
       navigate("/employer/dashboard");
     } catch (err) {
-      setError(err.message || "Sign In failed!");
+      // Display specific error message for rate limiting
+      if (err.message && err.message.includes("Too many attempts")) {
+        setError(err.message);
+      } else {
+        setError(err.message || "Sign In failed!");
+      }
     } finally {
       setLoading(false);
     }

@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Jobs,JobCategory
-
-# Register your models here.
+from .models import JobCategory, Jobs
 
 admin.site.register(Jobs)
 admin.site.register(JobCategory)
+

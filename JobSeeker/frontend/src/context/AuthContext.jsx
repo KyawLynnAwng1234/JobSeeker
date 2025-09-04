@@ -38,7 +38,12 @@ export const AuthProvider = ({ children }) => {
       navigate("/verify", { state: { email } });
     } catch (err) {
       console.error(err);
-      setMessage("SignIn failed. Please try again.");
+      // Display specific error message for rate limiting
+      if (err.message && err.message.includes("Too many attempts")) {
+        setMessage(err.message);
+      } else {
+        setMessage("SignIn failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
