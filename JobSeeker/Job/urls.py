@@ -1,6 +1,4 @@
 from django.urls import path
-<<<<<<< HEAD
-
 from . import views
 
 urlpatterns = [
@@ -13,8 +11,6 @@ urlpatterns = [
     path('job-categories/update/<int:pk>/', views.jobcategory_update_api, name='job-category-update'),
     path('job-categories/delete/<int:pk>/', views.jobcategory_delete_api, name='job-category-delete'),
     
-    
-
     # # # jobs urls
     path('jobs/', views.jobs_list_api, name='jobs-list'),
     path('jobs/create/', views.jobs_create_api, name='job-create'),
@@ -25,12 +21,4 @@ urlpatterns = [
 
 ]
 
-path('jobseeker/register',name="jobeekerpage")
 
-=======
-from .import views
-
-urlpatterns = [
-    path('createjob/',views.create_job_api,name="createjobpage"),
-]
->>>>>>> df9ff5ef6266e84a3e9a6258f21ac997f9f4a8f2
