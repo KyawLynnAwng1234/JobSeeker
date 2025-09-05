@@ -19,10 +19,13 @@ import RateLimitTest from "./pages/RateLimitTest";
 import EmployerDashboardLayout from "./pages/employer/dashboard/EmployerDashboard";
 import Overview from "./pages/employer/dashboard/OverView";
 import MyJobs from "./pages/employer/dashboard/MyJobs";
+import JobCategory from "./pages/employer/dashboard/JobCategory";
 
 // ✅ Auth Context import
 import { AuthProvider } from "./context/AuthContext";
 import { EmployerAuthProvider } from "./context/EmployerAuthContext";
+
+
 
 function App() {
   return (
@@ -58,6 +61,7 @@ function App() {
           >
             <Route index element={<Overview />} />
             <Route path="my-jobs" element={<MyJobs />} />
+            <Route path="category" element={<JobCategory />} />
           </Route>
         </Routes>
       </EmployerAuthProvider>
