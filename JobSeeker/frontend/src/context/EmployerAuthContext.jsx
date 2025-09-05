@@ -59,23 +59,18 @@ export const EmployerAuthProvider = ({ children }) => {
 
    // ✅ Signin with token + CSRF
   const signin = async ({ email, password }) => {
-    try {
-      const data = await signinEmployer({ email, password });
-      const userWithToken = {
-        id: data.id,
-        email: data.email,
-        username: data.username,
-        is_verified: data.is_verified,
-        access: data.access,
-        refresh: data.refresh,
-      };
-      setEmployer(userWithToken);
-      localStorage.setItem("employerUser", JSON.stringify(userWithToken));
-      return userWithToken;
-    } catch (error) {
-      // Pass the error up to be handled by the component
-      throw error;
-    }
+    const data = await signinEmployer({ email, password });
+    const userWithToken = {
+      id: data.id,
+      email: data.email,
+      username: data.username,
+      is_verified: data.is_verified,
+      access: data.access,
+      refresh: data.refresh,
+    };
+    setEmployer(userWithToken);
+    localStorage.setItem("employerUser", JSON.stringify(userWithToken));
+    return userWithToken;
   };
 
   // Logout with CSRF + refresh token

@@ -30,13 +30,7 @@ export async function signInAPI(email) {
     body: JSON.stringify({ email }),
   });
 
-  if (!res.ok) {
-    // Check for rate limit error (HTTP 429)
-    if (res.status === 429) {
-      throw new Error("Too many attempts, please wait one minute before trying again.");
-    }
-    throw new Error(`Error: ${res.status}`);
-  }
+  if (!res.ok) throw new Error(`Error: ${res.status}`);
   return res.json();
 }
 

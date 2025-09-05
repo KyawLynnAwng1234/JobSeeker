@@ -55,27 +55,19 @@ export const registerEmployerDetail = async (profile) => {
 // Signin (token-based, CSRF included)
 export const signinEmployer = async ({ email, password }) => {
   const csrftoken = getCookie("csrftoken");
-  try {
-    const response = await axios.post(
-      `${API_URL}${EMPLOYER_API.SIGNIN}`,
-      { email, password },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken,
-        },
-        withCredentials: true,
-      }
-    );
-    // returns { id, email, username, is_verified, access, refresh }
-    return response.data;
-  } catch (error) {
-    // Check for rate limit error (HTTP 429)
-    if (error.response && error.response.status === 429) {
-      throw new Error("Too many attempts, please wait one minute before trying again.");
+  const response = await axios.post(
+    `${API_URL}${EMPLOYER_API.SIGNIN}`,
+    { email, password },
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken,
+      },
+      withCredentials: true,
     }
-    throw error;
-  }
+  );
+  // returns { id, email, username, is_verified, access, refresh }
+  return response.data;
 };
 
 // Fetch current employer
