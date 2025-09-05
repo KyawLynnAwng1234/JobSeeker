@@ -17,7 +17,7 @@ from .serializers import EmployerRegisterSerializer, EmployerPreRegisterSerializ
 from .serializers import EmployerPreRegisterSerializer
 
 #models
-from Job.models import Jobs
+from Jobs.models import Jobs
 from Application.models import Application
 from .models import EmployerProfile
 

@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'Application',
     'EmployerProfile',
     'JobSeekerProfile',
-    'Job',
+    'Jobs',
     'Notification',
     'UI',
     
@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     #third party apps
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken', 
+    'rest_framework.authtoken',
+    
 ]
 
 MIDDLEWARE = [
