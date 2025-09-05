@@ -8,7 +8,7 @@ from .models import JobCategory, Jobs
 from .serializers import JobCategorySerializer, JobsSerializer
 from EmployerProfile.models import EmployerProfile
 from Accounts.decorators import role_required
-from django.shortcuts import get_object_or_404
+from django.shortcuts import  get_object_or_404
 
 # Create your views here.
 
