@@ -1,6 +1,6 @@
 from django.db import models
 from JobSeekerProfile.models import JobseekerProfile, Resume
-from Job.models import Jobs
+from Jobs.models import Jobs
 import uuid
 
 class SaveJob(models.Model):

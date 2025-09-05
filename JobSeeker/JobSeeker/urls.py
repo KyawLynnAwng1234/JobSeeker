@@ -8,7 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts-jobseeker/',include('JobSeekerProfile.urls')),
     path('accounts-employer/',include('EmployerProfile.urls')),
-    path('job/',include('Job.urls')),
+    path('job/',include('Jobs.urls')),
 
     #allauth and dj-rest-auth
     path("auth/", include("dj_rest_auth.urls")),

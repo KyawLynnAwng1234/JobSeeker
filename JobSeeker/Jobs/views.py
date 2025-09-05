@@ -1,3 +1,6 @@
+from django.shortcuts import render
+
+# Create your views here.
 
 from django.shortcuts import render
 from rest_framework import status
@@ -7,8 +10,9 @@ from rest_framework.response import Response
 from .models import JobCategory, Jobs
 from .serializers import JobCategorySerializer, JobsSerializer
 from EmployerProfile.models import EmployerProfile
-# from Accounts.decorators import role_required
 from django.shortcuts import get_object_or_404
+
+
 
 # Create your views here.
 
@@ -40,6 +44,8 @@ def jobcategory_detail_api(request, pk):
 # Category Update
 @api_view(['PUT'])
 # @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
+
 def jobcategory_update_api(request, pk):
     try:
         category = JobCategory.objects.get(pk=pk)
@@ -104,6 +110,7 @@ def jobs_detail_api(request, pk):
 # Job Update
 @api_view(['PATCH'])
 # @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def jobs_update_api(request, pk):
     try:
         job = Jobs.objects.get(pk=pk)
@@ -132,4 +139,3 @@ def jobs_delete_api(request, pk):
 
 
     
-
