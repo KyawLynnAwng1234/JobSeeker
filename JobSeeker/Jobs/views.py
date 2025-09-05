@@ -138,4 +138,3 @@ def jobs_delete_api(request, pk):
 
 
     
-
