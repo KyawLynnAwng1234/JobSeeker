@@ -10,7 +10,6 @@ from rest_framework.response import Response
 from .models import JobCategory, Jobs
 from .serializers import JobCategorySerializer, JobsSerializer
 from EmployerProfile.models import EmployerProfile
-
 from django.shortcuts import get_object_or_404
 
 
@@ -28,7 +27,6 @@ def jobcategory_list_api(request):
 # Category Create (POST)
 @api_view(['POST'])
 # @permission_classes([IsAuthenticated])
-
 def jobcategory_create_api(request):
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
@@ -45,7 +43,9 @@ def jobcategory_detail_api(request, pk):
 
 # Category Update
 @api_view(['PUT'])
+# @permission_classes([IsAuthenticated])
 @permission_classes([IsAuthenticated])
+
 def jobcategory_update_api(request, pk):
     try:
         category = JobCategory.objects.get(pk=pk)
@@ -109,6 +109,7 @@ def jobs_detail_api(request, pk):
 
 # Job Update
 @api_view(['PATCH'])
+# @permission_classes([IsAuthenticated])
 @permission_classes([IsAuthenticated])
 def jobs_update_api(request, pk):
     try:
