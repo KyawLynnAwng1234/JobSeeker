@@ -1,3 +1,6 @@
 // src/constants/apiEndpoints.js
 export const JOBS_ENDPOINT = "/jobs/";
-export const JOB_DETAIL = (id) => `/jobs/${id}/`;
+export const JOB_CREATE = "/job/jobs/create/";
+export const JOB_DETAIL = (id) => `/job/jobs/detail/${id}/`;
+export const JOB_UPDATE = (id) => `/job/jobs/update/${id}/`;
+export const JOB_DELETE = (id) => `/job/jobs/delete/${id}/`;
