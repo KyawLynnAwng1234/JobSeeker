@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from .models import JobCategory, Jobs
 from .serializers import JobCategorySerializer, JobsSerializer
@@ -17,18 +17,39 @@ from django.shortcuts import get_object_or_404
 
 # Create your views here.
 
-
-# Category List (GET)
+# job category list
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def jobcategory_list_api(request):
-    categories= JobCategory.objects.all()
+    user = request.user
+
+    if user.is_staff:  # Admin
+        categories = JobCategory.objects.all().order_by('-id')
+    elif hasattr(user, "role") and user.role == "employer":  # Employer
+        categories = JobCategory.objects.filter(created_by=user).order_by('-id')
+    else:  # Other users (e.g. job seekers) → no access
+        return Response(
+            {"error": "You do not have permission to view categories."},
+            status=status.HTTP_403_FORBIDDEN,
+        )
+
     serializer = JobCategorySerializer(categories, many=True)
     return Response(serializer.data)
 
-# Category Create (POST)
-@api_view(['POST'])
-# @permission_classes([IsAuthenticated])
 
+
+# custom permission
+class IsAdminOrEmployer(BasePermission):
+    def has_permission(self, request, view):
+        return (
+            request.user
+            and request.user.is_authenticated
+            and (request.user.is_staff or request.user.role == 'employer')
+        )
+    
+# job category create view
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_create_api(request):
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
@@ -36,12 +57,15 @@ def jobcategory_create_api(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
+
 # Category Detail
 @api_view(['GET'])
+@permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_detail_api(request, pk):
     category = get_object_or_404(JobCategory, pk=pk)
     serializer = JobCategorySerializer(category)
     return Response(serializer.data)
+
 
 # Category Update
 @api_view(['PUT'])
@@ -74,7 +98,7 @@ def jobcategory_delete_api(request, pk):
 # jobs list
 @api_view(['GET'])
 def jobs_list_api(request):
-    jobs = Jobs.objects.all()
+    jobs = Jobs.objects.all().order_by('-id')
     serializer = JobsSerializer(jobs, many=True)
     return Response(serializer.data, status=200)
 
