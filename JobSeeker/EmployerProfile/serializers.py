@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from Accounts.models import *
 from .models import EmployerProfile
-from Job.models import Jobs
+from Jobs.models import Jobs
 
 
 class EmployerPreRegisterSerializer(serializers.Serializer):

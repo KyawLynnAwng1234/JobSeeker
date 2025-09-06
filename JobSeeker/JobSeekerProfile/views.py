@@ -15,6 +15,9 @@ from Accounts.models import CustomUser
 User = get_user_model()
 from django.views.decorators.csrf import csrf_exempt
 from django_ratelimit.decorators import ratelimit
+from datetime import datetime, timedelta
+from django.utils import timezone
+from django.conf import settings
 
 
 @api_view(['POST'])
@@ -55,10 +58,11 @@ def signin_jobseeker_api(request, role):
         return Response({"error": "Failed to send verification code."},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    # ✅ Save to session
+    # ✅ Save to session with timestamp
     request.session['verification_code'] = code
     request.session['email'] = email
     request.session['user_id'] = str(user.id)
+    request.session['otp_created_at'] = timezone.now().isoformat()
 
     msg = ("Account created and verification code sent to "
            if created else "Verification code sent to ") + email
@@ -71,8 +75,12 @@ def signin_jobseeker_api(request, role):
 
 #job-seeker-email-verify 
 @api_view(['POST'])
-@ratelimit(key='ip', rate='5/m', block=True)
+@ratelimit(key='ip', rate='5/m', block=False, method='POST')
 def otp_verify_jobseeker_api(request):
+    # Check if rate limited
+    if getattr(request, 'limited', False):
+        return Response({"detail": "Too many verification attempts. Please wait one minute before trying again."}, status=status.HTTP_429_TOO_MANY_REQUESTS)
+    
     input_code = request.data.get('code')
     code = request.session.get('verification_code')
     user_id = request.session.get('user_id')
@@ -109,7 +117,7 @@ def otp_verify_jobseeker_api(request):
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
-@throttle_classes([ScopedRateThrottle])   # use the scoped rate above
+@ratelimit(key='ip', rate='5/m', block=False, method='POST')   # use the scoped rate above
 def otp_resend_jobseeker_api(request):
     """
     Resend the email verification code for jobseeker login.
@@ -151,8 +159,7 @@ def otp_resend_jobseeker_api(request):
         status=status.HTTP_200_OK
     )
 
-# attach the throttle scope name so DRF uses "jobseeker_resend" rate
-otp_resend_jobseeker_api.throttle_scope = "jobseeker_resend"
+
 
 
 @api_view(['POST'])
