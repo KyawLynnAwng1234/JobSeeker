@@ -21,7 +21,6 @@ from django.shortcuts import get_object_or_404
 @permission_classes([IsAuthenticated])
 def jobcategory_list_api(request):
     user = request.user
-
     if user.is_staff:  # Admin
         categories = JobCategory.objects.all().order_by('-id')
     elif hasattr(user, "role") and user.role == "employer":  # Employer
@@ -31,7 +30,6 @@ def jobcategory_list_api(request):
             {"error": "You do not have permission to view categories."},
             status=status.HTTP_403_FORBIDDEN,
         )
-
     serializer = JobCategorySerializer(categories, many=True)
     return Response(serializer.data)
 
@@ -45,20 +43,21 @@ class IsAdminOrEmployer(BasePermission):
             and request.user.is_authenticated
             and (request.user.is_staff or request.user.role == 'employer')
         )
+
+
     
-# job category create view
+
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
-# Category Create (POST)
-@api_view(['POST'])
 # @permission_classes([IsAuthenticated])
-
 def jobcategory_create_api(request):
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
+
 
 
 # Category Detail
@@ -72,9 +71,7 @@ def jobcategory_detail_api(request, pk):
 
 # Category Update
 @api_view(['PUT'])
-# @permission_classes([IsAuthenticated])
 @permission_classes([IsAuthenticated])
-
 def jobcategory_update_api(request, pk):
     try:
         category = JobCategory.objects.get(pk=pk)
@@ -86,6 +83,7 @@ def jobcategory_update_api(request, pk):
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # Category Delete
