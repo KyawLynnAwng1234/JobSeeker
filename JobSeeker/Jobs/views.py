@@ -82,6 +82,7 @@ def jobcategory_update_api(request, pk):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 # Category Delete
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
@@ -101,6 +102,7 @@ def jobs_list_api(request):
     jobs = Jobs.objects.all().order_by('-id')
     serializer = JobsSerializer(jobs, many=True)
     return Response(serializer.data, status=200)
+
 
 # jobs create
 @api_view(['POST'])
