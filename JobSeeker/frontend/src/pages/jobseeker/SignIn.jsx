@@ -2,11 +2,36 @@ import React, { useState } from "react";
 import { FaFacebook } from "react-icons/fa";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/userAuth";
+import RateLimitMessage from "../../components/RateLimitMessage";
+import useRateLimit from "../../hooks/useRateLimit";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const { loading, message, signIn } = useAuth();
   const navigate = useNavigate();
+  const { 
+    isRateLimited, 
+    retryAfter, 
+    rateLimitMessage, 
+    handleRateLimitError, 
+    isBlocked 
+  } = useRateLimit();
+
+  const handleSignIn = async () => {
+    if (isBlocked()) {
+      return; // Prevent action if rate limited
+    }
+    
+    try {
+      await signIn(email, navigate);
+    } catch (error) {
+      // Check if it's a rate limit error
+      if (!handleRateLimitError(error)) {
+        // Handle other types of errors normally
+        console.error('Sign in error:', error);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -43,15 +68,26 @@ const SignIn = () => {
             className="w-full mb-5 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
           />
 
+          <RateLimitMessage 
+            isVisible={isRateLimited}
+            message={rateLimitMessage}
+            retryAfter={retryAfter}
+            variant="error"
+          />
+
           <button
-            onClick={() => signIn(email, navigate)}
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
+            onClick={handleSignIn}
+            disabled={loading || isBlocked()}
+            className={`w-full py-3 rounded-lg text-lg font-medium transition ${
+              loading || isBlocked()
+                ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-50'
+                : 'bg-blue-600 text-white hover:bg-blue-700'
+            }`}
           >
-            {loading ? "Sending..." : "Email me sign in code"}
+            {loading ? "Sending..." : isBlocked() ? `Wait ${retryAfter}s` : "Email me sign in code"}
           </button>
 
-          {message && (
+          {message && !isRateLimited && (
             <p className="mt-3 text-center text-sm text-red-600">{message}</p>
           )}
 

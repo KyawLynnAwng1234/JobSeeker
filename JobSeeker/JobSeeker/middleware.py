@@ -15,8 +15,11 @@ class RateLimitMiddleware:
     def process_exception(self, request, exception):
         if isinstance(exception, Ratelimited):
             logger.warning(f"Rate limit exceeded for {request.META.get('REMOTE_ADDR')} on {request.path}")
-            return JsonResponse(
-                {"error": "Too many attempts, please wait one minute before trying again."}, 
+            response = JsonResponse(
+                {"detail": "Too many attempts, please wait one minute before trying again."}, 
                 status=429
             )
+            # Add retry-after header for better rate limit handling
+            response['Retry-After'] = '60'
+            return response
         return None

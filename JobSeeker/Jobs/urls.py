@@ -18,7 +18,5 @@ urlpatterns = [
     path('jobs/update/<int:pk>/', views.jobs_update_api, name='job-update'),
     path('jobs/delete/<int:pk>/', views.jobs_delete_api, name='job-delete'),
 
-
 ]
-
 

@@ -1,9 +1,9 @@
 from django.db import models
-
-# Create your models here.
 from django.db import models
 from EmployerProfile.models import EmployerProfile
 import uuid
+
+
 
 class JobCategory(models.Model):
     id = models.UUIDField(
