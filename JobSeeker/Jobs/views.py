@@ -21,7 +21,6 @@ from django.shortcuts import get_object_or_404
 @permission_classes([IsAuthenticated])
 def jobcategory_list_api(request):
     user = request.user
-
     if user.is_staff:  # Admin
         categories = JobCategory.objects.all().order_by('-id')
     elif hasattr(user, "role") and user.role == "employer":  # Employer
@@ -31,7 +30,6 @@ def jobcategory_list_api(request):
             {"error": "You do not have permission to view categories."},
             status=status.HTTP_403_FORBIDDEN,
         )
-
     serializer = JobCategorySerializer(categories, many=True)
     return Response(serializer.data)
 
@@ -45,10 +43,11 @@ class IsAdminOrEmployer(BasePermission):
             and request.user.is_authenticated
             and (request.user.is_staff or request.user.role == 'employer')
         )
+
+
     
 
 
-# job category create view
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 # @permission_classes([IsAuthenticated])
