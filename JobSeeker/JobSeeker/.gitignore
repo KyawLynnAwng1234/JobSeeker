@@ -1,27 +1,27 @@
-.env
-Python
-pycache/
-*.py[cod]
-*.pyo
-*.pyd
-*.so
-*.egg-info/
-.eggs/
-.dist/
-.build/
-.pytest_cache/
-.mypy_cache/
+# .env
+# Python
+# pycache/
+# *.py[cod]
+# *.pyo
+# *.pyd
+# *.so
+# *.egg-info/
+# .eggs/
+# .dist/
+# .build/
+# .pytest_cache/
+# .mypy_cache/
 
-Django
-.sqlite3
-media/
-staticfiles/
+# Django
+# .sqlite3
+# media/
+# staticfiles/
 
-Env & IDE
-.env
-.env.
-.vscode/
-.idea/
+# Env & IDE
+# .env
+# .env.
+# .vscode/
+# .idea/
 
-Database
-db.sqlite3
+# Database
+# db.sqlite3
