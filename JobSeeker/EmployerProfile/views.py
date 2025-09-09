@@ -103,9 +103,14 @@ def register_employer_api(request, role):
 @api_view(["POST"])
 @ratelimit(key='ip', rate='5/m', block=False, method='POST')
 def login_employer_api(request):
-    # Check if rate limited
+    # Check if rate limited with custom message
     if getattr(request, 'limited', False):
-        return Response({"error": "Too many attempts, please wait one minute before trying again."}, status=status.HTTP_429_TOO_MANY_REQUESTS)
+        response = Response({
+            "detail": "Too many employer login attempts. Please wait one minute before trying again."
+        }, status=status.HTTP_429_TOO_MANY_REQUESTS)
+        # Add retry-after header for better rate limit handling
+        response['Retry-After'] = '60'
+        return response
     
     email = request.data.get("email")
     password = request.data.get("password")

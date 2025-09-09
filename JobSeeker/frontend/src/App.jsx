@@ -14,6 +14,7 @@ import EmployerCompanyDetail from "./pages/employer/EmployerCompanyDetail";
 
 // Test Page
 import RateLimitTest from "./pages/RateLimitTest";
+import RateLimitDemo from "./pages/RateLimitDemo";
 
 // Employer Layout & Pages
 import EmployerDashboardLayout from "./pages/employer/dashboard/EmployerDashboard";
@@ -53,6 +54,7 @@ function App() {
           
           {/* Test Page */}
           <Route path="rate-limit-test" element={<RateLimitTest />} />
+          <Route path="rate-limit-demo" element={<RateLimitDemo />} />
 
           {/* Employer Auth */}
           <Route

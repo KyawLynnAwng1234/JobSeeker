@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'si2f*4o9a)-xmv2kue#@tyzskl6v278^h5c-a=lidg6#(syg=&'
+SECRET_KEY = 'adfadfadfadfadsf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True)
@@ -57,9 +57,10 @@ INSTALLED_APPS = [
     #third party apps
     'rest_framework',
     'corsheaders',
-    'rest_framework.authtoken',
-    
+    'rest_framework.authtoken', 
 ]
+
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",

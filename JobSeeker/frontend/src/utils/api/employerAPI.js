@@ -70,9 +70,11 @@ export const signinEmployer = async ({ email, password }) => {
     // returns { id, email, username, is_verified, access, refresh }
     return response.data;
   } catch (error) {
-    // Check for rate limit error (HTTP 429)
-    if (error.response && error.response.status === 429) {
-      throw new Error("Too many attempts, please wait one minute before trying again.");
+    if (error.response) {
+      // Attach response data and headers to the error for rate limit handling
+      error.status = error.response.status;
+      error.data = error.response.data;
+      error.headers = error.response.headers;
     }
     throw error;
   }
