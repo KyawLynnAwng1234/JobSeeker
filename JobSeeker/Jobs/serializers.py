@@ -11,8 +11,8 @@ class JobCategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
     
 class JobsSerializer(serializers.ModelSerializer):
-    employer_name = serializers.CharField(source='employer.user.username', read_only=True)
-    category_name = serializers.CharField(source='category.name', read_only=True)
+    employer = serializers.CharField(source='employer.business_name', read_only=True)
+    category = serializers.CharField(source='category.name', read_only=True)
 
     class Meta:
         model = Jobs
