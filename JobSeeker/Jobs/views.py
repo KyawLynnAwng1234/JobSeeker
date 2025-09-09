@@ -50,7 +50,10 @@ class IsAdminOrEmployer(BasePermission):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
+<<<<<<< HEAD
+=======
 # @permission_classes([IsAuthenticated])
+>>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
 def jobcategory_create_api(request):
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
@@ -59,24 +62,39 @@ def jobcategory_create_api(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 
+<<<<<<< HEAD
+# category detail
+=======
 
 # Category Detail
+>>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_detail_api(request, pk):
-    category = get_object_or_404(JobCategory, pk=pk)
+    user = request.user
+    if user.is_staff:  # Admin
+        category = get_object_or_404(JobCategory, pk=pk)
+    else:  # Employer
+        category = get_object_or_404(JobCategory, pk=pk, created_by=user)
+
     serializer = JobCategorySerializer(category)
     return Response(serializer.data)
 
 
 # Category Update
+<<<<<<< HEAD
+@api_view(['PUT', 'PATCH'])
+@permission_classes([IsAuthenticated, IsAdminOrEmployer])
+=======
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
+>>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
 def jobcategory_update_api(request, pk):
-    try:
-        category = JobCategory.objects.get(pk=pk)
-    except JobCategory.DoesNotExist:
-        return Response({'error': 'Category not found'}, status=status.HTTP_404_NOT_FOUND)
+    user = request.user
+    if user.is_staff:
+        category = get_object_or_404(JobCategory, pk=pk)
+    else:
+        category = get_object_or_404(JobCategory, pk=pk, created_by=user)
 
     serializer = JobCategorySerializer(category, data=request.data, partial=True)
     if serializer.is_valid():
@@ -88,78 +106,114 @@ def jobcategory_update_api(request, pk):
 
 # Category Delete
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_delete_api(request, pk):
-    try:
-        category = JobCategory.objects.get(pk=pk)
-    except JobCategory.DoesNotExist:
-        return Response({'error': 'Category not found'}, status=status.HTTP_404_NOT_FOUND)
-
+    user = request.user
+    if user.is_staff:
+        category = get_object_or_404(JobCategory, pk=pk)
+    else:
+        category = get_object_or_404(JobCategory, pk=pk, created_by=user)
     category.delete()
     return Response({'message': 'Category deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 
+
 # jobs list
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def jobs_list_api(request):
-    jobs = Jobs.objects.all().order_by('-id')
+    jobs = Jobs.objects.all().order_by('-id')  # နောက်ဆုံး create လုပ်ထားတာပထမ ထွက်
     serializer = JobsSerializer(jobs, many=True)
     return Response(serializer.data, status=200)
 
 
 # jobs create
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobs_create_api(request):
     user = request.user
+    # Check if user has an EmployerProfile
     try:
         employer_profile = EmployerProfile.objects.get(user=user)
     except EmployerProfile.DoesNotExist:
         return Response({'error': 'Employer profile not found'}, status=status.HTTP_404_NOT_FOUND)
-
+    # Serializer validation
     serializer = JobsSerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save(employer=employer_profile)  # employer assign automatically
+        serializer.save(employer=employer_profile)  # Automatically assign employer
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# Job Detail
+
+# Job Detail (GET)
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def jobs_detail_api(request, pk):
     try:
         job = Jobs.objects.get(pk=pk)
     except Jobs.DoesNotExist:
-        return Response({'error': 'Job not found'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "Job not found"},
+            status=status.HTTP_404_NOT_FOUND
+        )
 
-    serializer = JobsSerializer(job)
-    return Response(serializer.data)
+    user = request.user
+
+    if user.is_staff:
+        # Admin → အားလုံးကို ကြည့်နိုင်မယ်
+        serializer = JobsSerializer(job)
+        return Response(serializer.data)
+
+    elif job.employer.user == user:
+        # Employer → သူတင်ထားတဲ့ job ကိုပဲ ကြည့်နိုင်မယ်
+        serializer = JobsSerializer(job)
+        return Response(serializer.data)
+
+    else:
+        # Jobseeker → အားလုံး job ကြည့်နိုင်မယ်
+        serializer = JobsSerializer(job)
+        return Response(serializer.data)
 
 
-# Job Update
-@api_view(['PATCH'])
-# @permission_classes([IsAuthenticated])
-@permission_classes([IsAuthenticated])
+
+
+
+
+# Job Update (PUT/PATCH)
+@api_view(['PUT', 'PATCH'])
+@permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobs_update_api(request, pk):
-    try:
-        job = Jobs.objects.get(pk=pk)
-    except Jobs.DoesNotExist:
-        return Response({'error': 'Job not found'}, status=status.HTTP_404_NOT_FOUND)
+    user = request.user
 
-    serializer = JobsSerializer(job, data=request.data, partial=True)
+    if user.is_staff:
+        # Admin → အားလုံး job update လို့ရ
+        job = get_object_or_404(Jobs, pk=pk)
+    else:
+        # Employer → သူတင်ထားတဲ့ job ကိုပဲ update လို့ရ
+        job = get_object_or_404(Jobs, pk=pk, employer__user=user)
+
+    serializer = JobsSerializer(job, data=request.data, partial=True)  # partial=True = PATCH နဲ့လည်းအဆင်ပြေ
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# Job Delete
+
+
+
+# Job Delete (DELETE)
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobs_delete_api(request, pk):
-    try:
-        job = Jobs.objects.get(pk=pk)
-    except Jobs.DoesNotExist:
-        return Response({'error': 'Job not found'}, status=status.HTTP_404_NOT_FOUND)
+    user = request.user
+
+    if user.is_staff:
+        # Admin → အားလုံး job delete လို့ရ
+        job = get_object_or_404(Jobs, pk=pk)
+    else:
+        # Employer → သူတင်ထားတဲ့ job ကိုပဲ delete လို့ရ
+        job = get_object_or_404(Jobs, pk=pk, employer__user=user)
 
     job.delete()
     return Response({'message': 'Job deleted'}, status=status.HTTP_204_NO_CONTENT)
