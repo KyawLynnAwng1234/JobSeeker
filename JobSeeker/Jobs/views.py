@@ -50,6 +50,10 @@ class IsAdminOrEmployer(BasePermission):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
+<<<<<<< HEAD
+=======
+# @permission_classes([IsAuthenticated])
+>>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
 def jobcategory_create_api(request):
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
@@ -58,7 +62,12 @@ def jobcategory_create_api(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 
+<<<<<<< HEAD
 # category detail
+=======
+
+# Category Detail
+>>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_detail_api(request, pk):
@@ -73,8 +82,13 @@ def jobcategory_detail_api(request, pk):
 
 
 # Category Update
+<<<<<<< HEAD
 @api_view(['PUT', 'PATCH'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
+=======
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+>>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
 def jobcategory_update_api(request, pk):
     user = request.user
     if user.is_staff:
