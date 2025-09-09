@@ -58,6 +58,7 @@ def jobcategory_create_api(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 
+
 # Category Detail
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
