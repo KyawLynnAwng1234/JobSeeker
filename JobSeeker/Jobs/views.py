@@ -50,13 +50,6 @@ class IsAdminOrEmployer(BasePermission):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
-# @permission_classes([IsAuthenticated])
->>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
->>>>>>> ea74498184f83e05d96e28f18e9c827d8ceca99e
 def jobcategory_create_api(request):
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
@@ -65,15 +58,8 @@ def jobcategory_create_api(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-# category detail
-=======
 
->>>>>>> ea74498184f83e05d96e28f18e9c827d8ceca99e
 # Category Detail
->>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
 @api_view(['GET'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_detail_api(request, pk):
@@ -87,19 +73,10 @@ def jobcategory_detail_api(request, pk):
     return Response(serializer.data)
 
 
+
 # Category Update
-<<<<<<< HEAD
 @api_view(['PUT', 'PATCH'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
-=======
-<<<<<<< HEAD
-@api_view(['PUT', 'PATCH'])
-@permission_classes([IsAuthenticated, IsAdminOrEmployer])
-=======
-@api_view(['PUT'])
-@permission_classes([IsAuthenticated])
->>>>>>> 2574dc3774af0c364d97bf653f138ce608b1b812
->>>>>>> ea74498184f83e05d96e28f18e9c827d8ceca99e
 def jobcategory_update_api(request, pk):
     user = request.user
     if user.is_staff:
