@@ -12,6 +12,7 @@ class JobCategory(models.Model):
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
     name = models.CharField(max_length=100, unique=True)
+
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 

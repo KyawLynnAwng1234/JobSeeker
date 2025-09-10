@@ -12,7 +12,13 @@ import EmployerSignIn from "./pages/employer/EmployerSignIn";
 import EmployerRegister from "./pages/employer/EmployerRegister";
 import EmployerCompanyDetail from "./pages/employer/EmployerCompanyDetail";
 
+<<<<<<< HEAD
 
+=======
+// Test Page
+import RateLimitTest from "./pages/RateLimitTest";
+// import RateLimitDemo from "./pages/RateLimitDemo";
+>>>>>>> b1df11127aaa63fb678e76c268559f339127880a
 
 // Employer Layout & Pages
 import EmployerDashboardLayout from "./pages/employer/dashboard/EmployerDashboard";
@@ -23,6 +29,7 @@ import JobCategory from "./pages/employer/dashboard/JobCategory";
 // ✅ Auth Context import
 import { AuthProvider } from "./context/AuthContext";
 import { EmployerAuthProvider } from "./context/EmployerAuthContext";
+
 
 
 
