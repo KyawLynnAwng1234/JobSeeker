@@ -44,14 +44,14 @@ export default function JobCategory() {
     setMessage(null);
 
     try {
-      // CSRF token အရင်ရွာပြီး
+      
       const csrfToken = document.cookie
         .split("; ")
         .find((row) => row.startsWith("csrftoken="))
         ?.split("=")[1];
 
       const response = await axios.post(
-        "http://127.0.0.1:8000/job/job-categories/create/", // backend endpoint ကို adjust လုပ်ပါ
+        "http://127.0.0.1:8000/job/job-categories/create/",
         { name: categoryName },
         {
           headers: {
