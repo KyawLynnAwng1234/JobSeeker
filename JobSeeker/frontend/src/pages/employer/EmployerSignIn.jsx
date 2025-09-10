@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import { useEmployerAuth } from "../../hooks/useEmployerAuth";
-import RateLimitMessage from "../../components/RateLimitMessage";
-import useRateLimit from "../../hooks/useRateLimit";
+
 
 const EmployerSignIn = () => {
   const { signin } = useEmployerAuth();
@@ -12,21 +11,9 @@ const EmployerSignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  
-  const { 
-    isRateLimited, 
-    retryAfter, 
-    rateLimitMessage, 
-    handleRateLimitError, 
-    isBlocked 
-  } = useRateLimit();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (isBlocked()) {
-      return; // Prevent submission if rate limited
-    }
     
     setLoading(true);
     setError("");
@@ -35,11 +22,7 @@ const EmployerSignIn = () => {
       await signin({ email, password });
       navigate("/employer/dashboard");
     } catch (err) {
-      // Check if it's a rate limit error
-      if (!handleRateLimitError(err)) {
-        // Handle other types of errors normally
-        setError(err.message || "Sign In failed!");
-      }
+      setError(err.message || "Sign In failed!");
     } finally {
       setLoading(false);
     }
@@ -91,14 +74,7 @@ const EmployerSignIn = () => {
               />
             </div>
 
-            <RateLimitMessage 
-              isVisible={isRateLimited}
-              message={rateLimitMessage}
-              retryAfter={retryAfter}
-              variant="error"
-            />
-
-            {error && !isRateLimited && <p className="text-red-600 text-sm">{error}</p>}
+            {error && <p className="text-red-600 text-sm">{error}</p>}
 
             <div className="flex justify-end text-sm">
               <Link to="/employer/forgot-password" className="text-blue-600">
@@ -108,14 +84,14 @@ const EmployerSignIn = () => {
 
             <button
               type="submit"
-              disabled={loading || isBlocked()}
+              disabled={loading}
               className={`w-full py-3 rounded-lg text-lg font-medium transition ${
-                loading || isBlocked()
+                loading
                   ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-50'
                   : 'bg-blue-600 text-white hover:bg-blue-700'
               }`}
             >
-              {loading ? "Signing In..." : isBlocked() ? `Wait ${retryAfter}s` : "Sign In"}
+              {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
 

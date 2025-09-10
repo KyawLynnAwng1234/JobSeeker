@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True)
+DEBUG = config('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['192.168.130.155', 'localhost', '127.0.0.1']
 
@@ -217,3 +217,8 @@ CORS_ALLOW_CREDENTIALS = True
 
 DEFAULT_FROM_EMAIL = 'JobSeeker <no-reply@yourdomain.com>'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
+
+#Meaida files
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+#MEDIA_ROOT = BASE_DIR / 'media'

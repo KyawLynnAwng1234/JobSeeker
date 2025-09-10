@@ -21,10 +21,15 @@ class EmployerPreRegisterSerializer(serializers.Serializer):
 class EmployerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmployerProfile
-        fields = ["first_name", "last_name", "business_name", "city"]
+        fields = ["first_name", "last_name", "business_name", "city",'logo']
 
 class EmployerRegisterSerializer(serializers.Serializer):
     # Only validate profile input
     profile = EmployerProfileSerializer(write_only=True)
+
+class EmployerUpdateProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=EmployerProfile
+        fields=["user","first_name", "last_name", "business_name", "city",'logo']
 
     

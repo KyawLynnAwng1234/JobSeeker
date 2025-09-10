@@ -1,24 +1,48 @@
-from django.shortcuts import render
-
-# Create your views here.
 
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.utils import timezone
+from django.db.models import Q
+
+# import Application
+from Application.models import Application
 from .models import JobCategory, Jobs
 from .serializers import JobCategorySerializer, JobsSerializer
 from EmployerProfile.models import EmployerProfile
 from django.shortcuts import get_object_or_404
 
-
-
 # Create your views here.
+#dashboard
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def dashboard_api(request):
+#     today=timezone.localdate()
+#     user=request.user
+#     total_jobs=Jobs.objects.filter(employer__user=user).count()
+#     total_applications=Application.objects.filter(job__employer__user=user).count()
+#     active_jobs=Jobs.objects.filter(Q(employer__user=user)&Q(deadline__gte=today) | Q(deadline__isnull=True)).count()
+#     expired_jobs=Jobs.objects.filter(Q(employer__user=user)&Q(deadline__lt=today)).count()
+#     # data=JobsSerializer(expired_jobs,many=True).data
+    
+
+#     return Response({
+#         'total_jobs':total_jobs,
+#         'total_applications':total_applications,
+#         'active_jobs':active_jobs,
+#         # 'expired_jobs_count':expired_jobs_count
+#         'expired_jobs':expired_jobs
+
+#         })
+        
+#end dashboard
 
 
 # Category List (GET)
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def jobcategory_list_api(request):
     categories= JobCategory.objects.all()
     serializer = JobCategorySerializer(categories, many=True)
@@ -26,7 +50,7 @@ def jobcategory_list_api(request):
 
 # Category Create (POST)
 @api_view(['POST'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def jobcategory_create_api(request):
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
@@ -43,7 +67,6 @@ def jobcategory_detail_api(request, pk):
 
 # Category Update
 @api_view(['PUT'])
-# @permission_classes([IsAuthenticated])
 @permission_classes([IsAuthenticated])
 
 def jobcategory_update_api(request, pk):
@@ -73,8 +96,10 @@ def jobcategory_delete_api(request, pk):
 
 # jobs list
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def jobs_list_api(request):
-    jobs = Jobs.objects.all()
+    user=request.user
+    jobs = Jobs.objects.filter(employer__user=user)
     serializer = JobsSerializer(jobs, many=True)
     return Response(serializer.data, status=200)
 
@@ -97,6 +122,7 @@ def jobs_create_api(request):
 
 # Job Detail
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def jobs_detail_api(request, pk):
     try:
         job = Jobs.objects.get(pk=pk)
@@ -109,7 +135,6 @@ def jobs_detail_api(request, pk):
 
 # Job Update
 @api_view(['PATCH'])
-# @permission_classes([IsAuthenticated])
 @permission_classes([IsAuthenticated])
 def jobs_update_api(request, pk):
     try:

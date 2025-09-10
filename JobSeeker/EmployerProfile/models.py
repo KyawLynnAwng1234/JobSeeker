@@ -14,6 +14,9 @@ class EmployerProfile(models.Model):
     business_name = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
 
+    logo = models.ImageField(upload_to="upload_to_logo",default="default.png", null=True, blank=True)
+    founded_year = models.PositiveIntegerField(blank=True, null=True)
+    contact_email = models.EmailField(blank=True)
     def __str__(self):
         return self.business_name
 

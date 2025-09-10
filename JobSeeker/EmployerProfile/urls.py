@@ -11,6 +11,9 @@ urlpatterns = [
     path('employer/emailverify/<uidb64>/<token>/',views.emailverify_employer_api,name="employer-emailverifypage"),
     path('employer/resend-verification-email/',views.resend_verification_api,name="employer-resend-verification-emailpage"),
 
-    #dashboard
-    path('employer/dashboard/',views.employer_dashboard,name="employer-dashboard")
+   
+    #employer dashboard paths
+    path('employer/dashboard/', views.dashboard_api, name='employer-dashboard'),
+    path('employer/profile/', views.employer_profile_api, name='employer-profile'),
+    path('employer/profile-update/<str:pk>/',views.update_employer_profile_api,name="empployer-profile-update")
 ]
