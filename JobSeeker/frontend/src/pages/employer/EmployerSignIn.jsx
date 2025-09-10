@@ -91,7 +91,7 @@ const EmployerSignIn = () => {
               />
             </div>
 
-            <RateLimitMessage 
+            <RateLimitMessage
               isVisible={isRateLimited}
               message={rateLimitMessage}
               retryAfter={retryAfter}
