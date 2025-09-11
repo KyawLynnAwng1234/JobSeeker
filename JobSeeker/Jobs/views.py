@@ -46,8 +46,6 @@ class IsAdminOrEmployer(BasePermission):
 
 
     
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_create_api(request):
@@ -71,6 +69,8 @@ def jobcategory_detail_api(request, pk):
 
     serializer = JobCategorySerializer(category)
     return Response(serializer.data)
+
+
 
 
 
