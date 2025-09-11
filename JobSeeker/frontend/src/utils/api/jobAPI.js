@@ -8,8 +8,43 @@ import {
   JOB_DELETE,
 } from "../constants/apiJobendpoints";
 
-export const createJob = (data) => api.post(JOB_CREATE, data);   // 👈 /jobs/create/
-export const getJobs = () => api.get(JOBS_ENDPOINT);
-export const getJobDetail = (id) => api.get(JOB_DETAIL(id));
-export const updateJob = (id, data) => api.put(JOB_UPDATE(id), data);
-export const deleteJob = (id) => api.delete(JOB_DELETE(id));
+export const getCsrfToken = () => {
+  return document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("csrftoken="))
+    ?.split("=")[1];
+};
+
+// Create Job
+export const createJob = (data) =>
+  api.post(JOB_CREATE, data, {
+    headers: {
+      "X-CSRFTOKEN": getCsrfToken(),
+    },
+    withCredentials: true,
+  });
+
+// Get Jobs
+export const getJobs = () => api.get(JOBS_ENDPOINT, { withCredentials: true });
+
+// Get Job Detail
+export const getJobDetail = (id) =>
+  api.get(JOB_DETAIL(id), { withCredentials: true });
+
+// Update Job
+export const updateJob = (id, data) =>
+  api.put(JOB_UPDATE(id), data, {
+    headers: {
+      "X-CSRFToken": getCsrfToken(),
+    },
+    withCredentials: true,
+  });
+
+// Delete Job
+export const deleteJob = (id) =>
+  api.delete(JOB_DELETE(id), {
+    headers: {
+      "X-CSRFToken": getCsrfToken(),
+    },
+    withCredentials: true,
+  });

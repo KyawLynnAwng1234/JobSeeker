@@ -14,7 +14,7 @@ import EmployerCompanyDetail from "./pages/employer/EmployerCompanyDetail";
 
 // Test Page
 import RateLimitTest from "./pages/RateLimitTest";
-import RateLimitDemo from "./pages/RateLimitDemo";
+// import RateLimitDemo from "./pages/RateLimitDemo";
 
 // Employer Layout & Pages
 import EmployerDashboardLayout from "./pages/employer/dashboard/EmployerDashboard";
@@ -25,6 +25,7 @@ import JobCategory from "./pages/employer/dashboard/JobCategory";
 // ✅ Auth Context import
 import { AuthProvider } from "./context/AuthContext";
 import { EmployerAuthProvider } from "./context/EmployerAuthContext";
+
 
 
 

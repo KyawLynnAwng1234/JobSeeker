@@ -1,6 +1,7 @@
 from django.db import models
 from django.db import models
 from EmployerProfile.models import EmployerProfile
+from Accounts.models import CustomUser
 import uuid
 
 
@@ -12,6 +13,9 @@ class JobCategory(models.Model):
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
     name = models.CharField(max_length=100, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
+    updated_at = models.DateTimeField(auto_now=True,blank=True,null=True)
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
 
     def __str__(self):
         return self.name
