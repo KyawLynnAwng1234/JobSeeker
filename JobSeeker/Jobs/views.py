@@ -49,10 +49,11 @@ class IsAdminOrEmployer(BasePermission):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_create_api(request):
+    user=request.user
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+       serializer.save(user=request.user)
+       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 
@@ -65,7 +66,9 @@ def jobcategory_detail_api(request, pk):
     if user.is_staff:  # Admin
         category = get_object_or_404(JobCategory, pk=pk)
     else:  # Employer
+
         category = get_object_or_404(JobCategory, pk=pk, user=user)
+
 
     serializer = JobCategorySerializer(category)
     return Response(serializer.data)
@@ -83,8 +86,7 @@ def jobcategory_update_api(request, pk):
         category = get_object_or_404(JobCategory, pk=pk)
     else:
         category = get_object_or_404(JobCategory, pk=pk, user=user)
-
-    serializer = JobCategorySerializer(category, data=request.data, partial=True)
+        serializer = JobCategorySerializer(category, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
@@ -101,7 +103,7 @@ def jobcategory_delete_api(request, pk):
         category = get_object_or_404(JobCategory, pk=pk)
     else:
         category = get_object_or_404(JobCategory, pk=pk,user=user)
-    category.delete()
+        category.delete()
     return Response({'message': 'Category deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 
