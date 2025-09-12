@@ -73,20 +73,6 @@ const EmployerSignIn = () => {
                 required
               />
             </div>
-
-<<<<<<< HEAD
-            {error && <p className="text-red-600 text-sm">{error}</p>}
-=======
-            <RateLimitMessage
-              isVisible={isRateLimited}
-              message={rateLimitMessage}
-              retryAfter={retryAfter}
-              variant="error"
-            />
-
-            {error && !isRateLimited && <p className="text-red-600 text-sm">{error}</p>}
->>>>>>> b1df11127aaa63fb678e76c268559f339127880a
-
             <div className="flex justify-end text-sm">
               <Link to="/employer/forgot-password" className="text-blue-600">
                 Forget Password?

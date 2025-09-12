@@ -11,19 +11,6 @@ import VerifyOTP from "./pages/jobseeker/VerifyOTP";
 import EmployerSignIn from "./pages/employer/EmployerSignIn";
 import EmployerRegister from "./pages/employer/EmployerRegister";
 import EmployerCompanyDetail from "./pages/employer/EmployerCompanyDetail";
-
-<<<<<<< HEAD
-
-=======
-// Test Page
-import RateLimitTest from "./pages/RateLimitTest";
-<<<<<<< HEAD
-// import RateLimitDemo from "./pages/RateLimitDemo";
->>>>>>> b1df11127aaa63fb678e76c268559f339127880a
-=======
-import RateLimitDemo from "./pages/RateLimitDemo";
->>>>>>> ede8e9dd866e1f731539a93776b53cc0e3fd5729
-
 // Employer Layout & Pages
 import EmployerDashboardLayout from "./pages/employer/dashboard/EmployerDashboard";
 import Overview from "./pages/employer/dashboard/OverView";
