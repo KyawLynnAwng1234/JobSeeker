@@ -49,7 +49,10 @@ export const deleteJob = (id) =>
     },
     withCredentials: true,
   });
+<<<<<<< HEAD
 
 // Get all job categories
 export const getCategories = () =>
   api.get(JOB_CATEGORIES, { withCredentials: true });
+=======
+>>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448

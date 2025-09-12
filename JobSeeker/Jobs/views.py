@@ -24,7 +24,11 @@ def jobcategory_list_api(request):
     if user.is_staff:  # Admin
         categories = JobCategory.objects.all().order_by('-id')
     elif hasattr(user, "role") and user.role == "employer":  # Employer
+<<<<<<< HEAD
         categories = JobCategory.objects.all().order_by('-id')
+=======
+        categories = JobCategory.objects.filter(user=user).order_by('-id')
+>>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
     else:  # Other users (e.g. job seekers) → no access
         return Response(
             {"error": "You do not have permission to view categories."},
@@ -46,8 +50,6 @@ class IsAdminOrEmployer(BasePermission):
 
 
     
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_create_api(request):
@@ -67,10 +69,16 @@ def jobcategory_detail_api(request, pk):
     if user.is_staff:  # Admin
         category = get_object_or_404(JobCategory, pk=pk)
     else:  # Employer
+<<<<<<< HEAD
         category = get_object_or_404(JobCategory, pk=pk)
+=======
+        category = get_object_or_404(JobCategory, pk=pk, user=user)
+>>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
 
     serializer = JobCategorySerializer(category)
     return Response(serializer.data)
+
+
 
 
 
@@ -82,7 +90,11 @@ def jobcategory_update_api(request, pk):
     if user.is_staff:
         category = get_object_or_404(JobCategory, pk=pk)
     else:
+<<<<<<< HEAD
         category = get_object_or_404(JobCategory, pk=pk)
+=======
+        category = get_object_or_404(JobCategory, pk=pk, user=user)
+>>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
 
     serializer = JobCategorySerializer(category, data=request.data, partial=True)
     if serializer.is_valid():
@@ -100,7 +112,11 @@ def jobcategory_delete_api(request, pk):
     if user.is_staff:
         category = get_object_or_404(JobCategory, pk=pk)
     else:
+<<<<<<< HEAD
         category = get_object_or_404(JobCategory, pk=pk)
+=======
+        category = get_object_or_404(JobCategory, pk=pk,user=user)
+>>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
     category.delete()
     return Response({'message': 'Category deleted'}, status=status.HTTP_204_NO_CONTENT)
 
@@ -110,9 +126,17 @@ def jobcategory_delete_api(request, pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def jobs_list_api(request):
-    jobs = Jobs.objects.all().order_by('-id')  # နောက်ဆုံး create လုပ်ထားတာပထမ ထွက်
+    user = request.user
+    
+    if user.is_staff:  
+        # Admin → All jobs
+        jobs = Jobs.objects.all().order_by('-id')
+    else:  
+        # Employer → Only their own jobs
+        jobs = Jobs.objects.filter(employer__user=user).order_by('-id')
+    
     serializer = JobsSerializer(jobs, many=True)
-    return Response(serializer.data, status=200)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 # jobs create
@@ -138,6 +162,7 @@ def jobs_create_api(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def jobs_detail_api(request, pk):
+    # Get job object
     try:
         job = Jobs.objects.get(pk=pk)
     except Jobs.DoesNotExist:
@@ -148,25 +173,24 @@ def jobs_detail_api(request, pk):
 
     user = request.user
 
-    if user.is_staff:
-        # Admin → အားလုံးကို ကြည့်နိုင်မယ်
+    # Role-based access control
+    if user.is_staff:  
+        # Admin → All jobs view allowed
         serializer = JobsSerializer(job)
         return Response(serializer.data)
 
-    elif job.employer.user == user:
-        # Employer → သူတင်ထားတဲ့ job ကိုပဲ ကြည့်နိုင်မယ်
+    elif hasattr(user, "employerprofile") and job.employer.user == user:
+        # Employer → Only own jobs view allowed
         serializer = JobsSerializer(job)
         return Response(serializer.data)
 
     else:
-        # Jobseeker → အားလုံး job ကြည့်နိုင်မယ်
-        serializer = JobsSerializer(job)
-        return Response(serializer.data)
-
-
-
-
-
+        # Other users / jobseekers → Access forbidden
+        return Response(
+            {"error": "You do not have permission to view this job."},
+            status=status.HTTP_403_FORBIDDEN
+        )
+    
 
 # Job Update (PUT/PATCH)
 @api_view(['PUT', 'PATCH'])

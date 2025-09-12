@@ -1,6 +1,7 @@
 from django.db import models
 from django.db import models
 from EmployerProfile.models import EmployerProfile
+from Accounts.models import CustomUser
 import uuid
 
 
@@ -14,6 +15,10 @@ class JobCategory(models.Model):
     name = models.CharField(max_length=100, unique=True)
     created_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
     updated_at = models.DateTimeField(auto_now=True,blank=True,null=True)
+<<<<<<< HEAD
+=======
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE,blank=True,null=True)
+>>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
 
     def __str__(self):
         return self.name

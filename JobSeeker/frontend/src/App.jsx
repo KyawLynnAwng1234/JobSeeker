@@ -14,7 +14,7 @@ import EmployerCompanyDetail from "./pages/employer/EmployerCompanyDetail";
 
 // Test Page
 import RateLimitTest from "./pages/RateLimitTest";
-import RateLimitDemo from "./pages/RateLimitDemo";
+// import RateLimitDemo from "./pages/RateLimitDemo";
 
 // Employer Layout & Pages
 import EmployerDashboardLayout from "./pages/employer/dashboard/EmployerDashboard";
@@ -35,6 +35,11 @@ import { AuthProvider } from "./context/AuthContext";
 import { EmployerAuthProvider } from "./context/EmployerAuthContext";
 
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
 function App() {
   return (
     // ✅ Wrap whole app with AuthProvider
