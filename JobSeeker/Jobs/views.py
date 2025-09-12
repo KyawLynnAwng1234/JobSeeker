@@ -24,11 +24,7 @@ def jobcategory_list_api(request):
     if user.is_staff:  # Admin
         categories = JobCategory.objects.all().order_by('-id')
     elif hasattr(user, "role") and user.role == "employer":  # Employer
-<<<<<<< HEAD
-        categories = JobCategory.objects.all().order_by('-id')
-=======
         categories = JobCategory.objects.filter(user=user).order_by('-id')
->>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
     else:  # Other users (e.g. job seekers) → no access
         return Response(
             {"error": "You do not have permission to view categories."},
@@ -53,10 +49,11 @@ class IsAdminOrEmployer(BasePermission):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsAdminOrEmployer])
 def jobcategory_create_api(request):
+    user=request.user
     serializer = JobCategorySerializer(data=request.data)
     if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+       serializer.save(user=request.user)
+       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
 
 
@@ -69,11 +66,9 @@ def jobcategory_detail_api(request, pk):
     if user.is_staff:  # Admin
         category = get_object_or_404(JobCategory, pk=pk)
     else:  # Employer
-<<<<<<< HEAD
-        category = get_object_or_404(JobCategory, pk=pk)
-=======
+
         category = get_object_or_404(JobCategory, pk=pk, user=user)
->>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
+
 
     serializer = JobCategorySerializer(category)
     return Response(serializer.data)
@@ -90,13 +85,8 @@ def jobcategory_update_api(request, pk):
     if user.is_staff:
         category = get_object_or_404(JobCategory, pk=pk)
     else:
-<<<<<<< HEAD
-        category = get_object_or_404(JobCategory, pk=pk)
-=======
         category = get_object_or_404(JobCategory, pk=pk, user=user)
->>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
-
-    serializer = JobCategorySerializer(category, data=request.data, partial=True)
+        serializer = JobCategorySerializer(category, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
@@ -112,12 +102,8 @@ def jobcategory_delete_api(request, pk):
     if user.is_staff:
         category = get_object_or_404(JobCategory, pk=pk)
     else:
-<<<<<<< HEAD
-        category = get_object_or_404(JobCategory, pk=pk)
-=======
         category = get_object_or_404(JobCategory, pk=pk,user=user)
->>>>>>> 645e765f9c17bdd6d2eb2717c19a4b3584d2e448
-    category.delete()
+        category.delete()
     return Response({'message': 'Category deleted'}, status=status.HTTP_204_NO_CONTENT)
 
 

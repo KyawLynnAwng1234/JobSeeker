@@ -11,6 +11,7 @@ export default function JobCategoryListPage() {
   const fetchCategories = async () => {
     try {
       const res = await axios.get("http://127.0.0.1:8000/job/job-categories/");
+      console.log(res.data);
       setCategories(res.data);
     } catch (err) {
       console.error("Error fetching categories:", err);
