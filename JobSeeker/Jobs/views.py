@@ -67,7 +67,7 @@ def jobcategory_detail_api(request, pk):
     if user.is_staff:  # Admin
         category = get_object_or_404(JobCategory, pk=pk)
     else:  # Employer
-        category = get_object_or_404(JobCategory, pk=pk, created_at=user)
+        category = get_object_or_404(JobCategory, pk=pk)
 
     serializer = JobCategorySerializer(category)
     return Response(serializer.data)
@@ -82,7 +82,7 @@ def jobcategory_update_api(request, pk):
     if user.is_staff:
         category = get_object_or_404(JobCategory, pk=pk)
     else:
-        category = get_object_or_404(JobCategory, pk=pk, created_at=user)
+        category = get_object_or_404(JobCategory, pk=pk)
 
     serializer = JobCategorySerializer(category, data=request.data, partial=True)
     if serializer.is_valid():
@@ -100,7 +100,7 @@ def jobcategory_delete_api(request, pk):
     if user.is_staff:
         category = get_object_or_404(JobCategory, pk=pk)
     else:
-        category = get_object_or_404(JobCategory, pk=pk, created_at=user)
+        category = get_object_or_404(JobCategory, pk=pk)
     category.delete()
     return Response({'message': 'Category deleted'}, status=status.HTTP_204_NO_CONTENT)
 

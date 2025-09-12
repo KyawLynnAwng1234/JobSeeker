@@ -6,6 +6,7 @@ import {
   JOB_DETAIL,
   JOB_UPDATE,
   JOB_DELETE,
+  JOB_CATEGORIES,
 } from "../constants/apiJobendpoints";
 
 export const getCsrfToken = () => {
@@ -48,3 +49,7 @@ export const deleteJob = (id) =>
     },
     withCredentials: true,
   });
+
+// Get all job categories
+export const getCategories = () =>
+  api.get(JOB_CATEGORIES, { withCredentials: true });

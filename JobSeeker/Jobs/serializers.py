@@ -12,13 +12,17 @@ class JobCategorySerializer(serializers.ModelSerializer):
     
 class JobsSerializer(serializers.ModelSerializer):
     employer = serializers.CharField(source='employer.business_name', read_only=True)
-    category = serializers.CharField(source='category.name', read_only=True)
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=JobCategory.objects.all()
+    )
+    category_name = serializers.CharField(source='category.name', read_only=True)
 
     class Meta:
         model = Jobs
-        fields = "__all__"
+        fields = '__all__'
         read_only_fields = ['employer']
 
+    
     
 
 

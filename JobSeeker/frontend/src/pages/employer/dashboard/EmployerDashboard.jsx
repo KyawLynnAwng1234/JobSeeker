@@ -1,12 +1,21 @@
 import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { Briefcase, FileText, User, Settings, LogOut, LayoutGrid } from "lucide-react";
+import {
+  Briefcase,
+  FileText,
+  Plus,
+  User,
+  Settings,
+  LogOut,
+  LayoutGrid,
+} from "lucide-react";
 import { useEmployerAuth } from "../../../hooks/useEmployerAuth";
 
 export const sidebarItems = [
   { route: "dashboard", label: "Dashboard", icon: Briefcase },
-  { route: "category", label: "Category", icon: LayoutGrid },
-  { route: "my-jobs", label: "My Job", icon: FileText },
+  { route: "job-category", label: "Job Category", icon: LayoutGrid },
+  { route: "my-jobs", label: "Jobs List", icon: FileText },
+  { route: "job-create", label: "Jobs Create", icon: Plus },
   {
     route: "applications",
     label: "Job Application",
