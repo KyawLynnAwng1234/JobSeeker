@@ -72,6 +72,8 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Custom Middleware
     'JobSeeker.middleware.RateLimitMiddleware',
 ]
 
