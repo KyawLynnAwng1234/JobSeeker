@@ -54,8 +54,8 @@ export default function Overview() {
             icon: <CheckCircle />,
           },
           {
-            title: "Active Jobs",
-            value: res.data.expried_jobs,
+            title: "Expried Jobs",
+            value: res.data.expired_jobs,
             icon: <AlertTriangle />,
           },
         ]);

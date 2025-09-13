@@ -1,29 +1,29 @@
-.env
-Python
+# Python
 pycache/
 *.py[cod]
 *.pyo
-*.pyd
-*.so
-*.egg-info/
-.eggs/
-.dist/
-.build/
-.pytest_cache/
-.mypy_cache/
 
-Django
-.sqlite3
-media/
+# Django
+db.sqlite3
+/media/
 staticfiles/
+*.sqlite3
 
-Env & IDE
+# Env / secrets
 .env
-.env.
-.vscode/
-.idea/
+*.env
 
-.db.sqlite3
+# Node (if present)
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
 
 
 
