@@ -14,6 +14,11 @@ class SaveJob(models.Model):
 
 
 class Application(models.Model):
+    STATUS_CHOICES = [
+        ('P', 'Pending'),
+        ('AC', 'Accept'),
+        ('RJ', 'Reject'),
+    ]
     id = models.UUIDField(
         primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
         default=uuid.uuid4,    # Auto-generate UUID v4
@@ -22,7 +27,12 @@ class Application(models.Model):
     job_seeker_profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE,null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE, null=True, blank=True)
     resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True, blank=True)
-    applied_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
-    status = models.CharField(max_length=50, default="pending",null=True, blank=True)
+    status = models.CharField(max_length=50, choices=STATUS_CHOICES,default='P',null=True, blank=True)
     cover_letter_text = models.TextField(null=True, blank=True)
+    applied_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
+
+    def __str__(self):
+        return self.cover_letter_text
+
 

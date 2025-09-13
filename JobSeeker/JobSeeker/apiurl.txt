@@ -11,6 +11,9 @@ http://127.0.0.1:8000/accounts-employer/employer/preregister/
 http://127.0.0.1:8000/accounts-employer/employer/register/
 http://127.0.0.1:8000/accounts-employer/employer/login/
 http://127.0.0.1:8000/accounts-employer/employer/dashboard/
+http://127.0.0.1:8000/accounts-employer/employer/profile/
+http://127.0.0.1:8000/accounts-employer/employer/profile-update/607cfebb-426d-469d-a6fc-14de52381343/
+
 
 
 

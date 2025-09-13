@@ -11,7 +11,6 @@ urlpatterns = [
     path('accounts-jobseeker/',include('JobSeekerProfile.urls')),
     path('accounts-employer/',include('EmployerProfile.urls')),
     path('job/',include('Jobs.urls')),
-    path('notifications/',include('Notification.urls')),
 
     #allauth and dj-rest-auth
     path("auth/", include("dj_rest_auth.urls")),
@@ -27,5 +26,5 @@ if settings.DEBUG:
 
 #frontend
 urlpatterns += [
-    re_path(r'^(?:.*)/?$', views.frontend)
+    re_path(r'^(?!media/|static/).*$', views.frontend),
 ]

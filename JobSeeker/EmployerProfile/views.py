@@ -1,4 +1,4 @@
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.decorators import api_view,permission_classes,parser_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,9 +11,13 @@ from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth import login,logout,authenticate
 from django.db import IntegrityError
 from django_ratelimit.decorators import ratelimit
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import JSONParser,MultiPartParser, FormParser
+from django.utils import timezone
+from django.db.models import Q
 
 #serializers
-from .serializers import EmployerRegisterSerializer, EmployerPreRegisterSerializer
+from .serializers import *
 from .serializers import EmployerPreRegisterSerializer
 
 #models
@@ -187,17 +191,63 @@ def resend_verification_api(request):
 
 #dashboard
 @api_view(['GET'])
-def employer_dashboard(request):
-    if request.user.is_authenticated and request.user.role == "employer":
-        total_jobs=Jobs.objects.all().count()
-        total_applications=Application.objects.all().count()
-        return Response({
-        "message":"this is employer_dashboard",
-        "total_jobs":total_jobs,
-        "total_applications":total_applications
+@permission_classes([IsAuthenticated])
+def dashboard_api(request):
+    today=timezone.localdate()
+    user=request.user
+    total_jobs=Jobs.objects.filter(employer__user=user).count()
+    total_applications=Application.objects.filter(job__employer__user=user).count()
+    active_jobs=Jobs.objects.filter(Q(employer__user=user)&Q(deadline__gte=today) | Q(deadline__isnull=True)).count()
+    expired_jobs=Jobs.objects.filter(Q(employer__user=user)&Q(deadline__lt=today)).count()
+    # data=JobsSerializer(expired_jobs,many=True).data
+    
+
+    return Response({
+        'total_jobs':total_jobs,
+        'total_applications':total_applications,
+        'active_jobs':active_jobs,
+        # 'expired_jobs_count':expired_jobs_count
+        'expired_jobs':expired_jobs
+
         })
-    else:
-        return Response({
-            "Message":" Sorry,You have no permision here"
-        })
+        
+#end dashboard
+    
+
+#employer profile
+@api_view(['GET'])
+def employer_profile_api(request):
+    user=request.user
+    employer_profile=EmployerProfile.objects.filter(user=user)
+    employer_profile=EmployerProfileSerializer(employer_profile,many=True).data
+
+    return Response({
+        "employer_profile":employer_profile
+    })
+#end employer profile
+
+@api_view(["GET", "PATCH", "PUT"])
+@permission_classes([IsAuthenticated])
+@parser_classes([JSONParser, MultiPartParser, FormParser])  # accept JSON and multipart
+def update_employer_profile_api(request, pk):
+    try:
+        profile = EmployerProfile.objects.get(id=pk, user=request.user)
+    except EmployerProfile.DoesNotExist:
+        return Response({"error": "Employer profile not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        return Response(EmployerProfileSerializer(profile).data, status=status.HTTP_200_OK)
+    # PUT = full update, PATCH = partial
+    partial = request.method == "PATCH"
+    serializer = EmployerProfileSerializer(instance=profile, data=request.data, partial=partial)
+    if not serializer.is_valid():
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Debug: see exactly what will be written
+    serializer.save()              # persist
+    profile.refresh_from_db()      # verify it actually wrote to DB
+
+    return Response({
+        "message": "Employer profile updated successfully.",
+        "employer_profile": EmployerProfileSerializer(profile).data
+    }, status=status.HTTP_200_OK)
 

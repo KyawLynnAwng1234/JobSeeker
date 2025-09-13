@@ -14,9 +14,14 @@ urlpatterns = [
     # # # jobs urls
     path('jobs/', views.jobs_list_api, name='jobs-list'),
     path('jobs/create/', views.jobs_create_api, name='job-create'),
+
+    #dashboard
+    # path('dashboard/', views.dashboard_api, name='dashboard'),
+
     path('jobs/detail/<uuid:pk>/', views.jobs_detail_api, name='job-detail'),
     path('jobs/update/<uuid:pk>/', views.jobs_update_api, name='job-update'),
     path('jobs/delete/<uuid:pk>/', views.jobs_delete_api, name='job-delete'),
+
 
 ]
 

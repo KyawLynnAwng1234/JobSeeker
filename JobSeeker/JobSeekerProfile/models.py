@@ -14,6 +14,8 @@ class JobseekerProfile(models.Model):
     address = models.CharField(max_length=255, blank=True)
     profile_picture = models.ImageField(upload_to="profiles/", blank=True, null=True)
     bio = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
     def __str__(self):
         return self.full_name
@@ -31,6 +33,8 @@ class Resume(models.Model):
     file_type = models.CharField(max_length=20)
     is_default = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
 
 class Education(models.Model):
@@ -45,6 +49,8 @@ class Education(models.Model):
     field_of_study = models.CharField(max_length=100)
     start_year = models.IntegerField()
     end_year = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
 
 class Experience(models.Model):
@@ -59,6 +65,8 @@ class Experience(models.Model):
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
 
 class Language(models.Model):
@@ -70,6 +78,8 @@ class Language(models.Model):
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     proficiency = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
 
 class Skill(models.Model):
@@ -81,4 +91,6 @@ class Skill(models.Model):
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     proficiency = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
