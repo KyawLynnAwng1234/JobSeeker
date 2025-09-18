@@ -1,0 +1,28 @@
+{
+  "index.html": {
+    "file": "assets/index-DJmEHhfP.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "css": [
+      "assets/index-CIZRqBha.css"
+    ],
+    "assets": [
+      "assets/logotwo-exDaVGaC.png",
+      "assets/ajax-loader-BcnMEykj.gif",
+      "assets/slick-BlzDm7g2.svg"
+    ]
+  },
+  "node_modules/slick-carousel/slick/ajax-loader.gif": {
+    "file": "assets/ajax-loader-BcnMEykj.gif",
+    "src": "node_modules/slick-carousel/slick/ajax-loader.gif"
+  },
+  "node_modules/slick-carousel/slick/fonts/slick.svg": {
+    "file": "assets/slick-BlzDm7g2.svg",
+    "src": "node_modules/slick-carousel/slick/fonts/slick.svg"
+  },
+  "src/assets/images/logotwo.png": {
+    "file": "assets/logotwo-exDaVGaC.png",
+    "src": "src/assets/images/logotwo.png"
+  }
+}

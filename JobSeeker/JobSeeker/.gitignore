@@ -1,29 +1,39 @@
+# Environment
 .env
-Python
-pycache/
+*.env
+
+# Python cache
+__pycache__/
 *.py[cod]
 *.pyo
 *.pyd
 *.so
+
+# Build / packaging
 *.egg-info/
 .eggs/
-.dist/
-.build/
-.pytest_cache/
-.mypy_cache/
+dist/
+build/
 
-Django
-.sqlite3
-media/
-staticfiles/
+# Django
+db.sqlite3
+*.sqlite3
+/media/
+/staticfiles/
+/pytest_cache/
+/mypy_cache/
 
-Env & IDE
-.env
-.env.
+# Node (React / Vite)
+node_modules/
+dist-ssr/
+*.local
+
+# IDE / OS
 .vscode/
 .idea/
+.DS_Store
+Thumbs.db
 
-.db.sqlite3
 
 
 

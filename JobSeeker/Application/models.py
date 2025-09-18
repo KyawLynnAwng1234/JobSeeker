@@ -1,5 +1,5 @@
 from django.db import models
-from JobSeekerProfile.models import JobseekerProfile, Resume
+from JobSeekerProfile.models import JobseekerProfile,Resume
 from Jobs.models import Jobs
 import uuid
 
