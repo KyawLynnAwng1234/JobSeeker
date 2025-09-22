@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Notification
@@ -9,59 +9,94 @@ from Application.models import *
 from Jobs.models import *
 from .serializers import NotificationSerializer
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def create_sample_notifications(request):
-    try:
-        # Example objects
-        job = Jobs.objects.first()
-        application = Application.objects.first()
-
-        if not job or not application:
-            return Response({"error": "No job or Application found"}, status=404)
-
-        # Create notification for a Job
-        Notification.objects.create(
-            user=job.employer.user,
-            message="New job created!",
-            type="job_created",
-            content_type=ContentType.objects.get_for_model(Jobs),
-            object_id=job.id
-        )
-
-        # Create notification for an Employer
-        Notification.objects.create(
-            user=application.profile.user,
-            message="New Application Here",
-            type="Application Notification",
-            content_type=ContentType.objects.get_for_model(Application),
-            object_id=application.id
-        )
-
-        return Response({"success": True, "message": "Notifications created"})
-    
-    except Exception as e:
-        return Response({"error": str(e)}, status=500)
-
-
-# # notifications list
+# application notifications list
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def notification_list_api(request):
+def application_notification_list(request):
     """
-    Login user ရဲ့ notification list ပြရန်
+    Login user ရဲ့ jobs notification list ပြရန်
     """
     user = request.user
-    notifications = Notification.objects.filter(user=user).order_by('-created_at')
-    serializer = NotificationSerializer(notifications, many=True)
-    
-    unread_count = notifications.filter(is_read=False).count()
-    
+    ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
+
+    # Base queryset (all application notifications for this user)
+    base_qs = (
+        Notification.objects
+        .filter(user=user, content_type=ct_app)
+        .select_related('content_type')
+        .order_by('-created_at')
+    )
+
+    # Counts (cheap + consistent)
+    total_count = base_qs.count()
+    read_count = base_qs.filter(is_read=True).count()
+    unread_count = total_count - read_count
+
+    # Split lists
+    read_notifications = base_qs.filter(is_read=True)
+    unread_notifications = base_qs.filter(is_read=False)
+
+    # Serialize separately (DON’T pass two querysets to one serializer)
+    all_ser = NotificationSerializer(base_qs, many=True, context={'request': request})
+    read_ser = NotificationSerializer(read_notifications, many=True, context={'request': request})
+    unread_ser = NotificationSerializer(unread_notifications, many=True, context={'request': request})
+
     return Response({
-        "notifications": serializer.data,
-        "unread_count": unread_count
+        "counts": {
+            "total": total_count,
+            "read": read_count,
+            "unread": unread_count,
+        },
+
+        "all_list": all_ser.data,
+        "read_list": read_ser.data,
+        "unread_list": unread_ser.data,
     })
+
+#delete application notification read list
+@api_view(["DELETE"])  # allow API DELETE and admin POST form
+@permission_classes([IsAuthenticated])
+def application_notification_delete(request,pk):
+        """
+        Login user ရဲ့ read notification တွေကို delete လုပ်ရန်
+        """
+        user = request.user
+        ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
+        # Queryset of read application notifications for this user
+        read_qs = (
+            Notification.objects
+            .filter(user=user,content_type=ct_app, pk=pk)
+        )
+        deleted_count, _ = read_qs.delete()
+        return Response({
+             "message": f"{deleted_count} read notifications deleted.",
+             
+             }, status=204)
+
+
+#job notification list api
+@api_view(['GET'])  
+@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
+def job_notifications_list(request):
+    """
+    Admin: list ONLY Job-related notifications (site-wide).
+    """
+    ct_jobs = ContentType.objects.get_for_model(Jobs, for_concrete_model=False)
+    qs = (Notification.objects
+          .filter(content_type=ct_jobs)
+        #   .select_related('content_type')
+          .order_by('-created_at'))
+    serializer = NotificationSerializer(qs, many=True)
+    return Response(serializer.data)
+
+    
+    
+   
+    
+    
 
 
 # # notifications create

@@ -209,7 +209,6 @@ def dashboard_api(request):
         'expired_jobs':expired_jobs
 
         })
-        
 #end dashboard
     
 
