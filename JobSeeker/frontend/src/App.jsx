@@ -3,14 +3,31 @@ import { Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/homepage/Home";
 
+import JobSearch from "./pages/jobsearch/JobSearch";
+import JobSearchAll from "./pages/jobsearch/JobSearchAll";
+import JobSearchDetail from "./pages/jobsearch/JobSearchDetail";
+
+import Profile from "./pages/profile/Profile";
+
+import Companies from "./pages/companies/Companies";
+import CompanyAbout from "./pages/companies/CompanyAbout";
+
 // Auth JobSeeker
 import SignIn from "./pages/jobseeker/SignIn";
 import VerifyOTP from "./pages/jobseeker/VerifyOTP";
+
+// ProfileMe for user
+import ProfileMe from "./pages/profile/ProfileMe";
 
 // Auth Employer
 import EmployerSignIn from "./pages/employer/EmployerSignIn";
 import EmployerRegister from "./pages/employer/EmployerRegister";
 import EmployerCompanyDetail from "./pages/employer/EmployerCompanyDetail";
+
+// Test Page
+// import RateLimitTest from "./pages/RateLimitTest";
+// import RateLimitDemo from "./pages/RateLimitDemo";
+
 // Employer Layout & Pages
 import EmployerDashboardLayout from "./pages/employer/dashboard/EmployerDashboard";
 import Overview from "./pages/employer/dashboard/OverView";
@@ -29,6 +46,10 @@ import JobCategoryDetailPage from "./pages/employer/job-categories-page/JobCateg
 import { AuthProvider } from "./context/AuthContext";
 import { EmployerAuthProvider } from "./context/EmployerAuthContext";
 
+// ProtectedRoute
+import ProtectedRoute from "./components/ProtectedRoute";
+
+
 function App() {
   return (
     // ✅ Wrap whole app with AuthProvider
@@ -39,6 +60,27 @@ function App() {
           <Route path="/" element={<MainLayout />}>
             {/* Home */}
             <Route index element={<Home />} />
+
+            <Route path="job-search" element={<JobSearch />} />
+            <Route path="job-search/:id" element={<JobSearch />} />
+            <Route path="job-search/:id/detail" element={<JobSearch />} />
+            <Route path="job-search/all" element={<JobSearchAll />} />
+            <Route path="job-search/detail" element={<JobSearchDetail />} />
+
+            <Route path="profile" element={<Profile />} />
+
+            <Route path="companies" element={<Companies />} />
+            <Route path="companies/about" element={<CompanyAbout />} />
+            <Route path="companies/about/available-jobs" element={<CompanyAbout />} />
+
+            <Route
+              path="profile/me"
+              element={
+                <ProtectedRoute>
+                  <ProfileMe />
+                </ProtectedRoute>
+              }
+            />
           </Route>
 
           {/* Jobseeker Auth */}
@@ -52,8 +94,6 @@ function App() {
             path="employer/company/detail"
             element={<EmployerCompanyDetail />}
           />
-          
-    
 
           {/* Employer Auth */}
           <Route
@@ -70,10 +110,18 @@ function App() {
 
             {/* job-category */}
             <Route path="job-category" element={<JobCategoryListPage />} />
-            <Route path="job-category/create" element={<JobCategoryCreatePage />} />
-            <Route path="job-categories/:id/edit" element={<JobCategoryEditPage />} />
-            <Route path="job-categories/:id" element={<JobCategoryDetailPage />} />
-
+            <Route
+              path="job-category/create"
+              element={<JobCategoryCreatePage />}
+            />
+            <Route
+              path="job-categories/:id/edit"
+              element={<JobCategoryEditPage />}
+            />
+            <Route
+              path="job-categories/:id"
+              element={<JobCategoryDetailPage />}
+            />
           </Route>
         </Routes>
       </EmployerAuthProvider>
