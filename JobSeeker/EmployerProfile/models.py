@@ -13,8 +13,13 @@ class EmployerProfile(models.Model):
     last_name = models.CharField(max_length=100)
     business_name = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
+    phone = models.CharField(max_length=50, blank=True,null=True)
+    size = models.CharField(max_length=50, blank=True,null=True)
+    website = models.URLField(blank=True,null=True)
+    industry = models.CharField(max_length=200, blank=True,null=True)
 
-    logo = models.ImageField(upload_to="upload_to_logo",default="default.png", null=True, blank=True)
+
+    logo = models.ImageField(upload_to="upload_to_logo",default="logo.png", null=True, blank=True)
     founded_year = models.PositiveIntegerField(blank=True, null=True)
     contact_email = models.EmailField(blank=True)
     def __str__(self):

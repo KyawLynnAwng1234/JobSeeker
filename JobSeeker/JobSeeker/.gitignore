@@ -1,29 +1,39 @@
-# Python
-pycache/
+
+
+
+# Python cache
+__pycache__/
 *.py[cod]
 *.pyo
+*.pyd
+*.so
+
+# Build / packaging
+*.egg-info/
+.eggs/
+dist/
+build/
 
 # Django
 db.sqlite3
-/media/
-staticfiles/
 *.sqlite3
+/media/
+/staticfiles/
+/pytest_cache/
+/mypy_cache/
 
-# Env / secrets
-.env
-*.env
-
-# Node (if present)
+# Node (React / Vite)
 node_modules/
-dist/
 dist-ssr/
 *.local
 
-# Editor
-.vscode/*
-!.vscode/extensions.json
-.idea
+# IDE / OS
+.vscode/
+.idea/
 .DS_Store
+Thumbs.db
+
+
 
 
 

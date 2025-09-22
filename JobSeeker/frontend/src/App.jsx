@@ -4,6 +4,8 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/homepage/Home";
 
 import JobSearch from "./pages/jobsearch/JobSearch";
+import JobSearchAll from "./pages/jobsearch/JobSearchAll";
+import JobSearchDetail from "./pages/jobsearch/JobSearchDetail";
 
 import Profile from "./pages/profile/Profile";
 
@@ -62,6 +64,8 @@ function App() {
             <Route path="job-search" element={<JobSearch />} />
             <Route path="job-search/:id" element={<JobSearch />} />
             <Route path="job-search/:id/detail" element={<JobSearch />} />
+            <Route path="job-search/all" element={<JobSearchAll />} />
+            <Route path="job-search/detail" element={<JobSearchDetail />} />
 
             <Route path="profile" element={<Profile />} />
 

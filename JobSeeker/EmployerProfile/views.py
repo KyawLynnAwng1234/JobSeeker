@@ -201,7 +201,6 @@ def dashboard_api(request):
     expired_jobs=Jobs.objects.filter(Q(employer__user=user)&Q(deadline__lt=today)).count()
     # data=JobsSerializer(expired_jobs,many=True).data
     
-
     return Response({
         'total_jobs':total_jobs,
         'total_applications':total_applications,
@@ -215,39 +214,56 @@ def dashboard_api(request):
     
 
 #employer profile
-@api_view(['GET'])
+@api_view(["GET", "PUT", "PATCH"])
+@permission_classes([IsAuthenticated])
 def employer_profile_api(request):
     user=request.user
     employer_profile=EmployerProfile.objects.filter(user=user)
+    for emp_profile in employer_profile:
+        print(emp_profile.first_name,emp_profile.last_name,emp_profile.business_name,emp_profile.city,emp_profile.logo,emp_profile.phone,emp_profile.size,emp_profile.website,emp_profile.industry  )
     employer_profile=EmployerProfileSerializer(employer_profile,many=True).data
 
     return Response({
         "employer_profile":employer_profile
     })
+
 #end employer profile
 
+#start update employer profile
 @api_view(["GET", "PATCH", "PUT"])
 @permission_classes([IsAuthenticated])
-@parser_classes([JSONParser, MultiPartParser, FormParser])  # accept JSON and multipart
+@parser_classes([JSONParser, MultiPartParser, FormParser])
 def update_employer_profile_api(request, pk):
     try:
         profile = EmployerProfile.objects.get(id=pk, user=request.user)
     except EmployerProfile.DoesNotExist:
-        return Response({"error": "Employer profile not found."}, status=status.HTTP_404_NOT_FOUND)
-
+        return Response(
+            {"error": "Employer profile not found."},
+            status=status.HTTP_404_NOT_FOUND
+        )
     if request.method == "GET":
-        return Response(EmployerProfileSerializer(profile).data, status=status.HTTP_200_OK)
-    # PUT = full update, PATCH = partial
+        serializer = EmployerProfileSerializer(profile)   # normal read serializer
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    # For PUT/PATCH
     partial = request.method == "PATCH"
-    serializer = EmployerProfileSerializer(instance=profile, data=request.data, partial=partial)
-    if not serializer.is_valid():
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    # Debug: see exactly what will be written
-    serializer.save()              # persist
-    profile.refresh_from_db()      # verify it actually wrote to DB
+    serializer = EmployerUpdateProfileSerializer(   # use update serializer here
+        instance=profile,
+        data=request.data,
+        partial=partial
+    )
+    if serializer.is_valid():
+        employer=serializer.save()
+        profile.refresh_from_db()  # reload to be sure
+        return Response(
+            {
+                "message": "Employer profile updated successfully.",
+                "employer_profile": EmployerProfileSerializer(profile).data  # return with read serializer
+            },
+            status=status.HTTP_200_OK
+        )
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#end update employer profile
 
-    return Response({
-        "message": "Employer profile updated successfully.",
-        "employer_profile": EmployerProfileSerializer(profile).data
-    }, status=status.HTTP_200_OK)
+
 
