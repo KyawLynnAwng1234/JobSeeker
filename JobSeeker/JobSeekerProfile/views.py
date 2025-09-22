@@ -60,6 +60,7 @@ def signin_jobseeker_api(request, role):
 
     # ✅ Save to session with timestamp
     request.session['verification_code'] = code
+    print(request.session['verification_code'])
     request.session['email'] = email
     request.session['user_id'] = str(user.id)
     request.session['otp_created_at'] = timezone.now().isoformat()
@@ -83,6 +84,7 @@ def otp_verify_jobseeker_api(request):
     
     input_code = request.data.get('code')
     code = request.session.get('verification_code')
+    
     user_id = request.session.get('user_id')
 
     if input_code ==code and user_id:

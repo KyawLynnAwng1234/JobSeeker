@@ -1,39 +1,26 @@
-# Environment
-.env
-*.env
-
-# Python cache
-__pycache__/
+ Python
+pycache/
 *.py[cod]
 *.pyo
-*.pyd
-*.so
-
-# Build / packaging
-*.egg-info/
-.eggs/
-dist/
-build/
 
 # Django
 db.sqlite3
-*.sqlite3
 /media/
-/staticfiles/
-/pytest_cache/
-/mypy_cache/
+staticfiles/
+*.sqlite3
 
-# Node (React / Vite)
+# Env / secrets
+.env
+*.env
+
+# Node (if present)
 node_modules/
+dist/
 dist-ssr/
 *.local
 
-# IDE / OS
-.vscode/
-.idea/
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
-
-
-
-
