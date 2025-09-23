@@ -36,14 +36,14 @@ export const registerEmployer = async (email, password) => {
 };
 
 // Register employer detail
-export const registerEmployerDetail = async (profile) => {
+export const registerEmployerDetail = async (formData) => {
   const csrftoken = getCookie("csrftoken");
   const response = await axios.post(
     `${API_URL}${EMPLOYER_API.REGISTER_DETAIL}`,
-    { profile },
+    formData,
     {
       headers: {
-        "Content-Type": "application/json",
+        
         "X-CSRFToken": csrftoken,
       },
       withCredentials: true,

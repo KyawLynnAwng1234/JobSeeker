@@ -42,6 +42,9 @@ import JobCategoryCreatePage from "./pages/employer/job-categories-page/JobCateg
 import JobCategoryEditPage from "./pages/employer/job-categories-page/JobCategoryEditPage";
 import JobCategoryDetailPage from "./pages/employer/job-categories-page/JobCategoryDetailPage";
 
+import EmployerProfile from "./pages/employer/profile/EmployerProfile";
+import EmployerProfileEdit from "./pages/employer/profile/EmployerProfileEdit";
+
 // ✅ Auth Context import
 import { AuthProvider } from "./context/AuthContext";
 import { EmployerAuthProvider } from "./context/EmployerAuthContext";
@@ -122,6 +125,9 @@ function App() {
               path="job-categories/:id"
               element={<JobCategoryDetailPage />}
             />
+
+            <Route path="profile" element={<EmployerProfile />} />
+            <Route path="profile/edit" element={<EmployerProfileEdit />} />
           </Route>
         </Routes>
       </EmployerAuthProvider>

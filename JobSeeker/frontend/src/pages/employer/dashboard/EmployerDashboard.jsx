@@ -113,7 +113,7 @@ export default function EmployerDashboardLayout() {
           </div>
         </header>
 
-        <main className="p-6">
+        <main className="">
           {emailNotVerified && (
             <div className="flex justify-between items-center p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4">
               <span>Please verify your email to access the dashboard.</span>
@@ -131,3 +131,4 @@ export default function EmployerDashboardLayout() {
     </div>
   );
 }
+
