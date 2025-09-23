@@ -126,8 +126,10 @@ function App() {
               element={<JobCategoryDetailPage />}
             />
 
+
             <Route path="profile" element={<EmployerProfile />} />
             <Route path="profile/edit" element={<EmployerProfileEdit />} />
+
           </Route>
         </Routes>
       </EmployerAuthProvider>

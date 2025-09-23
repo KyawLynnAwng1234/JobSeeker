@@ -7,7 +7,6 @@ from .models import Jobs
 from Application.models import Application
 from Notification.models import Notification  # adjust if your app name is different
 
-
 # -------- Job created -> notify employer --------
 @receiver(post_save, sender=Jobs)
 def notify_on_job_created(sender, instance, created, **kwargs):
@@ -23,6 +22,8 @@ def notify_on_job_created(sender, instance, created, **kwargs):
         content_type=ContentType.objects.get_for_model(Jobs),
         object_id=instance.id,
     ))
+
+
 
 
 # -------- Application created -> notify employer --------
