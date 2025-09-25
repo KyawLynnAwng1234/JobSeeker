@@ -7,8 +7,10 @@ import {
   Settings,
   LogOut,
   LayoutGrid,
+  Mail,
 } from "lucide-react";
 import { useEmployerAuth } from "../../../hooks/useEmployerAuth";
+import Notification from "./Notification";
 
 export const sidebarItems = [
   { route: "dashboard", label: "Dashboard", icon: Briefcase },
@@ -27,6 +29,19 @@ export default function EmployerDashboardLayout() {
   const { employer, logout, resendEmail, loading } = useEmployerAuth();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, text: "New application received from John Doe", read: false },
+    { id: 2, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 3, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 4, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 5, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 6, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 7, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 8, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 9, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 10, text: "Your job post 'Frontend Dev' was approved", read: false },
+    { id: 11, text: "Password changed successfully", read: true },
+  ]);
 
   if (loading) {
     return (
@@ -37,7 +52,11 @@ export default function EmployerDashboardLayout() {
   }
 
   const emailNotVerified = !employer?.is_verified;
-  console.log(emailNotVerified);
+
+  // ✅ notification အားလုံးကို read ဖြစ်အောင် mark လုပ်တာ
+  const markAllAsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -72,16 +91,30 @@ export default function EmployerDashboardLayout() {
 
       {/* Main Content */}
       <div className="flex-1">
-        <header className="flex justify-between items-center bg-white p-4 shadow-sm">
+        <header className="flex justify-between items-center bg-white p-4 shadow-sm relative">
           <NavLink to="/" className="text-gray-600 hover:text-blue-600">
             Home
           </NavLink>
-          <div className="flex space-x-4">
-            <button>🔔</button>
-            <button>📩</button>
+
+          <div className="flex items-center space-x-4 relative">
+            {/* 🔔 Notification Button */}
+            <Notification
+              notifications={notifications}
+              markAllAsRead={markAllAsRead}
+            />
+
+            {/* 📩 Mail Icon */}
+            <button className="p-2 rounded-full hover:bg-gray-200">
+              <Mail size={20} />
+            </button>
+
+            {/* 👤 User Dropdown */}
             <div className="relative">
               <button
-                onClick={() => setDropdownOpen(!dropdownOpen)}
+                onClick={() => {
+                  setDropdownOpen(!dropdownOpen);
+                  setNotifOpen(false);
+                }}
                 className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded hover:bg-gray-200"
               >
                 <User size={18} />
@@ -131,4 +164,3 @@ export default function EmployerDashboardLayout() {
     </div>
   );
 }
-

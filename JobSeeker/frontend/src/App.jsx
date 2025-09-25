@@ -43,7 +43,7 @@ import JobCategoryEditPage from "./pages/employer/job-categories-page/JobCategor
 import JobCategoryDetailPage from "./pages/employer/job-categories-page/JobCategoryDetailPage";
 
 import EmployerProfile from "./pages/employer/profile/EmployerProfile";
-import EmployerProfileEdit from "./pages/employer/profile/EmployerProfileEdit";
+import EmployerProfileEditPage from "./pages/employer/profile/EmployerProfileEditPage";
 
 // ✅ Auth Context import
 import { AuthProvider } from "./context/AuthContext";
@@ -128,7 +128,7 @@ function App() {
 
 
             <Route path="profile" element={<EmployerProfile />} />
-            <Route path="profile/edit" element={<EmployerProfileEdit />} />
+            <Route path="profile/edit" element={<EmployerProfileEditPage />} />
 
           </Route>
         </Routes>

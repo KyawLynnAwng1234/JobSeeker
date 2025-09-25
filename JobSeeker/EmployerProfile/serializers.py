@@ -18,9 +18,10 @@ class EmployerPreRegisterSerializer(serializers.Serializer):
 
 
 class EmployerProfileSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=True)
     class Meta:
         model = EmployerProfile
-        fields = ["first_name", "last_name", "business_name","logo", "city","phone", "size", "website", "industry", "founded_year", "contact_email",]
+        fields = ["id", "first_name", "last_name", "business_name","logo", "city","phone", "size", "website", "industry", "founded_year", "contact_email",]
 
 class EmployerRegisterSerializer(serializers.Serializer):
     # Only validate profile input
@@ -30,6 +31,7 @@ class EmployerRegisterSerializer(serializers.Serializer):
 class EmployerUpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=EmployerProfile
-        fields=["user","first_name", "last_name", "business_name", "city","logo","phone", "size", "website", "industry", "founded_year", "contact_email",]
+        fields=["first_name", "last_name", "business_name", "city","logo","phone", "size", "website", "industry", "founded_year", "contact_email",]
+        read_only_fields = ["user"]
 
     
