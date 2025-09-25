@@ -1,6 +1,6 @@
 Notifications
 ------------
-
-http://127.0.0.1:8000/notifications/notifications/application/
-http://127.0.0.1:8000/notifications/notifications/applications/read/
-http://127.0.0.1:8000/application/employer/applications/b26fd4b6-9605-4efb-9d4a-b74adf8d531e/
+http://127.0.0.1:8000/notifications/notifications/applications/
+http://127.0.0.1:8000/notifications/notifications/applications/noti-id/mark-read/
+http://127.0.0.1:8000/notifications/notifications/applications/noti-id/mark-unread/
+http://127.0.0.1:8000/notifications/notifications/applications/all-delete/
