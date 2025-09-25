@@ -32,7 +32,6 @@ class Resume(models.Model):
     file_url = models.CharField(max_length=255)
     file_type = models.CharField(max_length=20)
     is_default = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
@@ -88,7 +87,7 @@ class Skill(models.Model):
         default=uuid.uuid4,    # Auto-generate UUID v4
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
-    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE,related_name="skills")
     name = models.CharField(max_length=100)
     proficiency = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)

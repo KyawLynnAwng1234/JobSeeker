@@ -20,15 +20,13 @@ def application_notification_list(request):
     """
     user = request.user
     ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
-
     # Base queryset (all application notifications for this user)
     base_qs = (
         Notification.objects
-        .filter(user=user, content_type=ct_app)
+        .filter(user=request.user,user__role="employer", content_type=ct_app)
         .select_related('content_type')
         .order_by('-created_at')
     )
-
     # Counts (cheap + consistent)
     total_count = base_qs.count()
     read_count = base_qs.filter(is_read=True).count()
@@ -42,18 +40,39 @@ def application_notification_list(request):
     all_ser = NotificationSerializer(base_qs, many=True, context={'request': request})
     read_ser = NotificationSerializer(read_notifications, many=True, context={'request': request})
     unread_ser = NotificationSerializer(unread_notifications, many=True, context={'request': request})
-
     return Response({
         "counts": {
             "total": total_count,
             "read": read_count,
             "unread": unread_count,
         },
-
         "all_list": all_ser.data,
         "read_list": read_ser.data,
         "unread_list": unread_ser.data,
     })
+#end
+
+#notification read list 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def application_notification_mark_read(request,pk):
+    user=request.user
+    noti=Notification.objects.get(user=user,pk=pk)
+    noti.is_read=True
+    noti.save(update_fields=["is_read"])
+    return Response({"detail": f"Notification {pk} marked as read."}, status=status.HTTP_200_OK)
+#end
+
+#notification unread list
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def application_notification_mark_unread(request,pk):
+     user=request.user
+     noti=Notification.objects.get(user=user,pk=pk)
+     noti.is_read=False
+     noti.save(update_fields=["is_read"])
+     return Response({"detail": f"Notification {pk} marked as unread."}, status=status.HTTP_200_OK)
+#end
 
 #delete application notification read list
 @api_view(["DELETE"])  # allow API DELETE and admin POST form
@@ -72,8 +91,26 @@ def application_notification_delete(request,pk):
         deleted_count, _ = read_qs.delete()
         return Response({
              "message": f"{deleted_count} read notifications deleted.",
-             
              }, status=204)
+#end
+
+#all delete application notifications
+@api_view(["DELETE"])  # allow API DELETE and admin POST form
+@permission_classes([IsAuthenticated])
+def application_notification_delete_all(request):
+        """
+        Login user ရဲ့ read notification တွေကို delete လုပ်ရန်
+        """
+        user = request.user
+        ct_app=ContentType.objects.get_for_model(Application,for_concrete_model=False)
+        ap_noti=Notification.objects.filter(content_type=ct_app,user=user)
+        all_noti=Notification.objects.filter(content_type=ct_app,user=user,is_read=True).delete()
+        deleted_count, _ = all_noti
+        
+        return Response({
+             "message": f"{deleted_count}all notifications deleted.",
+             }, status=204)
+#end
 
 
 #job notification list api

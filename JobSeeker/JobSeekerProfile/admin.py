@@ -4,3 +4,5 @@ from .models import *
 # Register your models here.
 admin.site.register(JobseekerProfile)
 admin.site.register(Resume)
+admin.site.register(Skill)
+
