@@ -145,9 +145,9 @@
           <a href="{% url 'admin-notification-detail' n.id %}?status={{ request.GET.status }}&page={{ page_obj.number|default:1 }}"
             class="button">Detail</a>
 
-          <a href="{% url 'admin-notifications-delete' n.id %}" class="deletelink"
+          <a href="{% url 'admin-notifications-delete' n.id %}"
             onclick="return confirm('Are you sure you want to delete this notification?');">
-            Delete
+            Remove
           </a>
 
           {% if not n.is_read %}

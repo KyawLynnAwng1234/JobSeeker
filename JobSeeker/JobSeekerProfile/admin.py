@@ -5,4 +5,8 @@ from .models import *
 admin.site.register(JobseekerProfile)
 admin.site.register(Resume)
 admin.site.register(Skill)
+admin.site.register(Education)
+admin.site.register(Language)
+admin.site.register(Experience)
+
 

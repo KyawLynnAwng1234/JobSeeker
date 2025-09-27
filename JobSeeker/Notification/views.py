@@ -11,6 +11,7 @@ from .serializers import NotificationSerializer
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
+
 # application notifications list
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -63,6 +64,21 @@ def application_notification_mark_read(request,pk):
     return Response({"detail": f"Notification {pk} marked as read."}, status=status.HTTP_200_OK)
 #end
 
+#notificaton all_read list
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def application_notification_mark_all_read(request):
+      user=request.user
+      ct_app=ContentType.objects.get_for_model(Notification,for_concrete_model=False)
+      all_noti=Notification.objects.filter(content_type=ct_app,user=user)
+      all_noti.is_read=True
+      all_noti.save(update_fields=["is_read"])
+      return Response({"detail": f"Notification {all_noti} marked as read."}, status=status.HTTP_200_OK)
+#end
+
+
+      
+
 #notification unread list
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -75,41 +91,74 @@ def application_notification_mark_unread(request,pk):
 #end
 
 #delete application notification read list
-@api_view(["DELETE"])  # allow API DELETE and admin POST form
+@api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
-def application_notification_delete(request,pk):
-        """
-        Login user ရဲ့ read notification တွေကို delete လုပ်ရန်
-        """
-        user = request.user
-        ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
-        # Queryset of read application notifications for this user
-        read_qs = (
-            Notification.objects
-            .filter(user=user,content_type=ct_app, pk=pk)
+def application_notification_delete(request, pk):
+    """
+    Delete a specific Application notification for the logged-in user.
+    Returns a friendly message with the deleted notification's message.
+    """
+    user = request.user
+    ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
+
+    qs = Notification.objects.filter(user=user, content_type=ct_app, pk=pk)
+
+    if not qs.exists():
+        return Response(
+            {"message": "Notification not found."},
+            status=status.HTTP_404_NOT_FOUND,
         )
-        deleted_count, _ = read_qs.delete()
-        return Response({
-             "message": f"{deleted_count} read notifications deleted.",
-             }, status=204)
+
+    # Capture message before delete
+    notif_message = qs.values_list("message", flat=True).first()
+
+    # Delete it
+    qs.delete()
+
+    return Response(
+        {"message": f"'{notif_message}' notification deleted."},
+        status=status.HTTP_200_OK,
+    )
 #end
 
-#all delete application notifications
-@api_view(["DELETE"])  # allow API DELETE and admin POST form
+@api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def application_notification_delete_all(request):
-        """
-        Login user ရဲ့ read notification တွေကို delete လုပ်ရန်
-        """
-        user = request.user
-        ct_app=ContentType.objects.get_for_model(Application,for_concrete_model=False)
-        ap_noti=Notification.objects.filter(content_type=ct_app,user=user)
-        all_noti=Notification.objects.filter(content_type=ct_app,user=user,is_read=True).delete()
-        deleted_count, _ = all_noti
-        
-        return Response({
-             "message": f"{deleted_count}all notifications deleted.",
-             }, status=204)
+    """
+    Delete the logged-in user's Application notifications.
+    Show how many and which ones were deleted.
+    """
+    user = request.user
+    status_param = (request.GET.get("status") or "read").lower()   # read | all | unread
+    ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
+
+    qs = Notification.objects.filter(user=user, content_type=ct_app)
+
+    if status_param == "read":
+        qs = qs.filter(is_read=True)
+    elif status_param == "unread":
+        qs = qs.filter(is_read=False)
+    # status=all → no extra filter
+
+    # Capture before delete
+    deleted_notifications = list(
+        qs.values("message")
+    )
+    deleted_count = len(deleted_notifications)
+
+    # Perform delete
+    qs.delete()
+
+    return Response(
+        {
+            "message": f"Successfully deleted {deleted_count} application notifications.",
+            "status_filter": status_param,
+            "deleted_count": deleted_count,
+            "deleted_items": deleted_notifications,
+        },
+        status=status.HTTP_200_OK,
+    )
+
 #end
 
 
