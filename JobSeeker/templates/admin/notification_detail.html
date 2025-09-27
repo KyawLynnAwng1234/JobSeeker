@@ -132,12 +132,6 @@
         <button type="submit" class="button">Mark read</button>
       </form>
     {% endif %}
-
-    <form method="post" action="{% url 'admin-notifications-delete' notification.id %}{% if back_query %}?{{ back_query }}{% endif %}"
-          onsubmit="return confirm('Delete this notification?');">
-      {% csrf_token %}
-      <button type="submit" class="deletelink">Delete</button>
-    </form>
   </div>
 
 </div>

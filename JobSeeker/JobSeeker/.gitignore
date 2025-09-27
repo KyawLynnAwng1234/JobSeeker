@@ -1,26 +1,27 @@
- Python
-pycache/
-*.py[cod]
+# ---- Python ----
+__pycache__/
+*.pyc
 *.pyo
+*.pyd
 
-# Django
+# ---- Django ----
+# keep migrations in Git! (don't ignore them)
 db.sqlite3
-/media/
-staticfiles/
 *.sqlite3
+media/
+staticfiles/
 
-# Env / secrets
-.env
-*.env
-
-# Node (if present)
+# ---- Node/Vite (frontend) ----
 node_modules/
 dist/
-dist-ssr/
-*.local
+.build/
+.cache/
 
-# Editor
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
+# ---- IDE/Env ----
+.env
+.vscode/
+.idea/
+.pytest_cache/
+.mypy_cache/
+.eggs/
+*.egg-info/
