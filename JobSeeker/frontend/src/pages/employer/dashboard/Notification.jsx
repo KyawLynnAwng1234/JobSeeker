@@ -1,32 +1,42 @@
-import { useState, useEffect, useRef } from "react";
-import { Bell } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Bell, Trash2 } from "lucide-react";
+import { useNotificationAuth } from "../../../hooks/useNotificationAuth";
 
-export default function Notification({ notifications, markAllAsRead }) {
+export default function Notification() {
+  const { notifications, loading, markRead, markUnread, deleteOne, deleteAll } =
+    useNotificationAuth();
   const [open, setOpen] = useState(false);
-  const notifRef = useRef(null); // 👈 dropdown ကိုဖမ်းဖို့
+  const notifRef = useRef(null);
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
-  const displayNotifications =
-    notifications.length > 10 ? notifications.slice(0, 9) : notifications;
-  const remainingCount = notifications.length - displayNotifications.length;
+  // ✅ unread count
+  const unreadCount = notifications?.filter((n) => !n.is_read)?.length || 0;
 
-  // ✅ Outside click ကို detect လုပ်တာ
+  // ✅ Outside click → close popup
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (notifRef.current && !notifRef.current.contains(e.target)) {
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  if (loading) return null;
+
+  const toggleReadStatus = (id, isRead) => {
+    if (isRead) {
+      markUnread(id);
+    } else {
+      markRead(id);
+    }
+  };
+
   return (
     <div className="relative" ref={notifRef}>
-      {/* Notification button */}
+      {/* 🔔 Bell icon */}
       <button
-        onClick={() => setOpen((prev) => !prev)} // ✅ toggle logic
+        onClick={() => setOpen((prev) => !prev)}
         className="relative p-2 rounded-full hover:bg-gray-200"
       >
         <Bell size={20} />
@@ -37,38 +47,52 @@ export default function Notification({ notifications, markAllAsRead }) {
         )}
       </button>
 
-      {/* Notification dropdown */}
+      {/* 📬 Notification Popup */}
       {open && (
         <div className="absolute right-0 mt-2 w-80 bg-white border rounded shadow-lg z-20 max-h-96 overflow-y-auto">
           <div className="flex justify-between items-center px-4 py-2 border-b">
             <h3 className="font-semibold text-gray-700">Notifications</h3>
-            <button
-              onClick={markAllAsRead}
-              className="text-blue-600 text-sm hover:underline"
-            >
-              Mark all as read
-            </button>
+            {notifications.length > 0 && (
+              <button
+                onClick={deleteAll}
+                className="text-red-600 text-sm hover:underline"
+              >
+                Clear all
+              </button>
+            )}
           </div>
 
           {notifications.length === 0 ? (
-            <div className="p-4 text-gray-500 text-center">No notifications</div>
+            <div className="p-4 text-gray-500 text-center">
+              No notifications
+            </div>
           ) : (
-            displayNotifications.map((n) => (
+            notifications.map((n) => (
               <div
                 key={n.id}
-                className={`px-4 py-3 border-b hover:bg-gray-50 cursor-pointer ${
-                  !n.read ? "bg-blue-50" : ""
+                className={`flex justify-between items-center px-4 py-3 border-b hover:bg-gray-50 ${
+                  !n.is_read ? "bg-blue-50" : ""
                 }`}
               >
-                <p className="text-sm text-gray-700">{n.text}</p>
+                {/* Message + toggle read */}
+                <div
+                  onClick={() => toggleReadStatus(n.id, n.is_read)}
+                  className="flex-1 cursor-pointer"
+                >
+                  <p className="text-sm text-gray-700">
+                    {n?.message || n?.text || "New notification"}
+                  </p>
+                </div>
+
+                {/* 🗑 Delete button */}
+                <button
+                  onClick={() => deleteOne(n.id)} disabled={!n.is_read}
+                  className={`ml-3 text-gray-400 hover:text-red-500 ${!n.is_read ? "opacity-50 cursor-not-allowed" : ""}`}
+                >
+                  <Trash2 size={16} />
+                </button>
               </div>
             ))
-          )}
-
-          {remainingCount > 0 && (
-            <div className="px-4 py-3 text-sm text-gray-500 cursor-pointer">
-              +{remainingCount} more
-            </div>
           )}
         </div>
       )}

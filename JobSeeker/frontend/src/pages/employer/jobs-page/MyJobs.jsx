@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { getJobs, deleteJob } from "../../../utils/api/jobAPI";
 import { useNavigate } from "react-router-dom";
+import JobDeleteModal from "../../../components/employer/jobs/JobDeleteModal";
 
 // CSRF token function
 function getCookie(name) {
@@ -23,6 +24,8 @@ const csrftoken = getCookie("csrftoken");
 export default function MyJobs() {
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [jobToDelete, setJobToDelete] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,13 +42,21 @@ export default function MyJobs() {
   const truncateText = (text, limit) =>
     !text ? "" : text.length > limit ? text.substring(0, limit) + "..." : text;
 
+  const confirmDelete = (id) => {
+    setJobToDelete(id);
+    setShowConfirm(true);
+  };
+
   const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this job?")) return;
+    if (!id) return;
     try {
       await deleteJob(id, csrftoken);
       setJobs((prev) => prev.filter((job) => job.id !== id));
     } catch (err) {
       console.error("Error deleting job:", err);
+    } finally {
+      setShowConfirm(false);
+      setJobToDelete(null);
     }
   };
 
@@ -54,7 +65,8 @@ export default function MyJobs() {
     navigate(`/employer/dashboard/my-jobs/${id}/detail`);
   };
 
-  const handleEdit = (job) => navigate(`/employer/dashboard/my-jobs/${job.id}/edit`);
+  const handleEdit = (job) =>
+    navigate(`/employer/dashboard/my-jobs/${job.id}/edit`);
 
   return (
     <div>
@@ -105,7 +117,7 @@ export default function MyJobs() {
                         Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(job.id)}
+                        onClick={() => confirmDelete(job.id)}
                         className="text-red-600 hover:underline"
                       >
                         Delete
@@ -134,6 +146,15 @@ export default function MyJobs() {
           </button>
         </div>
       </div>
+
+      <JobDeleteModal
+        show={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={() => handleDelete(jobToDelete)}
+        title="Confirm Delete"
+        message="Are you sure you want to delete this job?"
+      />
+
     </div>
   );
 }

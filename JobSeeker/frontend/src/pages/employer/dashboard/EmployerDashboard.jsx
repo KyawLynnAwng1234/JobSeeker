@@ -29,19 +29,6 @@ export default function EmployerDashboardLayout() {
   const { employer, logout, resendEmail, loading } = useEmployerAuth();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [notifications, setNotifications] = useState([
-    { id: 1, text: "New application received from John Doe", read: false },
-    { id: 2, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 3, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 4, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 5, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 6, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 7, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 8, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 9, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 10, text: "Your job post 'Frontend Dev' was approved", read: false },
-    { id: 11, text: "Password changed successfully", read: true },
-  ]);
 
   if (loading) {
     return (
@@ -52,11 +39,6 @@ export default function EmployerDashboardLayout() {
   }
 
   const emailNotVerified = !employer?.is_verified;
-
-  // ✅ notification အားလုံးကို read ဖြစ်အောင် mark လုပ်တာ
-  const markAllAsRead = () => {
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -98,10 +80,7 @@ export default function EmployerDashboardLayout() {
 
           <div className="flex items-center space-x-4 relative">
             {/* 🔔 Notification Button */}
-            <Notification
-              notifications={notifications}
-              markAllAsRead={markAllAsRead}
-            />
+            <Notification />
 
             {/* 📩 Mail Icon */}
             <button className="p-2 rounded-full hover:bg-gray-200">

@@ -1,16 +1,19 @@
 import React from "react";
 
-export default function JobCategoryDeleteModal({ isOpen, onClose, onConfirm }) {
-  if (!isOpen) return null;
+export default function JobDeleteModal({ 
+  show, 
+  onClose, 
+  onConfirm, 
+  title = "Confirm", 
+  message = "Are you sure?" 
+}) {
+  if (!show) return null;
 
   return (
     <div className="fixed inset-0 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-xl shadow-lg w-96">
-        <h2 className="text-xl font-bold mb-4 text-red-600">Confirm Delete</h2>
-        <p className="mb-6 text-gray-700">
-          Are you sure you want to delete this category? This action cannot be undone.
-        </p>
-
+        <h2 className="text-xl font-bold mb-4 text-red-600">{title}</h2>
+        <p className="mb-6 text-gray-700">{message}</p>
         <div className="flex justify-end gap-4">
           <button
             onClick={onClose}
