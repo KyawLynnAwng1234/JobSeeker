@@ -50,9 +50,9 @@ export const EmployerAuthProvider = ({ children }) => {
   };
 
    // ✅ Submit company detail
-  const submitCompanyDetail = async (profile) => {
-    const data = await registerEmployerDetail(profile);
-    const updatedEmployer = { ...employer, ...profile, };
+  const submitCompanyDetail = async (formData) => {
+    const data = await registerEmployerDetail(formData);
+    const updatedEmployer = { ...employer, ...formData, };
     setEmployer(updatedEmployer);
     return updatedEmployer;
   };

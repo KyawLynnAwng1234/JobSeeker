@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getJobDetail, updateJob, getCategories } from "../../../utils/api/jobAPI";
+import {toast} from "react-hot-toast";
 
 export default function EditJob() {
   const { id } = useParams();
@@ -18,7 +19,7 @@ export default function EditJob() {
         setCategories(catRes.data);
       } catch (err) {
         console.error("Error fetching data:", err);
-        alert("Failed to load job or categories");
+        toast.error("❌ Failed to load job or categories");
       } finally {
         setLoading(false);
       }
@@ -34,11 +35,11 @@ export default function EditJob() {
     e.preventDefault();
     try {
       await updateJob(id, job);
-      alert("Job updated successfully");
+      toast.success("✅ Job updated successfully");
       navigate("/employer/dashboard/my-jobs");
     } catch (err) {
       console.error("Error updating job:", err);
-      alert("Failed to update job");
+      toast.error("❌ Failed to update job");
     }
   };
 
