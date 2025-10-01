@@ -379,6 +379,30 @@
         "documentation": {}
     },
     {
+        "label": "redirect",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "HttpResponse",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
         "label": "django.db.models.deletion",
         "kind": 6,
         "isExtraImport": true,
@@ -409,6 +433,14 @@
         "description": "Job.models",
         "isExtraImport": true,
         "detail": "Job.models",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
         "documentation": {}
     },
     {
@@ -517,6 +549,14 @@
         "documentation": {}
     },
     {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
         "label": "get_wsgi_application",
         "importPath": "django.core.wsgi",
         "description": "django.core.wsgi",
@@ -530,6 +570,79 @@
         "description": "rest_framework",
         "isExtraImport": true,
         "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "status",
+        "importPath": "rest_framework",
+        "description": "rest_framework",
+        "isExtraImport": true,
+        "detail": "rest_framework",
+        "documentation": {}
+    },
+    {
+        "label": "random",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "random",
+        "description": "random",
+        "detail": "random",
+        "documentation": {}
+    },
+    {
+        "label": "send_mail",
+        "importPath": "django.core.mail",
+        "description": "django.core.mail",
+        "isExtraImport": true,
+        "detail": "django.core.mail",
+        "documentation": {}
+    },
+    {
+        "label": "api_view",
+        "importPath": "rest_framework.decorators",
+        "description": "rest_framework.decorators",
+        "isExtraImport": true,
+        "detail": "rest_framework.decorators",
+        "documentation": {}
+    },
+    {
+        "label": "parser_classes",
+        "importPath": "rest_framework.decorators",
+        "description": "rest_framework.decorators",
+        "isExtraImport": true,
+        "detail": "rest_framework.decorators",
+        "documentation": {}
+    },
+    {
+        "label": "MultiPartParser",
+        "importPath": "rest_framework.parsers",
+        "description": "rest_framework.parsers",
+        "isExtraImport": true,
+        "detail": "rest_framework.parsers",
+        "documentation": {}
+    },
+    {
+        "label": "FormParser",
+        "importPath": "rest_framework.parsers",
+        "description": "rest_framework.parsers",
+        "isExtraImport": true,
+        "detail": "rest_framework.parsers",
+        "documentation": {}
+    },
+    {
+        "label": "reverse",
+        "importPath": "rest_framework.reverse",
+        "description": "rest_framework.reverse",
+        "isExtraImport": true,
+        "detail": "rest_framework.reverse",
+        "documentation": {}
+    },
+    {
+        "label": "Response",
+        "importPath": "rest_framework.response",
+        "description": "rest_framework.response",
+        "isExtraImport": true,
+        "detail": "rest_framework.response",
         "documentation": {}
     },
     {
@@ -753,7 +866,7 @@
         "kind": 5,
         "importPath": "JobSeeker.settings",
         "description": "JobSeeker.settings",
-        "peekOfCode": "ALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    #custome apps",
+        "peekOfCode": "ALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'rest_framework',",
         "detail": "JobSeeker.settings",
         "documentation": {}
     },
@@ -762,7 +875,7 @@
         "kind": 5,
         "importPath": "JobSeeker.settings",
         "description": "JobSeeker.settings",
-        "peekOfCode": "INSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    #custome apps\n    'Accounts',\n    'Application',",
+        "peekOfCode": "INSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'rest_framework',\n    #custome apps\n    'Accounts',",
         "detail": "JobSeeker.settings",
         "documentation": {}
     },
@@ -933,7 +1046,7 @@
         "kind": 5,
         "importPath": "JobSeeker.urls",
         "description": "JobSeeker.urls",
-        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n]",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n    path('jobseekerprofile/',include(\"JobSeekerProfile.urls\")),\n]",
         "detail": "JobSeeker.urls",
         "documentation": {}
     },
@@ -1124,6 +1237,141 @@
         "description": "JobSeekerProfile.serializers",
         "peekOfCode": "class SkillSerializar(serializers.ModelSerializer):\n    class Meta:\n        model = Skill\n        fields = '__all__'",
         "detail": "JobSeekerProfile.serializers",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "JobSeekerProfile.urls",
+        "description": "JobSeekerProfile.urls",
+        "peekOfCode": "urlpatterns = [\n    path('', views.api_overview, name=\"api-overview\"),\n    # start jobseekerprofile\n    path('jobseekerprofile/', views.jobseekerprofile_list, name='jobseekerprofile-list'),\n    path('jobseekerprofile/<int:pk>/', views.jobseekerprofile_detail, name='jobseekerprofile-detail'),\n    # end JobseekerProfile\n    # start skills\n    path('skill/', views.skill_list, name='skill-list'),\n    path('skill/<int:pk>/', views.skill_detail, name='skill-detail'),\n    # end skills",
+        "detail": "JobSeekerProfile.urls",
+        "documentation": {}
+    },
+    {
+        "label": "send_verification_code",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.utils",
+        "description": "JobSeekerProfile.utils",
+        "peekOfCode": "def send_verification_code(email):\n    code = random.randint(100000, 999999)\n    subject = \"Your JobSeeker Verification Code\"\n    message = f\"Use this verification code to complete your registration: {code}\"\n    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])\n    return str(code)",
+        "detail": "JobSeekerProfile.utils",
+        "documentation": {}
+    },
+    {
+        "label": "api_overview",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def api_overview(request, format=None):\n    api_urls = {\n        # start jobseekerprofile\n        \"JobseekerProfile List/Create\": reverse('jobseekerprofile-list', request=request, format=format),\n        \"JobseekerProfile Detail\": reverse('jobseekerprofile-detail', args=[1], request=request, format=format),\n        # end jobseekerprofile\n        # start resume\n        \"Resume List/Create\": reverse('resume-list', request=request, format=format),\n        \"Resume Detail\": reverse('resume-detail', args=[1], request=request, format=format),\n        # end resume",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "skill_list",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def skill_list(request):\n    if request.method == 'GET':   # READ all\n        skills = Skill.objects.all()\n        serializer = SkillSerializar(skills, many=True)\n        return Response(serializer.data)\n    elif request.method == 'POST':   # CREATE\n        serializer = SkillSerializar(data=request.data)\n        if serializer.is_valid():\n            serializer.save()\n            return Response(serializer.data, status=status.HTTP_201_CREATED)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "skill_detail",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def skill_detail(request, pk):\n    try:\n        skill = Skill.objects.get(pk=pk)\n    except Skill.DoesNotExist:\n        return Response({\"error\": \"Skill not found\"}, status=status.HTTP_404_NOT_FOUND)\n    if request.method == 'GET':   # READ one\n        serializer = SkillSerializar(skill)\n        return Response(serializer.data)\n    elif request.method == 'PUT':   # UPDATE\n        serializer = SkillSerializar(skill, data=request.data)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "jobseekerprofile_list",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def jobseekerprofile_list(request):\n    print(\"request.data =\", request.data)\n    if request.method == 'GET':   # READ all\n        jobseekerprofiles = JobseekerProfile.objects.all()\n        serializer = JobseekerProfileSerializer(jobseekerprofiles, many=True)\n        return Response(serializer.data)\n    elif request.method == 'POST':   # CREATE\n        serializer = JobseekerProfileSerializer(data=request.data)\n        if serializer.is_valid():\n            serializer.save()",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "jobseekerprofile_detail",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def jobseekerprofile_detail(request, pk):\n    try:\n        jobseekerprofile = JobseekerProfile.objects.get(pk=pk)\n    except JobseekerProfile.DoesNotExist:\n        return Response({\"error\": \"JobseekerProfile not found\"}, status=status.HTTP_404_NOT_FOUND)\n    if request.method == 'GET':   # READ one\n        serializer = JobseekerProfileSerializer(jobseekerprofile)\n        return Response(serializer.data)\n    elif request.method == 'PUT':   # UPDATE\n        serializer = JobseekerProfileSerializer(jobseekerprofile, data=request.data)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "education_list",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def education_list(request):\n    if request.method == 'GET':   # READ all\n        educations = Education.objects.all()\n        serializer = EducationSerializer(educations, many=True)\n        return Response(serializer.data)\n    elif request.method == 'POST':   # CREATE\n        serializer = EducationSerializer(data=request.data)\n        if serializer.is_valid():\n            serializer.save()\n            return Response(serializer.data, status=status.HTTP_201_CREATED)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "education_detail",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def education_detail(request, pk):\n    try:\n        education = Education.objects.get(pk=pk)\n    except Education.DoesNotExist:\n        return Response({\"error\": \"Education not found\"}, status=status.HTTP_404_NOT_FOUND)\n    if request.method == 'GET':   # READ one\n        serializer = EducationSerializer(education)\n        return Response(serializer.data)\n    elif request.method == 'PUT':   # UPDATE\n        serializer = EducationSerializer(education, data=request.data)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "experience_list",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def experience_list(request):\n    if request.method == 'GET':   # READ all\n        experiences = Experience.objects.all()\n        serializer = ExperienceSerializer(experiences, many=True)\n        return Response(serializer.data)\n    elif request.method == 'POST':   # CREATE\n        serializer = ExperienceSerializer(data=request.data)\n        if serializer.is_valid():\n            serializer.save()\n            return Response(serializer.data, status=status.HTTP_201_CREATED)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "experience_detail",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def experience_detail(request, pk):\n    try:\n        experience = Experience.objects.get(pk=pk)\n    except Experience.DoesNotExist:\n        return Response({\"error\": \"Experience not found\"}, status=status.HTTP_404_NOT_FOUND)\n    if request.method == 'GET':   # READ one\n        serializer = ExperienceSerializer(experience)\n        return Response(serializer.data)\n    elif request.method == 'PUT':   # UPDATE\n        serializer = ExperienceSerializer(experience, data=request.data)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "language_list",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def language_list(request):\n    if request.method == 'GET':   # READ all\n        languages = Language.objects.all()\n        serializer = LanguageSerializar(languages, many=True)\n        return Response(serializer.data)\n    elif request.method == 'POST':   # CREATE\n        serializer = LanguageSerializar(data=request.data)\n        if serializer.is_valid():\n            serializer.save()\n            return Response(serializer.data, status=status.HTTP_201_CREATED)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "language_detail",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def language_detail(request, pk):\n    try:\n        language = Language.objects.get(pk=pk)\n    except Language.DoesNotExist:\n        return Response({\"error\": \"Language not found\"}, status=status.HTTP_404_NOT_FOUND)\n    if request.method == 'GET':   # READ one\n        serializer = LanguageSerializar(language)\n        return Response(serializer.data)\n    elif request.method == 'PUT':   # UPDATE\n        serializer = LanguageSerializar(language, data=request.data)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "resume_list",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def resume_list(request):\n    if request.method == 'GET':   # READ all\n        resumes = Resume.objects.all()\n        serializer = ResumeSerializer(resumes, many=True)\n        return Response(serializer.data)\n    elif request.method == 'POST':   # CREATE\n        serializer = ResumeSerializer(data=request.data)\n        if serializer.is_valid():\n            serializer.save()\n            return Response(serializer.data, status=status.HTTP_201_CREATED)",
+        "detail": "JobSeekerProfile.views",
+        "documentation": {}
+    },
+    {
+        "label": "resume_detail",
+        "kind": 2,
+        "importPath": "JobSeekerProfile.views",
+        "description": "JobSeekerProfile.views",
+        "peekOfCode": "def resume_detail(request, pk):\n    try:\n        resume = Resume.objects.get(pk=pk)\n    except Resume.DoesNotExist:\n        return Response({\"error\": \"Resume not found\"}, status=status.HTTP_404_NOT_FOUND)\n    if request.method == 'GET':   # READ one\n        serializer = ResumeSerializer(resume)\n        return Response(serializer.data)\n    elif request.method == 'PUT':   # UPDATE\n        serializer = ResumeSerializer(resume, data=request.data)",
+        "detail": "JobSeekerProfile.views",
         "documentation": {}
     },
     {
