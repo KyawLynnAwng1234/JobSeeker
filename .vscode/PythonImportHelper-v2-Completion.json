@@ -1,0 +1,1101 @@
+[
+    {
+        "label": "django.contrib.auth.models",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "AbstractUser",
+        "importPath": "django.contrib.auth.models",
+        "description": "django.contrib.auth.models",
+        "isExtraImport": true,
+        "detail": "django.contrib.auth.models",
+        "documentation": {}
+    },
+    {
+        "label": "django.contrib.auth.validators",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.contrib.auth.validators",
+        "description": "django.contrib.auth.validators",
+        "detail": "django.contrib.auth.validators",
+        "documentation": {}
+    },
+    {
+        "label": "django.utils.timezone",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.utils.timezone",
+        "description": "django.utils.timezone",
+        "detail": "django.utils.timezone",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "migrations",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "models",
+        "importPath": "django.db",
+        "description": "django.db",
+        "isExtraImport": true,
+        "detail": "django.db",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "importPath": "django.contrib",
+        "description": "django.contrib",
+        "isExtraImport": true,
+        "detail": "django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "AppConfig",
+        "importPath": "django.apps",
+        "description": "django.apps",
+        "isExtraImport": true,
+        "detail": "django.apps",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "TestCase",
+        "importPath": "django.test",
+        "description": "django.test",
+        "isExtraImport": true,
+        "detail": "django.test",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "render",
+        "importPath": "django.shortcuts",
+        "description": "django.shortcuts",
+        "isExtraImport": true,
+        "detail": "django.shortcuts",
+        "documentation": {}
+    },
+    {
+        "label": "django.db.models.deletion",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "django.db.models.deletion",
+        "description": "django.db.models.deletion",
+        "detail": "django.db.models.deletion",
+        "documentation": {}
+    },
+    {
+        "label": "JobseekerProfile",
+        "importPath": "JobSeekerProfile.models",
+        "description": "JobSeekerProfile.models",
+        "isExtraImport": true,
+        "detail": "JobSeekerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Resume",
+        "importPath": "JobSeekerProfile.models",
+        "description": "JobSeekerProfile.models",
+        "isExtraImport": true,
+        "detail": "JobSeekerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Jobs",
+        "importPath": "Job.models",
+        "description": "Job.models",
+        "isExtraImport": true,
+        "detail": "Job.models",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "settings",
+        "importPath": "django.conf",
+        "description": "django.conf",
+        "isExtraImport": true,
+        "detail": "django.conf",
+        "documentation": {}
+    },
+    {
+        "label": "CustomUser",
+        "importPath": "Accounts.models",
+        "description": "Accounts.models",
+        "isExtraImport": true,
+        "detail": "Accounts.models",
+        "documentation": {}
+    },
+    {
+        "label": "CustomUser",
+        "importPath": "Accounts.models",
+        "description": "Accounts.models",
+        "isExtraImport": true,
+        "detail": "Accounts.models",
+        "documentation": {}
+    },
+    {
+        "label": "CustomUser",
+        "importPath": "Accounts.models",
+        "description": "Accounts.models",
+        "isExtraImport": true,
+        "detail": "Accounts.models",
+        "documentation": {}
+    },
+    {
+        "label": "EmployerProfile",
+        "importPath": "EmployerProfile.models",
+        "description": "EmployerProfile.models",
+        "isExtraImport": true,
+        "detail": "EmployerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "get_asgi_application",
+        "importPath": "django.core.asgi",
+        "description": "django.core.asgi",
+        "isExtraImport": true,
+        "detail": "django.core.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "Path",
+        "importPath": "pathlib",
+        "description": "pathlib",
+        "isExtraImport": true,
+        "detail": "pathlib",
+        "documentation": {}
+    },
+    {
+        "label": "path",
+        "importPath": "django.urls",
+        "description": "django.urls",
+        "isExtraImport": true,
+        "detail": "django.urls",
+        "documentation": {}
+    },
+    {
+        "label": "get_wsgi_application",
+        "importPath": "django.core.wsgi",
+        "description": "django.core.wsgi",
+        "isExtraImport": true,
+        "detail": "django.core.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "JobSeeker.Accounts.migrations.0001_initial",
+        "description": "JobSeeker.Accounts.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        ('auth', '0012_alter_user_first_name_max_length'),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='CustomUser',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
+        "detail": "JobSeeker.Accounts.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "AccountsConfig",
+        "kind": 6,
+        "importPath": "JobSeeker.Accounts.apps",
+        "description": "JobSeeker.Accounts.apps",
+        "peekOfCode": "class AccountsConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'Accounts'",
+        "detail": "JobSeeker.Accounts.apps",
+        "documentation": {}
+    },
+    {
+        "label": "CustomUser",
+        "kind": 6,
+        "importPath": "JobSeeker.Accounts.models",
+        "description": "JobSeeker.Accounts.models",
+        "peekOfCode": "class CustomUser(AbstractUser):\n    role = models.CharField(\n        max_length=20,\n        choices=((\"employer\", \"Employer\"), (\"jobseeker\", \"Jobseeker\"))\n    )\n    is_verified = models.BooleanField(default=False)\n    created_at = models.DateTimeField(auto_now_add=True)\n    updated_at = models.DateTimeField(auto_now=True)\n    def __str__(self):\n        return f\"{self.username} ({self.role})\"",
+        "detail": "JobSeeker.Accounts.models",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "JobSeeker.Application.migrations.0001_initial",
+        "description": "JobSeeker.Application.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        ('Job', '0001_initial'),\n        ('JobSeekerProfile', '0002_alter_education_degree_and_more'),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Application',\n            fields=[",
+        "detail": "JobSeeker.Application.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "SaveJobAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.Application.admin",
+        "description": "JobSeeker.Application.admin",
+        "peekOfCode": "class SaveJobAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'job']\nadmin.site.register(SaveJob, SaveJobAdmin)\n# end SaveJob\n# start Application\nadmin.site.register(Application)",
+        "detail": "JobSeeker.Application.admin",
+        "documentation": {}
+    },
+    {
+        "label": "ApplicationConfig",
+        "kind": 6,
+        "importPath": "JobSeeker.Application.apps",
+        "description": "JobSeeker.Application.apps",
+        "peekOfCode": "class ApplicationConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'Application'",
+        "detail": "JobSeeker.Application.apps",
+        "documentation": {}
+    },
+    {
+        "label": "SaveJob",
+        "kind": 6,
+        "importPath": "JobSeeker.Application.models",
+        "description": "JobSeeker.Application.models",
+        "peekOfCode": "class SaveJob(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    job = models.ForeignKey(Jobs, on_delete=models.CASCADE)\nclass Application(models.Model):\n    job_seeker_profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    job = models.ForeignKey(Jobs, on_delete=models.CASCADE)\n    resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True, blank=True)\n    applied_at = models.DateTimeField(auto_now_add=True)\n    status = models.CharField(max_length=50, default=\"pending\")\n    cover_letter_text = models.TextField(blank=True, null=True)",
+        "detail": "JobSeeker.Application.models",
+        "documentation": {}
+    },
+    {
+        "label": "Application",
+        "kind": 6,
+        "importPath": "JobSeeker.Application.models",
+        "description": "JobSeeker.Application.models",
+        "peekOfCode": "class Application(models.Model):\n    job_seeker_profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    job = models.ForeignKey(Jobs, on_delete=models.CASCADE)\n    resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True, blank=True)\n    applied_at = models.DateTimeField(auto_now_add=True)\n    status = models.CharField(max_length=50, default=\"pending\")\n    cover_letter_text = models.TextField(blank=True, null=True)\n    def __str__(self):\n        return str(self.job_seeker_profile)",
+        "detail": "JobSeeker.Application.models",
+        "documentation": {}
+    },
+    {
+        "label": "admin",
+        "kind": 6,
+        "importPath": "JobSeeker.django.contrib",
+        "description": "JobSeeker.django.contrib",
+        "peekOfCode": "class admin:\n    pass",
+        "detail": "JobSeeker.django.contrib",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "JobSeeker.EmployerProfile.migrations.0001_initial",
+        "description": "JobSeeker.EmployerProfile.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='EmployerProfile',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
+        "detail": "JobSeeker.EmployerProfile.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "JobSeeker.EmployerProfile.migrations.0002_alter_employerprofile_business_name_and_more",
+        "description": "JobSeeker.EmployerProfile.migrations.0002_alter_employerprofile_business_name_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('EmployerProfile', '0001_initial'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='employerprofile',\n            name='business_name',\n            field=models.CharField(blank=True, max_length=255, null=True),\n        ),",
+        "detail": "JobSeeker.EmployerProfile.migrations.0002_alter_employerprofile_business_name_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "EmployerProfileAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.EmployerProfile.admin",
+        "description": "JobSeeker.EmployerProfile.admin",
+        "peekOfCode": "class EmployerProfileAdmin(admin.ModelAdmin):\n    list_display = ['id', 'user', 'first_name', 'last_name', 'business_name', 'city']\nadmin.site.register(EmployerProfile, EmployerProfileAdmin)\n# end EmployerProfile",
+        "detail": "JobSeeker.EmployerProfile.admin",
+        "documentation": {}
+    },
+    {
+        "label": "EmployerprofileConfig",
+        "kind": 6,
+        "importPath": "JobSeeker.EmployerProfile.apps",
+        "description": "JobSeeker.EmployerProfile.apps",
+        "peekOfCode": "class EmployerprofileConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'EmployerProfile'",
+        "detail": "JobSeeker.EmployerProfile.apps",
+        "documentation": {}
+    },
+    {
+        "label": "EmployerProfile",
+        "kind": 6,
+        "importPath": "JobSeeker.EmployerProfile.models",
+        "description": "JobSeeker.EmployerProfile.models",
+        "peekOfCode": "class EmployerProfile(models.Model):\n    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)\n    first_name = models.CharField(max_length=100, null=True, blank=True)\n    last_name = models.CharField(max_length=100, null=True, blank=True)\n    business_name = models.CharField(max_length=255, null=True, blank=True)\n    city = models.CharField(max_length=100, null=True, blank=True)\n    def __str__(self):\n        return self.business_name",
+        "detail": "JobSeeker.EmployerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "JobSeeker.Job.migrations.0001_initial",
+        "description": "JobSeeker.Job.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        ('EmployerProfile', '0002_alter_employerprofile_business_name_and_more'),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='JobCategory',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
+        "detail": "JobSeeker.Job.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "JobCategoryAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.Job.admin",
+        "description": "JobSeeker.Job.admin",
+        "peekOfCode": "class JobCategoryAdmin(admin.ModelAdmin):\n    list_display = ['id', 'name']\nadmin.site.register(JobCategory, JobCategoryAdmin)\n# end JobCategory\n# start Jobs\nclass JobsAdmin(admin.ModelAdmin):\n    list_display = ['id', 'employer', 'title', 'description', 'location', 'job_type', 'salary', 'category', 'is_active', 'deadline']\nadmin.site.register(Jobs, JobsAdmin)\n# end Jobs",
+        "detail": "JobSeeker.Job.admin",
+        "documentation": {}
+    },
+    {
+        "label": "JobsAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.Job.admin",
+        "description": "JobSeeker.Job.admin",
+        "peekOfCode": "class JobsAdmin(admin.ModelAdmin):\n    list_display = ['id', 'employer', 'title', 'description', 'location', 'job_type', 'salary', 'category', 'is_active', 'deadline']\nadmin.site.register(Jobs, JobsAdmin)\n# end Jobs",
+        "detail": "JobSeeker.Job.admin",
+        "documentation": {}
+    },
+    {
+        "label": "JobConfig",
+        "kind": 6,
+        "importPath": "JobSeeker.Job.apps",
+        "description": "JobSeeker.Job.apps",
+        "peekOfCode": "class JobConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'Job'",
+        "detail": "JobSeeker.Job.apps",
+        "documentation": {}
+    },
+    {
+        "label": "JobCategory",
+        "kind": 6,
+        "importPath": "JobSeeker.Job.models",
+        "description": "JobSeeker.Job.models",
+        "peekOfCode": "class JobCategory(models.Model):\n    name = models.CharField(max_length=100, unique=True)\n    def __str__(self):\n        return self.name\nclass Jobs(models.Model):\n    employer = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)\n    title = models.CharField(max_length=150, null=True, blank=True)\n    description = models.TextField(null=True, blank=True)\n    location = models.CharField(max_length=150, null=True, blank=True)\n    job_type = models.CharField(max_length=50, null=True, blank=True)",
+        "detail": "JobSeeker.Job.models",
+        "documentation": {}
+    },
+    {
+        "label": "Jobs",
+        "kind": 6,
+        "importPath": "JobSeeker.Job.models",
+        "description": "JobSeeker.Job.models",
+        "peekOfCode": "class Jobs(models.Model):\n    employer = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)\n    title = models.CharField(max_length=150, null=True, blank=True)\n    description = models.TextField(null=True, blank=True)\n    location = models.CharField(max_length=150, null=True, blank=True)\n    job_type = models.CharField(max_length=50, null=True, blank=True)\n    salary = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)\n    category = models.ForeignKey(JobCategory, on_delete=models.SET_NULL, null=True, blank=True)\n    is_active = models.BooleanField(default=True)\n    deadline = models.DateField(blank=True, null=True)",
+        "detail": "JobSeeker.Job.models",
+        "documentation": {}
+    },
+    {
+        "label": "application",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.asgi",
+        "description": "JobSeeker.JobSeeker.asgi",
+        "peekOfCode": "application = get_asgi_application()",
+        "detail": "JobSeeker.JobSeeker.asgi",
+        "documentation": {}
+    },
+    {
+        "label": "BASE_DIR",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "BASE_DIR = Path(__file__).resolve().parent.parent\n# Quick-start development settings - unsuitable for production\n# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/\n# SECURITY WARNING: keep the secret key used in production secret!\nSECRET_KEY = 'django-insecure-s$36g^pyo9l9efi-$p3kk9f=+p$t9#*!&h$k-$p14w03$c834l'\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\nALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "SECRET_KEY",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "SECRET_KEY = 'django-insecure-s$36g^pyo9l9efi-$p3kk9f=+p$t9#*!&h$k-$p14w03$c834l'\n# SECURITY WARNING: don't run with debug turned on in production!\nDEBUG = True\nALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DEBUG",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "DEBUG = True\nALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ALLOWED_HOSTS",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "ALLOWED_HOSTS = []\n# Application definition\nINSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'Application',",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "INSTALLED_APPS",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "INSTALLED_APPS = [\n    'django.contrib.admin',\n    'django.contrib.auth',\n    'django.contrib.contenttypes',\n    'django.contrib.sessions',\n    'django.contrib.messages',\n    'django.contrib.staticfiles',\n    'Application',\n    'EmployerProfile',\n    'JobSeeker',",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "AUTH_USER_MODEL",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "AUTH_USER_MODEL = 'Accounts.CustomUser'\nMIDDLEWARE = [\n    'django.middleware.security.SecurityMiddleware',\n    'django.contrib.sessions.middleware.SessionMiddleware',\n    'django.middleware.common.CommonMiddleware',\n    'django.middleware.csrf.CsrfViewMiddleware',\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\n    'django.contrib.messages.middleware.MessageMiddleware',\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\n]",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "MIDDLEWARE",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "MIDDLEWARE = [\n    'django.middleware.security.SecurityMiddleware',\n    'django.contrib.sessions.middleware.SessionMiddleware',\n    'django.middleware.common.CommonMiddleware',\n    'django.middleware.csrf.CsrfViewMiddleware',\n    'django.contrib.auth.middleware.AuthenticationMiddleware',\n    'django.contrib.messages.middleware.MessageMiddleware',\n    'django.middleware.clickjacking.XFrameOptionsMiddleware',\n]\nROOT_URLCONF = 'JobSeeker.urls'",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "ROOT_URLCONF",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "ROOT_URLCONF = 'JobSeeker.urls'\nTEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.request',\n                'django.contrib.auth.context_processors.auth',",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "TEMPLATES",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "TEMPLATES = [\n    {\n        'BACKEND': 'django.template.backends.django.DjangoTemplates',\n        'DIRS': [],\n        'APP_DIRS': True,\n        'OPTIONS': {\n            'context_processors': [\n                'django.template.context_processors.request',\n                'django.contrib.auth.context_processors.auth',\n                'django.contrib.messages.context_processors.messages',",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "WSGI_APPLICATION",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "WSGI_APPLICATION = 'JobSeeker.wsgi.application'\n# Database\n# https://docs.djangoproject.com/en/5.2/ref/settings/#databases\nDATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n# Password validation",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DATABASES",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "DATABASES = {\n    'default': {\n        'ENGINE': 'django.db.backends.sqlite3',\n        'NAME': BASE_DIR / 'db.sqlite3',\n    }\n}\n# Password validation\n# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators\nAUTH_PASSWORD_VALIDATORS = [\n    {",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "AUTH_PASSWORD_VALIDATORS",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "AUTH_PASSWORD_VALIDATORS = [\n    {\n        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',\n    },\n    {\n        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',\n    },",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "LANGUAGE_CODE",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "LANGUAGE_CODE = 'en-us'\nTIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.2/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "TIME_ZONE",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "TIME_ZONE = 'UTC'\nUSE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.2/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "USE_I18N",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "USE_I18N = True\nUSE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.2/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "USE_TZ",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "USE_TZ = True\n# Static files (CSS, JavaScript, Images)\n# https://docs.djangoproject.com/en/5.2/howto/static-files/\nSTATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "STATIC_URL",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "STATIC_URL = 'static/'\n# Default primary key field type\n# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field\nDEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "DEFAULT_AUTO_FIELD",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.settings",
+        "description": "JobSeeker.JobSeeker.settings",
+        "peekOfCode": "DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'",
+        "detail": "JobSeeker.JobSeeker.settings",
+        "documentation": {}
+    },
+    {
+        "label": "urlpatterns",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.urls",
+        "description": "JobSeeker.JobSeeker.urls",
+        "peekOfCode": "urlpatterns = [\n    path('admin/', admin.site.urls),\n]",
+        "detail": "JobSeeker.JobSeeker.urls",
+        "documentation": {}
+    },
+    {
+        "label": "application",
+        "kind": 5,
+        "importPath": "JobSeeker.JobSeeker.wsgi",
+        "description": "JobSeeker.JobSeeker.wsgi",
+        "peekOfCode": "application = get_wsgi_application()",
+        "detail": "JobSeeker.JobSeeker.wsgi",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.migrations.0001_initial",
+        "description": "JobSeeker.JobSeekerProfile.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='JobseekerProfile',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
+        "detail": "JobSeeker.JobSeekerProfile.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.migrations.0002_alter_education_degree_and_more",
+        "description": "JobSeeker.JobSeekerProfile.migrations.0002_alter_education_degree_and_more",
+        "peekOfCode": "class Migration(migrations.Migration):\n    dependencies = [\n        ('JobSeekerProfile', '0001_initial'),\n    ]\n    operations = [\n        migrations.AlterField(\n            model_name='education',\n            name='degree',\n            field=models.CharField(blank=True, max_length=100, null=True),\n        ),",
+        "detail": "JobSeeker.JobSeekerProfile.migrations.0002_alter_education_degree_and_more",
+        "documentation": {}
+    },
+    {
+        "label": "JobseekerProfileAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.admin",
+        "description": "JobSeeker.JobSeekerProfile.admin",
+        "peekOfCode": "class JobseekerProfileAdmin(admin.ModelAdmin):\n    list_display = ['id', 'user', 'full_name', 'phone', 'address', 'profile_picture', 'bio']\nadmin.site.register(JobseekerProfile, JobseekerProfileAdmin)\n# end JobseekerProfile\n# start Resume\nclass ResumeAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'title', 'file_url', 'file_type', 'is_default', 'created_at']\nadmin.site.register(Resume, ResumeAdmin)\n# end Resume\n# start Education",
+        "detail": "JobSeeker.JobSeekerProfile.admin",
+        "documentation": {}
+    },
+    {
+        "label": "ResumeAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.admin",
+        "description": "JobSeeker.JobSeekerProfile.admin",
+        "peekOfCode": "class ResumeAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'title', 'file_url', 'file_type', 'is_default', 'created_at']\nadmin.site.register(Resume, ResumeAdmin)\n# end Resume\n# start Education\nclass EducationAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'school_name', 'degree', 'field_of_study', 'start_year', 'end_year']\nadmin.site.register(Education, EducationAdmin)\n# end Education\n# start Experience",
+        "detail": "JobSeeker.JobSeekerProfile.admin",
+        "documentation": {}
+    },
+    {
+        "label": "EducationAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.admin",
+        "description": "JobSeeker.JobSeekerProfile.admin",
+        "peekOfCode": "class EducationAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'school_name', 'degree', 'field_of_study', 'start_year', 'end_year']\nadmin.site.register(Education, EducationAdmin)\n# end Education\n# start Experience\nclass ExperienceAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'company_name', 'position', 'start_date', 'end_date', 'description']\nadmin.site.register(Experience, ExperienceAdmin)\n# end Experience\n# start Language",
+        "detail": "JobSeeker.JobSeekerProfile.admin",
+        "documentation": {}
+    },
+    {
+        "label": "ExperienceAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.admin",
+        "description": "JobSeeker.JobSeekerProfile.admin",
+        "peekOfCode": "class ExperienceAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'company_name', 'position', 'start_date', 'end_date', 'description']\nadmin.site.register(Experience, ExperienceAdmin)\n# end Experience\n# start Language\nclass LanguageAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'name', 'proficiency']\nadmin.site.register(Language, LanguageAdmin)\n# end Language\n# start Skill",
+        "detail": "JobSeeker.JobSeekerProfile.admin",
+        "documentation": {}
+    },
+    {
+        "label": "LanguageAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.admin",
+        "description": "JobSeeker.JobSeekerProfile.admin",
+        "peekOfCode": "class LanguageAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'name', 'proficiency']\nadmin.site.register(Language, LanguageAdmin)\n# end Language\n# start Skill\nclass SkillAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'name', 'proficiency']\nadmin.site.register(Skill, SkillAdmin)\n# end Skill",
+        "detail": "JobSeeker.JobSeekerProfile.admin",
+        "documentation": {}
+    },
+    {
+        "label": "SkillAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.admin",
+        "description": "JobSeeker.JobSeekerProfile.admin",
+        "peekOfCode": "class SkillAdmin(admin.ModelAdmin):\n    list_display = ['id', 'profile', 'name', 'proficiency']\nadmin.site.register(Skill, SkillAdmin)\n# end Skill",
+        "detail": "JobSeeker.JobSeekerProfile.admin",
+        "documentation": {}
+    },
+    {
+        "label": "JobseekerprofileConfig",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.apps",
+        "description": "JobSeeker.JobSeekerProfile.apps",
+        "peekOfCode": "class JobseekerprofileConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'JobSeekerProfile'",
+        "detail": "JobSeeker.JobSeekerProfile.apps",
+        "documentation": {}
+    },
+    {
+        "label": "JobseekerProfile",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.models",
+        "description": "JobSeeker.JobSeekerProfile.models",
+        "peekOfCode": "class JobseekerProfile(models.Model):\n    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)\n    full_name = models.CharField(max_length=150, null=True, blank=True)\n    phone = models.CharField(max_length=20, null=True, blank=True)\n    address = models.CharField(max_length=255, null=True, blank=True)\n    profile_picture = models.ImageField(upload_to=\"profiles/\", null=True, blank=True)\n    bio = models.TextField(blank=True)\n    def __str__(self):\n        return self.full_name\nclass Resume(models.Model):",
+        "detail": "JobSeeker.JobSeekerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Resume",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.models",
+        "description": "JobSeeker.JobSeekerProfile.models",
+        "peekOfCode": "class Resume(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    title = models.CharField(max_length=255, null=True, blank=True)\n    file_url = models.CharField(max_length=255, null=True, blank=True)\n    file_type = models.CharField(max_length=20, null=True, blank=True)\n    is_default = models.BooleanField(default=False)\n    created_at = models.DateTimeField(auto_now_add=True)\nclass Education(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    school_name = models.CharField(max_length=255, null=True, blank=True)",
+        "detail": "JobSeeker.JobSeekerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Education",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.models",
+        "description": "JobSeeker.JobSeekerProfile.models",
+        "peekOfCode": "class Education(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    school_name = models.CharField(max_length=255, null=True, blank=True)\n    degree = models.CharField(max_length=100, null=True, blank=True)\n    field_of_study = models.CharField(max_length=100, null=True, blank=True)\n    start_year = models.IntegerField()\n    end_year = models.IntegerField(blank=True, null=True)\nclass Experience(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    company_name = models.CharField(max_length=255, null=True, blank=True)",
+        "detail": "JobSeeker.JobSeekerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Experience",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.models",
+        "description": "JobSeeker.JobSeekerProfile.models",
+        "peekOfCode": "class Experience(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    company_name = models.CharField(max_length=255, null=True, blank=True)\n    position = models.CharField(max_length=100, null=True, blank=True)\n    start_date = models.DateField()\n    end_date = models.DateField(blank=True, null=True)\n    description = models.TextField(blank=True, null=True)\nclass Language(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    name = models.CharField(max_length=100, null=True, blank=True)",
+        "detail": "JobSeeker.JobSeekerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Language",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.models",
+        "description": "JobSeeker.JobSeekerProfile.models",
+        "peekOfCode": "class Language(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    name = models.CharField(max_length=100, null=True, blank=True)\n    proficiency = models.CharField(max_length=50, null=True, blank=True)\nclass Skill(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    name = models.CharField(max_length=100, null=True, blank=True)\n    proficiency = models.CharField(max_length=50, null=True, blank=True)",
+        "detail": "JobSeeker.JobSeekerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Skill",
+        "kind": 6,
+        "importPath": "JobSeeker.JobSeekerProfile.models",
+        "description": "JobSeeker.JobSeekerProfile.models",
+        "peekOfCode": "class Skill(models.Model):\n    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)\n    name = models.CharField(max_length=100, null=True, blank=True)\n    proficiency = models.CharField(max_length=50, null=True, blank=True)",
+        "detail": "JobSeeker.JobSeekerProfile.models",
+        "documentation": {}
+    },
+    {
+        "label": "Migration",
+        "kind": 6,
+        "importPath": "JobSeeker.Notification.migrations.0001_initial",
+        "description": "JobSeeker.Notification.migrations.0001_initial",
+        "peekOfCode": "class Migration(migrations.Migration):\n    initial = True\n    dependencies = [\n        migrations.swappable_dependency(settings.AUTH_USER_MODEL),\n    ]\n    operations = [\n        migrations.CreateModel(\n            name='Notification',\n            fields=[\n                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),",
+        "detail": "JobSeeker.Notification.migrations.0001_initial",
+        "documentation": {}
+    },
+    {
+        "label": "NotificationAdmin",
+        "kind": 6,
+        "importPath": "JobSeeker.Notification.admin",
+        "description": "JobSeeker.Notification.admin",
+        "peekOfCode": "class NotificationAdmin(admin.ModelAdmin):\n    list_display = ['id', 'user', 'message', 'type', 'is_read', 'created_at']\nadmin.site.register(Notification, NotificationAdmin)\n# end Notification",
+        "detail": "JobSeeker.Notification.admin",
+        "documentation": {}
+    },
+    {
+        "label": "NotificationConfig",
+        "kind": 6,
+        "importPath": "JobSeeker.Notification.apps",
+        "description": "JobSeeker.Notification.apps",
+        "peekOfCode": "class NotificationConfig(AppConfig):\n    default_auto_field = 'django.db.models.BigAutoField'\n    name = 'Notification'",
+        "detail": "JobSeeker.Notification.apps",
+        "documentation": {}
+    },
+    {
+        "label": "Notification",
+        "kind": 6,
+        "importPath": "JobSeeker.Notification.models",
+        "description": "JobSeeker.Notification.models",
+        "peekOfCode": "class Notification(models.Model):\n    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)\n    message = models.TextField()\n    type = models.CharField(max_length=50)  # e.g. \"application_update\"\n    is_read = models.BooleanField(default=False)\n    created_at = models.DateTimeField(auto_now_add=True)",
+        "detail": "JobSeeker.Notification.models",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "JobSeeker.manage",
+        "description": "JobSeeker.manage",
+        "peekOfCode": "def main():\n    \"\"\"Run administrative tasks.\"\"\"\n    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'JobSeeker.settings')\n    try:\n        from django.core.management import execute_from_command_line\n    except ImportError as exc:\n        raise ImportError(\n            \"Couldn't import Django. Are you sure it's installed and \"\n            \"available on your PYTHONPATH environment variable? Did you \"\n            \"forget to activate a virtual environment?\"",
+        "detail": "JobSeeker.manage",
+        "documentation": {}
+    }
+]
