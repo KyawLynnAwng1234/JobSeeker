@@ -7,8 +7,7 @@ from .models import SaveJob, Application
 class SaveJobAdmin(admin.ModelAdmin):
     list_display = ['id', 'profile', 'job']
 admin.site.register(SaveJob, SaveJobAdmin)
-# end SaveJob
 
-# start Application
+# Register your models here.
 admin.site.register(Application)
-# end Application
+admin.site.register(SaveJob)

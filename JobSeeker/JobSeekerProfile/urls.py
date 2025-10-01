@@ -1,0 +1,17 @@
+from django.urls import path
+from .import views
+
+urlpatterns = [
+
+    path('jobseeker/signin/<str:role>/',views.signin_jobseeker_api,name="jobseekersiginpage"),
+    path('jobseeker/sigout/',views.sigout_jobseeker_api,name="jobseekersigoutpage"),
+    path('jobseeker/send/otp/',views.otp_verify_jobseeker_api,name="jobseekeremailverifypage"),
+    path("jobseeker/resend/otp/",views.otp_resend_jobseeker_api, name="jobseeker-otp-resend"),
+
+    #current user for login user 
+    path('jobseeker/currentuser/',views.current_user,name="jobseekercurrentuserpage"),
+
+    #employer dashboard
+    
+
+]

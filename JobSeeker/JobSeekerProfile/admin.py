@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import JobseekerProfile, Resume, Education, Experience, Language, Skill
+from .models import *
 
 # Register your models here.
 
@@ -37,4 +37,13 @@ admin.site.register(Language, LanguageAdmin)
 class SkillAdmin(admin.ModelAdmin):
     list_display = ['id', 'profile', 'name', 'proficiency']
 admin.site.register(Skill, SkillAdmin)
-# end Skill
+
+# Register your models here.
+admin.site.register(JobseekerProfile)
+admin.site.register(Resume)
+admin.site.register(Skill)
+admin.site.register(Education)
+admin.site.register(Language)
+admin.site.register(Experience)
+
+
