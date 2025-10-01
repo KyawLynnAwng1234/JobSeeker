@@ -1,1 +1,17 @@
-.env
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Django stuff
+db.sqlite3
+*.log
+
+# Virtual env
+env/
+venv/
+.venv/
+ENV/
+
+# Ignore compiled migrations (DO NOT ignore actual migrations!)
+**/migrations/__pycache__/
