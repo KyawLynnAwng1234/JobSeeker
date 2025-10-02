@@ -3,7 +3,6 @@ from Accounts.models import *
 
 
 class JobSeekerSignInSerializer(serializers.ModelSerializer):
-
     email = serializers.EmailField(required=True)
     username = serializers.SerializerMethodField(read_only=True)
     class Meta:

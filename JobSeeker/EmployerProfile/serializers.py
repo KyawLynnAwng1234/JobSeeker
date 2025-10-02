@@ -31,4 +31,14 @@ class EmployerUpdateProfileSerializer(serializers.ModelSerializer):
         model=EmployerProfile
         fields=["user","first_name", "last_name", "business_name", "city","logo","phone", "size", "website", "industry"]
 
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=EmployerProfile
+        fields='__all__'
+
+class JobcompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Jobs
+        fields='__all__'
+
     
