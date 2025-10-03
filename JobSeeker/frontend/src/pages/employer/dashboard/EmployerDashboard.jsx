@@ -7,8 +7,10 @@ import {
   Settings,
   LogOut,
   LayoutGrid,
+  Mail,
 } from "lucide-react";
 import { useEmployerAuth } from "../../../hooks/useEmployerAuth";
+import Notification from "./Notification";
 
 export const sidebarItems = [
   { route: "dashboard", label: "Dashboard", icon: Briefcase },
@@ -37,7 +39,6 @@ export default function EmployerDashboardLayout() {
   }
 
   const emailNotVerified = !employer?.is_verified;
-  console.log(emailNotVerified);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -72,13 +73,21 @@ export default function EmployerDashboardLayout() {
 
       {/* Main Content */}
       <div className="flex-1">
-        <header className="flex justify-between items-center bg-white p-4 shadow-sm">
+        <header className="flex justify-between items-center bg-white p-4 shadow-sm relative">
           <NavLink to="/" className="text-gray-600 hover:text-blue-600">
             Home
           </NavLink>
-          <div className="flex space-x-4">
-            <button>🔔</button>
-            <button>📩</button>
+
+          <div className="flex items-center space-x-4 relative">
+            {/* 🔔 Notification Button */}
+            <Notification />
+
+            {/* 📩 Mail Icon */}
+            <button className="p-2 rounded-full hover:bg-gray-200">
+              <Mail size={20} />
+            </button>
+
+            {/* 👤 User Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -113,7 +122,7 @@ export default function EmployerDashboardLayout() {
           </div>
         </header>
 
-        <main className="p-6">
+        <main className="">
           {emailNotVerified && (
             <div className="flex justify-between items-center p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4">
               <span>Please verify your email to access the dashboard.</span>

@@ -18,18 +18,21 @@ class EmployerPreRegisterSerializer(serializers.Serializer):
 
 
 class EmployerProfileSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=True)
     class Meta:
         model = EmployerProfile
-        fields = ["first_name", "last_name", "business_name", "city","logo","phone", "size", "website", "industry"]
+        fields = ["id", "first_name", "last_name", "business_name","logo", "city","phone", "size", "website", "industry", "founded_year", "contact_email",]
 
 class EmployerRegisterSerializer(serializers.Serializer):
     # Only validate profile input
     profile = EmployerProfileSerializer(write_only=True)
+    logo = serializers.ImageField(required=False,allow_null=True)
 
 class EmployerUpdateProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model=EmployerProfile
-        fields=["user","first_name", "last_name", "business_name", "city","logo","phone", "size", "website", "industry"]
+        fields=["first_name", "last_name", "business_name", "city","logo","phone", "size", "website", "industry", "founded_year", "contact_email",]
+        read_only_fields = ["user"]
 
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:

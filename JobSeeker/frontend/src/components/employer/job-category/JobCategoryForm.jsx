@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import {toast} from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function JobCategoryForm({ onSuccess, categoryId }) {
   const [categoryName, setCategoryName] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   // Edit အတွက် detail load
   useEffect(() => {
@@ -38,7 +41,7 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
             withCredentials: true,
           }
         );
-        alert("✅ Category updated!");
+        toast.success("✅ Category updated!");
       } else {
         // Create
         await axios.post(
@@ -52,13 +55,16 @@ export default function JobCategoryForm({ onSuccess, categoryId }) {
             withCredentials: true,
           }
         );
-        alert("✅ Category created!");
+        toast.success("✅ Category created!");
       }
       setCategoryName("");
       onSuccess && onSuccess();
+
+      navigate("/employer/dashboard/job-category");
+
     } catch (err) {
       console.error("Error saving:", err);
-      alert("❌ Error saving category");
+      toast.error("❌ Error saving category");
     } finally {
       setLoading(false);
     }

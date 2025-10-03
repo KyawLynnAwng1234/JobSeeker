@@ -2,8 +2,11 @@
 import React, { useEffect, useState } from "react";
 import { createJob, updateJob, getJobDetail } from "../../../utils/api/jobAPI";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 
 export default function JobForm({ jobId }) {
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -49,10 +52,12 @@ export default function JobForm({ jobId }) {
     try {
       if (jobId) {
         await updateJob(jobId, formData);
-        alert("✅ Job updated!");
+        toast.success("✅ Job updated successfully!");
+        navigate("/employer/dashboard/my-jobs");
       } else {
         await createJob(formData);
-        alert("✅ Job created!");
+        toast.success("✅ Job created successfully!");
+        navigate("/employer/dashboard/my-jobs");
         setFormData({
           title: "",
           job_type: "",
@@ -65,7 +70,7 @@ export default function JobForm({ jobId }) {
       }
     } catch (err) {
       console.error(err);
-      alert("❌ Error saving job");
+      toast.error("❌ Error saving job");
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@ import axios from "axios";
 import JobCategoryForm from "../../../components/employer/job-category/JobCategoryForm";
 import JobCategoryList from "../../../components/employer/job-category/JobCategoryList";
 import JobCategoryDeleteModal from "../../../components/employer/job-category/JobCategoryDeleteModal";
+import {toast} from "react-hot-toast";
 
 export default function JobCategoryListPage() {
   const [categories, setCategories] = useState([]);
@@ -31,12 +32,12 @@ export default function JobCategoryListPage() {
         `http://127.0.0.1:8000/job/job-categories/delete/${id}/`,
         { headers: { "X-CSRFToken": csrfToken }, withCredentials: true }
       );
-      alert("✅ Category deleted!");
+      toast.success("✅ Category deleted!");
       setDeleteId(null);
       fetchCategories();
     } catch (err) {
       console.error("Error deleting category:", err);
-      alert("❌ Error deleting category");
+      toast.error("❌ Error deleting category");
     }
   };
 
