@@ -43,7 +43,7 @@ class Application(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES,default='P',null=True, blank=True)
     cover_letter_text = models.TextField(null=True)
     applied_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
-    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
+    updated_at=models.DateTimeField(auto_now=True,null=True, blank=True)
 
 
     class Meta:

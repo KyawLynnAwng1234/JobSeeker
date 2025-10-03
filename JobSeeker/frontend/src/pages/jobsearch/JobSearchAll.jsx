@@ -1,172 +1,131 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBookmark } from "react-icons/fa";
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import EnterSearch from "../EnterSearch";
 import QuickSearchSection from "../homepage/QuickSearchSection";
 
-const jobs = [
-  {
-    title: "Project Manager",
-    company: "Time Management",
-    location: "Mirpur, U",
-    duties: [
-      "Increase Productivity and Efficiency",
-      "Best Work Balance",
-      "Reduce Process return",
-    ],
-    time: "1h ago",
-  },
-  {
-    title: "Project Manager",
-    company: "Time Management",
-    location: "Mirpur, U",
-    duties: [
-      "Increased Productivity and Efficiency",
-      "Best Work Balance",
-      "Reduce Process return",
-    ],
-    time: "2h ago",
-  },
-  {
-    title: "Project Manager",
-    company: "Time Management",
-    location: "Mirpur, U",
-    duties: [
-      "Increased Productivity and Efficiency",
-      "Best Work Balance",
-      "Reduce Process return",
-    ],
-    time: "2d ago",
-  },
-  {
-    title: "Project Manager",
-    company: "Time Management",
-    location: "Mirpur, U",
-    duties: [
-      "Increased Productivity and Efficiency",
-      "Best Work Balance",
-      "Reduce Process return",
-    ],
-    time: "2d ago",
-  },
-  {
-    title: "Project Manager",
-    company: "Time Management",
-    location: "Mirpur, U",
-    duties: [
-      "Increased Productivity and Efficiency",
-      "Best Work Balance",
-      "Reduce Process return",
-    ],
-    time: "3d ago",
-  },
-  {
-    title: "Project Manager",
-    company: "Time Management",
-    location: "Mirpur, U",
-    duties: [
-      "Increased Productivity and Efficiency",
-      "Best Work Balance",
-      "Reduce Process return",
-    ],
-    time: "4d ago",
-  },
-  {
-    title: "Project Manager",
-    company: "Time Management",
-    location: "Mirpur, U",
-    duties: [
-      "Increased Productivity and Efficiency",
-      "Best Work Balance",
-      "Reduce Process return",
-    ],
-    time: "5d ago",
-  },
-  {
-    title: "Project Manager",
-    company: "Time Management",
-    location: "Mirpur, U",
-    duties: [
-      "Increased Productivity and Efficiency",
-      "Best Work Balance",
-      "Reduce Process return",
-    ],
-    time: "6d ago",
-  },
-];
-
+// Job Card Component
 const JobCard = ({ job }) => (
   <div className="border border-gray-300 rounded-lg p-4 relative shadow-sm hover:shadow-md transition-shadow duration-300">
     <div className="absolute top-4 right-4 text-blue-500">
       <FaBookmark size={20} />
     </div>
     <h3 className="text-lg font-semibold text-gray-800">{job.title}</h3>
-    <p className="text-sm text-gray-600">{job.company}</p>
+    <p className="text-sm text-gray-600">
+      {job.employer || "Unknown Company"}
+    </p>
     <p className="text-sm text-gray-500 mt-1">{job.location}</p>
-    <ul className="list-disc list-inside mt-3 text-sm text-gray-700">
-      {job.duties.map((duty, index) => (
-        <li key={index}>{duty}</li>
-      ))}
-    </ul>
-    <p className="text-sm text-gray-400 mt-4">{job.time}</p>
+    <p className="text-sm text-gray-700 mt-3">
+      {job.description?.slice(0, 100)}...
+    </p>
+    <p className="text-sm text-gray-400 mt-4">
+      {job.deadline ? `Deadline: ${job.deadline}` : "No deadline"}
+    </p>
   </div>
 );
 
-const JobSearchAll = () => (
-  <div>
+const JobSearchAll = () => {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    <EnterSearch />
+  const [currentPage, setCurrentPage] = useState(1);
+  const jobsPerPage = 15;
 
-    <div className="container mx-auto p-8">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">
-          Jobs you can apply for as you wish
-        </h2>
-        <div className="flex space-x-2">
-          <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm">
-            180 Jobs
-          </button>
-          <button className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm">
-            New
-          </button>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
-        {jobs.map((job, index) => (
-          <JobCard key={index} job={job} />
-        ))}
-      </div>
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/job/jobs/", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Jobs API Response:", data);
+        setJobs(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching jobs:", err);
+        setLoading(false);
+      });
+  }, []);
 
-      {/* Pagination Section */}
-      <div className="flex justify-center mt-8">
-        <nav className="flex items-center space-x-2">
-          <button className="p-2 rounded-md hover:bg-gray-200">
-            <HiOutlineChevronLeft size={20} className="text-gray-600" />
-          </button>
-          <div className="flex space-x-1">
-            <button className="px-4 py-2 rounded-md bg-blue-600 text-white font-semibold">
-              1
+  const indexOfLastJob = currentPage * jobsPerPage;
+  const indexOfFirstJob = indexOfLastJob - jobsPerPage;
+  const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+
+  return (
+    <div>
+      <EnterSearch />
+
+      <div className="container mx-auto p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gray-800">
+            Jobs you can apply for as you wish
+          </h2>
+          <div className="flex space-x-2">
+            <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm">
+              {jobs.length} Jobs
             </button>
-            <button className="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-200">
-              2
-            </button>
-            <button className="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-200">
-              3
-            </button>
-            <span className="px-4 py-2 text-gray-500">...</span>
-            <button className="px-4 py-2 rounded-md text-gray-700 hover:bg-gray-200">
-              10
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-full text-sm">
+              New
             </button>
           </div>
-          <button className="p-2 rounded-md hover:bg-gray-200">
-            <HiOutlineChevronRight size={20} className="text-gray-600" />
-          </button>
-        </nav>
-      </div>
-    </div>
+        </div>
 
-    <QuickSearchSection />
-  </div>
-);
+        {loading ? (
+          <p className="text-center text-gray-500">Loading jobs...</p>
+        ) : currentJobs.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+            {currentJobs.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">No jobs available</p>
+        )}
+
+        {/* Pagination Section */}
+        <div className="flex justify-center mt-8">
+          <nav className="flex items-center space-x-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              className="p-2 rounded-md hover:bg-gray-200 disabled:opacity-50"
+            >
+              <HiOutlineChevronLeft size={20} className="text-gray-600" />
+            </button>
+
+            {/* Page Numbers */}
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-4 py-2 rounded-md ${
+                  currentPage === i + 1
+                    ? "bg-blue-600 text-white font-semibold"
+                    : "text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="p-2 rounded-md hover:bg-gray-200 disabled:opacity-50"
+            >
+              <HiOutlineChevronRight size={20} className="text-gray-600" />
+            </button>
+          </nav>
+        </div>
+      </div>
+
+      <QuickSearchSection />
+    </div>
+  );
+};
 
 export default JobSearchAll;

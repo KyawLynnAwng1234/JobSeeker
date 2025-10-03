@@ -15,6 +15,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser,MultiPartParser, FormParser
 from django.utils import timezone
 from django.db.models import Q
+<<<<<<< HEAD
+import json
+
+=======
+>>>>>>> a0f999494cb896c9c6f9c374934f58ec59535377
 #serializers
 from .serializers import *
 #models
@@ -50,10 +55,37 @@ def preregister_employer(request):
 
 # register employerprofile
 @api_view(["POST"])
+<<<<<<< HEAD
 def register_employer(request, role):
     serializer = EmployerRegisterSerializer(data=request.data)
+=======
+@parser_classes([ MultiPartParser, FormParser])
+def register_employer_api(request, role):
+    data = request.data.copy()
+
+    # profile ကို dict ပြောင်း
+    profile_str = data.get("profile")
+    if profile_str:
+        try:
+            profile_data = json.loads(profile_str)
+        except json.JSONDecodeError:
+            return Response({"profile": ["Invalid JSON"]}, status=400)
+    else:
+        profile_data = {}
+    logo_file = request.FILES.get("logo")
+    
+    serializer = EmployerRegisterSerializer(data={"profile": profile_data, "logo": logo_file})
+
+ 
+
+    if not serializer.is_valid():
+        print(serializer.errors)  # 🔍 check which field fail
+    
+
+>>>>>>> 5f55b2d8505731fbaf3865e04d3cff473a6e6560
     if serializer.is_valid(raise_exception=True):
         profile_data = serializer.validated_data["profile"]
+        logo= serializer.validated_data.get("logo")
         # email & password from session (pre-register step)
         email = request.session.get("user_email")
         raw_password = request.session.get("user_password")
@@ -74,7 +106,7 @@ def register_employer(request, role):
         user.set_password(raw_password)   # <-- correct way
         user.save()
         # create employer profile
-        employer_profile = EmployerProfile.objects.create(user=user, **profile_data)
+        employer_profile = EmployerProfile.objects.create(user=user, **profile_data,logo=logo)
         # log them in (session)
         login(request, user)
         # send verification email
@@ -89,9 +121,18 @@ def register_employer(request, role):
                 "last_name": employer_profile.last_name,
                 "business_name": employer_profile.business_name,
                 "city": employer_profile.city,
+                "phone":employer_profile.phone,
+                "size":employer_profile.size,
+                "website":employer_profile.website,
+                "industry":employer_profile.industry,
+                "logo": request.build_absolute_uri(employer_profile.logo.url) 
+                        if employer_profile.logo and employer_profile.logo.name else None,
+                "founded_year":employer_profile.founded_year,
+                "contact_email":employer_profile.contact_email,
             }
         }
-        return Response(response_data, status=status.HTTP_201_CREATED)
+    print(response_data)
+    return Response(response_data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 # end register employerprofile
 

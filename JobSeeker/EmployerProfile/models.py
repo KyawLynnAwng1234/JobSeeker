@@ -22,6 +22,7 @@ class EmployerProfile(models.Model):
     logo = models.ImageField(upload_to="upload_to_logo",default="logo.png", null=True, blank=True)
     founded_year = models.PositiveIntegerField(blank=True, null=True)
     contact_email = models.EmailField(blank=True)
+    
     def __str__(self):
         return self.business_name
 
