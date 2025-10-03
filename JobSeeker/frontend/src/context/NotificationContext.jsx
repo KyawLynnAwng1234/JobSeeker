@@ -59,8 +59,12 @@ export const NotificationProvider = ({ children }) => {
 
   const handleDelete = async (id) => {
     try {
+      const notif = notifications.find((n) => n.id === id);
+      const notifName = notif?.message || "Notification";
+
       await deleteNotification(id);
-      toast.success("Notification deleted.");
+
+      toast.success(`"${notifName}" deleted.`);
       loadNotifications();
     } catch (err) {
       console.error("Delete failed:", err);
@@ -71,10 +75,18 @@ export const NotificationProvider = ({ children }) => {
   const handleDeleteAll = async () => {
     try {
       const res = await deleteAllNotifications();
-      const successMsg = res?.message || "All notifications cleared.";
+      const deletedCount = res?.deleted_count || 0;
+      const deletedItems = res?.deleted_items || [];
 
-      toast.success(successMsg);
-      console.log(successMsg);
+      if (deletedCount > 0) {
+        const names = deletedItems
+          .map((item) => `• ${item.message}`)
+          .join("\n");
+        toast.success(`✅ Deleted ${deletedCount} notifications:\n${names}`);
+      } else {
+        toast.info("ℹ️ No read notifications to clear.");
+      }
+
       loadNotifications();
     } catch (err) {
       if (err.response) {

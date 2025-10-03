@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { Bell, Trash2 } from "lucide-react";
 import { useNotificationAuth } from "../../../hooks/useNotificationAuth";
+import { toast } from "react-hot-toast";
 
 export default function Notification() {
   const { notifications, loading, markRead, markUnread, deleteOne, deleteAll } =
     useNotificationAuth();
   const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState("all");
   const notifRef = useRef(null);
 
   // ✅ unread count
@@ -31,6 +33,12 @@ export default function Notification() {
       markRead(id);
     }
   };
+
+  const filteredNotifications = notifications.filter((n) => {
+    if (filter === "unread") return !n.is_read;
+    if (filter === "read") return n.is_read;
+    return true; // all
+  });
 
   return (
     <div className="relative" ref={notifRef}>
@@ -62,12 +70,46 @@ export default function Notification() {
             )}
           </div>
 
-          {notifications.length === 0 ? (
+          {/* Filter Tabs */}
+          <div className="flex border-b text-sm">
+            <button
+              onClick={() => setFilter("all")}
+              className={`flex-1 py-2 ${
+                filter === "all"
+                  ? "border-b-2 border-blue-500 text-blue-600 font-semibold"
+                  : "text-gray-500"
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilter("unread")}
+              className={`flex-1 py-2 ${
+                filter === "unread"
+                  ? "border-b-2 border-blue-500 text-blue-600 font-semibold"
+                  : "text-gray-500"
+              }`}
+            >
+              Unread
+            </button>
+            <button
+              onClick={() => setFilter("read")}
+              className={`flex-1 py-2 ${
+                filter === "read"
+                  ? "border-b-2 border-blue-500 text-blue-600 font-semibold"
+                  : "text-gray-500"
+              }`}
+            >
+              Read
+            </button>
+          </div>
+
+          {filteredNotifications.length === 0 ? (
             <div className="p-4 text-gray-500 text-center">
               No notifications
             </div>
           ) : (
-            notifications.map((n) => (
+            filteredNotifications.map((n) => (
               <div
                 key={n.id}
                 className={`flex justify-between items-center px-4 py-3 border-b hover:bg-gray-50 ${
@@ -86,8 +128,14 @@ export default function Notification() {
 
                 {/* 🗑 Delete button */}
                 <button
-                  onClick={() => deleteOne(n.id)} disabled={!n.is_read}
-                  className={`ml-3 text-gray-400 hover:text-red-500 ${!n.is_read ? "opacity-50 cursor-not-allowed" : ""}`}
+                  onClick={() => {
+                    if (!n.is_read) {
+                      toast.error("You haven't read this yet.");
+                      return;
+                    }
+                    deleteOne(n.id);
+                  }}
+                  className="ml-3 text-gray-400 hover:text-red-500"
                 >
                   <Trash2 size={16} />
                 </button>

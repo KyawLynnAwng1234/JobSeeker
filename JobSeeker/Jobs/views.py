@@ -137,10 +137,13 @@ def jobs_list_api(request):
     
     if user.is_staff:  
         # Admin → All jobs
-        jobs = Jobs.objects.all().order_by('-id')
+        jobs = Jobs.objects.all().order_by('-created_at')
+    elif hasattr(user, "employerprofile"):
+        # Employer → Only their own jobs
+        jobs = Jobs.objects.filter(employer__user=user).order_by('-created_at')
     else:  
         # Employer → Only their own jobs
-        jobs = Jobs.objects.filter(employer__user=user).order_by('-id')
+        jobs = Jobs.objects.filter(is_active=True).order_by('-created_at')
     
     serializer = JobsSerializer(jobs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

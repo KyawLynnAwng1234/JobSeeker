@@ -90,10 +90,7 @@ export default function EmployerDashboardLayout() {
             {/* 👤 User Dropdown */}
             <div className="relative">
               <button
-                onClick={() => {
-                  setDropdownOpen(!dropdownOpen);
-                  setNotifOpen(false);
-                }}
+                onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center space-x-2 bg-gray-100 px-3 py-2 rounded hover:bg-gray-200"
               >
                 <User size={18} />
