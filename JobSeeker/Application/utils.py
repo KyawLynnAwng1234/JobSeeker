@@ -7,7 +7,70 @@ MIN_REQ = {
     "education": 1,     # min number of education entries
     "experience": 1,    # min number of experience entries
     "skills": 1,        # e.g., set to 3 if you want 3+ skills
+    "language":1,       
 }
+
+# =========================
+# UI specs per section
+# =========================
+SECTION_SPECS = {
+    "summary": {
+        "label": "Profile Summary",
+        "fix_url": "/profile/edit#summary",
+        "action_label": "Write Summary",
+        "required_fields": ["text"],
+        "optional_fields": [],
+        "defaults": {},
+        "messages": {"empty": "Write a short profile summary."},
+    },
+    "education": {
+        "label": "Education",
+        "fix_url": "/profile/edit#education",
+        "action_label": "Add Education",
+        "required_fields": ["school_name", "degree", "start_date"],
+        "optional_fields": ["field_of_study", "end_date", "description"],
+        "defaults": {"degree": "", "school_name": ""},
+        "messages": {"empty": "Add at least one education entry."},
+    },
+    "experience": {
+        "label": "Experience",
+        "fix_url": "/profile/edit#experience",
+        "action_label": "Add Experience",
+        "required_fields": ["company_name", "position", "start_date"],
+        "optional_fields": ["end_date", "description", "location"],
+        "defaults": {"position": "", "company_name": ""},
+        "messages": {"empty": "Add at least one work experience."},
+    },
+    "skills": {
+        "label": "Skills",
+        "fix_url": "/profile/edit#skills",
+        "action_label": "Add Skill",
+        "required_fields": ["name"],
+        "optional_fields": [],
+        "defaults": {},
+        "messages": {"empty": "Add at least one skill."},
+    },
+    "language": {
+        "label": "Language",
+        "fix_url": "/profile/edit#language",
+        "action_label": "Add Language",
+        "required_fields": ["name"],
+        "optional_fields": ["proficiency"],
+        "defaults": {"proficiency": None},
+        "messages": {"empty": "Add at least one language."},
+    },
+    "certifications": {
+        "label": "Certifications",
+        "fix_url": "/profile/edit#certifications",
+        "action_label": "Add Certification",
+        "required_fields": ["name", "issuer"],
+        "optional_fields": ["issued_date", "expires_at"],
+        "defaults": {},
+        "messages": {"empty": "Add at least one certification."},
+    },
+}
+
+# =========================
 
 # ---- Helpers -----------------------------------------------------------------
 def jsonify_dates(obj):
@@ -103,9 +166,18 @@ def build_resume_snapshot(profile):
             rows = _values_smart(skill_mgr.all(), wanted_fields=("name",))
             skills = [r["name"] for r in rows if "name" in r and r["name"]]
 
-    # --- Languages (optional) ---
-    lang_mgr = _get_rel_manager(profile, ["languages", "language_set"])
-    languages = _values_smart(lang_mgr.all(), wanted_fields=("name", "proficiency")) if lang_mgr else []
+    # --- Languages (required by checker below) ---
+    lang_mgr = _get_rel_manager(profile, ["language", "language_set", "profile_languages", "languages_set"])
+    if lang_mgr:
+        # Prefer a normalized dict shape with name + proficiency if available.
+        lang_rows = _values_smart(lang_mgr.all(), wanted_fields=("name", "proficiency"))
+        language = [
+            {"name": r.get("name"), "proficiency": r.get("proficiency")}
+            for r in lang_rows
+            if r.get("name")
+        ]
+    else:
+        language= []
 
     # --- Certifications (optional) ---
     cert_mgr = _get_rel_manager(profile, ["certifications", "certification_set"])
@@ -116,11 +188,11 @@ def build_resume_snapshot(profile):
         "education": educations,
         "experience": experiences,
         "skills": list(skills),
-        "languages": languages,
+        "language": language,
         "certifications": certifications,
     }
-    # ✅ Ensure everything is JSON-serializable (dates → strings)
     return jsonify_dates(snapshot)
+
 
 # ---- Requirements checker ----------------------------------------------------
 def check_requirements(snapshot, min_req=None):
@@ -140,4 +212,44 @@ def check_requirements(snapshot, min_req=None):
         missing.append({"field": "experience", "need": min_req["experience"]})
     if len(snapshot.get("skills", [])) < min_req.get("skills", 0):
         missing.append({"field": "skills", "need": min_req["skills"], "have": len(snapshot.get("skills", []))})
+    if len(snapshot.get("language", [])) < min_req.get("language", 0):
+        missing.append({"field": "language", "need": min_req["language"], "have": len(snapshot.get("language", []))})
     return missing
+
+
+def decorate_missing(missing_list):
+    """
+    Attach UI metadata + per-section required subfields so the frontend
+    can render the right checklist and CTA without hardcoding.
+    """
+    out = []
+    for item in missing_list:
+        field = item.get("field")
+        spec = SECTION_SPECS.get(field, {
+            "label": field.title() if field else "Missing",
+            "fix_url": "/profile/edit",
+            "action_label": "Fix",
+            "required_fields": [],
+            "optional_fields": [],
+            "defaults": {},
+            "messages": {"empty": "Please complete this section."},
+        })
+        out.append({
+            **item,
+            "label": spec["label"],
+            "fix_url": spec["fix_url"],
+            "action_label": spec["action_label"],
+            "message": item.get("message") or spec["messages"]["empty"],
+            "schema": {
+                "required_fields": spec["required_fields"],
+                "optional_fields": spec.get("optional_fields", []),
+                "defaults": spec.get("defaults", {}),
+            },
+        })
+    return out
+
+
+
+
+
+

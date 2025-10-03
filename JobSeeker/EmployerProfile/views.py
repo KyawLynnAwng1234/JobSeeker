@@ -15,18 +15,17 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser,MultiPartParser, FormParser
 from django.utils import timezone
 from django.db.models import Q
+<<<<<<< HEAD
 import json
 
+=======
+>>>>>>> a0f999494cb896c9c6f9c374934f58ec59535377
 #serializers
 from .serializers import *
-from .serializers import EmployerPreRegisterSerializer
-
 #models
 from Jobs.models import Jobs
 from Application.models import Application
 from .models import EmployerProfile
-
-
 User = get_user_model()
 
 # Pre-register employer (collect email & password)
@@ -89,10 +88,8 @@ def register_employer_api(request, role):
                 {"error": "Session expired. Please pre-register again."},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
         username = email.split("@")[0]
         # create user
-       
         user = User.objects.create(
             email=email,
             role=role,
@@ -102,7 +99,6 @@ def register_employer_api(request, role):
         )
         user.set_password(raw_password)   # <-- correct way
         user.save()
-     
         # create employer profile
         employer_profile = EmployerProfile.objects.create(user=user, **profile_data,logo=logo)
         # log them in (session)
@@ -147,7 +143,6 @@ def login_employer_api(request):
         # Add retry-after header for better rate limit handling
         response['Retry-After'] = '60'
         return response
-    
     email = request.data.get("email")
     password = request.data.get("password")
     user = authenticate(request, email=email, password=password)
@@ -192,31 +187,18 @@ def emailverify_employer_api(request, uidb64, token):
 @api_view(["POST"])
 @permission_classes([AllowAny])  # not logged in — fine
 def resend_verification_api(request):
-    """
-    Resend verification email.
-    Priority:
-      1) email from session (pre-register stored it as 'user_email')
-      2) email from POST body
-    """
-    # 1) get email from session first
     email = (request.session.get("user_email") or "").strip()
-    # 2) if no session email, accept from POST body
     if not email:
         email = (request.data.get("email") or "").strip()
     if not email:
         return Response({"detail": "Email required."}, status=status.HTTP_400_BAD_REQUEST)
-    # 3) look up user case-insensitively
     try:
         user = User.objects.get(email__iexact=email)
     except User.DoesNotExist:
-        # don’t reveal whether an email exists
         return Response({"detail": "If your account exists, we sent a verification email."}, status=200)
-    # 4) already verified?
     if getattr(user, "is_verified", False):
         return Response({"detail": "Your email is already verified."}, status=200)
-    # 5) send email
     send_verification_email(request, user)
-    # optional: flag to show UI hints
     return Response({"detail": "Verification email sent."}, status=200)
 #end resend email verification link
 
@@ -231,7 +213,6 @@ def dashboard_api(request):
     total_applications=Application.objects.filter(job__employer__user=user).count()
     active_jobs=Jobs.objects.filter(Q(employer__user=user)&Q(deadline__gte=today) | Q(deadline__isnull=True)).count()
     expired_jobs=Jobs.objects.filter(Q(employer__user=user)&Q(deadline__lt=today)).count()
-    # data=JobsSerializer(expired_jobs,many=True).data
     
     return Response({
         'total_jobs':total_jobs,
@@ -250,14 +231,10 @@ def dashboard_api(request):
 def employer_profile_api(request):
     user=request.user
     employer_profile=EmployerProfile.objects.filter(user=user)
-    for emp_profile in employer_profile:
-        print(emp_profile.first_name,emp_profile.last_name,emp_profile.business_name,emp_profile.city,emp_profile.logo,emp_profile.phone,emp_profile.size,emp_profile.website,emp_profile.industry  )
     employer_profile=EmployerProfileSerializer(employer_profile,many=True).data
-
     return Response({
         "employer_profile":employer_profile
     })
-
 #end employer profile
 
 #start update employer profile
@@ -295,6 +272,27 @@ def update_employer_profile_api(request, pk):
         )
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 #end update employer profile
+
+#start company list
+@api_view(['GET'])
+def company_list(request):
+    companies_q=EmployerProfile.objects.all()
+    companies_s=CompanySerializer(companies_q,many=True).data
+
+    return Response({
+        "companies":companies_s
+    })
+#end
+
+#start jobs in company
+@api_view(['GET'])
+def jobs_in_company(request,com_id):
+    jobs_in_com=Jobs.objects.filter(employer__id=com_id)
+    jobs_in_com_s=JobcompanySerializer(jobs_in_com,many=True).data
+    return Response({
+        "jobs_in_com_s":jobs_in_com_s
+    })
+#end
 
 
 

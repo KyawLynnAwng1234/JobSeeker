@@ -34,4 +34,14 @@ class EmployerUpdateProfileSerializer(serializers.ModelSerializer):
         fields=["first_name", "last_name", "business_name", "city","logo","phone", "size", "website", "industry", "founded_year", "contact_email",]
         read_only_fields = ["user"]
 
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=EmployerProfile
+        fields='__all__'
+
+class JobcompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Jobs
+        fields='__all__'
+
     

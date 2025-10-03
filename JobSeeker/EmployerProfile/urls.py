@@ -11,9 +11,13 @@ urlpatterns = [
     path('employer/emailverify/<uidb64>/<token>/',views.emailverify_employer_api,name="employer-emailverifypage"),
     path('employer/resend-verification-email/',views.resend_verification_api,name="employer-resend-verification-emailpage"),
 
-   
     #employer dashboard paths
     path('employer/dashboard/', views.dashboard_api, name='employer-dashboard'),
     path('employer/profile/', views.employer_profile_api, name='employer-profile'),
-    path('employer/profile-update/<str:pk>/',views.update_employer_profile_api,name="empployer-profile-update")
+    path('employer/profile-update/<str:pk>/',views.update_employer_profile_api,name="empployer-profile-update"),
+
+    #company list
+    path('company/',views.company_list,name="company-list"),
+    path('job/company/<uuid:com_id>/',views.jobs_in_company,name='job-in-company'),
+
 ]

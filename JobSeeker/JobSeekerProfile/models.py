@@ -27,7 +27,7 @@ class Resume(models.Model):
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE,related_name="resumes")
     title = models.CharField(max_length=200)
     file  = models.FileField(upload_to="resume-file/", null=True, blank=True)  # PDF/DOC/DOCX
-    data  = models.JSONField(null=True, blank=True)  # snapshot from Education/Experience/Skills…
+    data  = models.JSONField(null=True, blank=True)# snapshot from Education/Experience/Skills…
     is_default = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -51,14 +51,17 @@ class Education(models.Model):
         default=uuid.uuid4,    # Auto-generate UUID v4
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
-    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
+    profile = models.ForeignKey(JobseekerProfile,on_delete=models.CASCADE)
     school_name = models.CharField(max_length=255)
     degree = models.CharField(max_length=100)
     field_of_study = models.CharField(max_length=100)
-    start_year = models.IntegerField()
+    start_year = models.IntegerField(blank=True)
     end_year = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
+
+    def __str__(self):
+        return self.school_name
 
 
 class Experience(models.Model):
@@ -76,6 +79,9 @@ class Experience(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
+    def __str__(self):
+        return self.company_name
+
 
 class Language(models.Model):
     id = models.UUIDField(
@@ -89,6 +95,8 @@ class Language(models.Model):
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
+    def __str__(self):
+        return self.name
 
 class Skill(models.Model):
     id = models.UUIDField(
@@ -101,4 +109,7 @@ class Skill(models.Model):
     proficiency = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
