@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from Accounts.models import *
-
+from .models import *
 
 class JobSeekerSignInSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
@@ -11,6 +11,44 @@ class JobSeekerSignInSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         return obj.email.split('@')[0] if obj.email else None
+    
+
+class JobseekerProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobseekerProfile
+        fields = '__all__' 
 
 
+class ResumeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resume
+        fields = '__all__'
+        
+
+class EducationSerializer(serializers.ModelSerializer):
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Education
+        fields = '__all__'
+        
+
+class ExperienceSerializer(serializers.ModelSerializer):
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Experience
+        fields = '__all__'
+        
+
+class LanguageSerializar(serializers.ModelSerializer):
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Language
+        fields = '__all__'
+        
+
+class SkillSerializar(serializers.ModelSerializer):
+    profile = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = Skill
+        fields = '__all__'
 

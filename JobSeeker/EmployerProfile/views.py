@@ -21,11 +21,12 @@ from .serializers import *
 from Jobs.models import Jobs
 from Application.models import Application
 from .models import EmployerProfile
+from django.db.models import Count
 User = get_user_model()
 
 # Pre-register employer (collect email & password)
 @api_view(['POST'])
-def preregister_employer_api(request):
+def preregister_employer(request):
     serializer = EmployerPreRegisterSerializer(data=request.data)
     if serializer.is_valid():
         email = serializer.validated_data['email']
@@ -49,7 +50,7 @@ def preregister_employer_api(request):
 
 # register employerprofile
 @api_view(["POST"])
-def register_employer_api(request, role):
+def register_employer(request, role):
     serializer = EmployerRegisterSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         profile_data = serializer.validated_data["profile"]
@@ -98,7 +99,7 @@ def register_employer_api(request, role):
 #sign in employer
 @api_view(["POST"])
 @ratelimit(key='ip', rate='5/m', block=False, method='POST')
-def login_employer_api(request):
+def login_employer(request):
     # Check if rate limited with custom message
     if getattr(request, 'limited', False):
         response = Response({
@@ -120,7 +121,7 @@ def login_employer_api(request):
 
 #sign out employer
 @api_view(["POST"])
-def logout_employer_api(request):
+def logout_employer(request):
     logout(request)
     return Response({"detail": "Logged out successfully"}, status=status.HTTP_200_OK)
 #end sign out employer
@@ -128,7 +129,7 @@ def logout_employer_api(request):
 
 # employer Email verification
 @api_view(["GET"])
-def emailverify_employer_api(request, uidb64, token):
+def emailverify_employer(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
         user = User.objects.get(pk=uid)
@@ -150,7 +151,7 @@ def emailverify_employer_api(request, uidb64, token):
 #resend verification email
 @api_view(["POST"])
 @permission_classes([AllowAny])  # not logged in — fine
-def resend_verification_api(request):
+def resend_verification(request):
     email = (request.session.get("user_email") or "").strip()
     if not email:
         email = (request.data.get("email") or "").strip()
@@ -170,7 +171,7 @@ def resend_verification_api(request):
 #dashboard
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
-def dashboard_api(request):
+def dashboard(request):
     today=timezone.localdate()
     user=request.user
     total_jobs=Jobs.objects.filter(employer__user=user).count()
@@ -192,7 +193,7 @@ def dashboard_api(request):
 #employer profile
 @api_view(["GET", "PUT", "PATCH"])
 @permission_classes([IsAuthenticated])
-def employer_profile_api(request):
+def employer_profile(request):
     user=request.user
     employer_profile=EmployerProfile.objects.filter(user=user)
     employer_profile=EmployerProfileSerializer(employer_profile,many=True).data
@@ -205,7 +206,7 @@ def employer_profile_api(request):
 @api_view(["GET", "PATCH", "PUT"])
 @permission_classes([IsAuthenticated])
 @parser_classes([JSONParser, MultiPartParser, FormParser])
-def update_employer_profile_api(request, pk):
+def update_employer_profile(request, pk):
     try:
         profile = EmployerProfile.objects.get(id=pk, user=request.user)
     except EmployerProfile.DoesNotExist:
@@ -240,9 +241,8 @@ def update_employer_profile_api(request, pk):
 #start company list
 @api_view(['GET'])
 def company_list(request):
-    companies_q=EmployerProfile.objects.all()
+    companies_q = EmployerProfile.objects.annotate(job_count=Count("jobs"))
     companies_s=CompanySerializer(companies_q,many=True).data
-
     return Response({
         "companies":companies_s
     })
@@ -255,6 +255,7 @@ def jobs_in_company(request,com_id):
     jobs_in_com_s=JobcompanySerializer(jobs_in_com,many=True).data
     return Response({
         "jobs_in_com_s":jobs_in_com_s
+        
     })
 #end
 

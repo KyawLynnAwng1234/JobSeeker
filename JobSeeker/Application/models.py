@@ -11,9 +11,8 @@ class SaveJob(models.Model):
         default=uuid.uuid4,    # Auto-generate UUID v4
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
-    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE,)
+    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE,related_name='saved_jobs', null=True, blank=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE, null=True, blank=True)
-
 
     class Meta:
         constraints = [

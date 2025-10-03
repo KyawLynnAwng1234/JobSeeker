@@ -23,9 +23,6 @@ def notify_on_job_created(sender, instance, created, **kwargs):
         object_id=instance.id,
     ))
 
-
-
-
 # -------- Application created -> notify employer --------
 @receiver(post_save, sender=Application)
 def notify_on_application_created(sender, instance, created, **kwargs):

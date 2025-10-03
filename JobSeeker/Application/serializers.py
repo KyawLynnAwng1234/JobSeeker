@@ -2,7 +2,7 @@ from rest_framework import serializers
 import json
 from uuid import UUID
 from datetime import date, datetime
-from .models import Application
+from .models import *
 from Application.models import Resume
 from .utils_resume_persist import persist_resume_sections
 from .utils import jsonify_dates
@@ -10,7 +10,6 @@ from JobSeekerProfile.models import Education, Experience, Skill, Language
 
 
 # ---------- Helpers ----------
-
 def _as_list(v):
     if not v:
         return []
@@ -79,6 +78,11 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
         fields = ["id", "resume", "resume_form", "resume_upload", "status", "cover_letter_text"]
         read_only_fields = ["id", "resume"]
 
+class SaveJobsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SaveJob
+        fields='__all__'
+
     def validate(self, attrs):
         has_form  = bool(attrs.get("resume_form"))
         has_file  = bool(attrs.get("resume_upload"))
@@ -104,7 +108,6 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
         profile    = self.context["profile"]
         job        = self.context["job"]
         allow_auto = bool(self.context.get("allow_auto_general", False))
-
         form   = attrs.pop("resume_form", None)
         upload = attrs.pop("resume_upload", None)
 
