@@ -44,9 +44,9 @@ class Application(models.Model):
     resume_upload=models.ImageField(upload_to="resume-file",null=True,blank=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES,default='P',null=True, blank=True)
     cover_letter_text = models.TextField(null=True)
+    max_applicants = models.PositiveIntegerField(default=0, help_text="Maximum number of allowed applicants",null=True)
     applied_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at=models.DateTimeField(auto_now=True,null=True, blank=True)
-
 
     class Meta:
         constraints = [
