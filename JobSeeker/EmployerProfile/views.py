@@ -16,10 +16,17 @@ from rest_framework.parsers import JSONParser,MultiPartParser, FormParser
 from django.utils import timezone
 from django.db.models import Q
 <<<<<<< HEAD
+
+import json
+
+
+=======
+<<<<<<< HEAD
 import json
 
 =======
 >>>>>>> a0f999494cb896c9c6f9c374934f58ec59535377
+>>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
 #serializers
 from .serializers import *
 #models
@@ -56,9 +63,12 @@ def preregister_employer(request):
 # register employerprofile
 @api_view(["POST"])
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 def register_employer(request, role):
     serializer = EmployerRegisterSerializer(data=request.data)
 =======
+>>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
 @parser_classes([ MultiPartParser, FormParser])
 def register_employer_api(request, role):
     data = request.data.copy()
@@ -82,7 +92,10 @@ def register_employer_api(request, role):
         print(serializer.errors)  # 🔍 check which field fail
     
 
+<<<<<<< HEAD
+=======
 >>>>>>> 5f55b2d8505731fbaf3865e04d3cff473a6e6560
+>>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
     if serializer.is_valid(raise_exception=True):
         profile_data = serializer.validated_data["profile"]
         logo= serializer.validated_data.get("logo")

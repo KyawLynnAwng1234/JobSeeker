@@ -1,15 +1,26 @@
 {
   "index.html": {
+<<<<<<< HEAD
+    "file": "assets/index-pWRSdVch.js",
+=======
     "file": "assets/index-A17aO97R.js",
+>>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "css": [
+<<<<<<< HEAD
+      "assets/index-D-BS87bv.css"
+    ],
+    "assets": [
+      "assets/logotwo-exDaVGaC.png",
+=======
       "assets/index-B9eDBOcY.css"
     ],
     "assets": [
       "assets/logotwo-exDaVGaC.png",
       "assets/companies-CHiPRevC.jpg",
+>>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
       "assets/ajax-loader-BcnMEykj.gif",
       "assets/slick-BlzDm7g2.svg"
     ]
@@ -22,10 +33,13 @@
     "file": "assets/slick-BlzDm7g2.svg",
     "src": "node_modules/slick-carousel/slick/fonts/slick.svg"
   },
+<<<<<<< HEAD
+=======
   "src/assets/images/companies.jpg": {
     "file": "assets/companies-CHiPRevC.jpg",
     "src": "src/assets/images/companies.jpg"
   },
+>>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
   "src/assets/images/logotwo.png": {
     "file": "assets/logotwo-exDaVGaC.png",
     "src": "src/assets/images/logotwo.png"

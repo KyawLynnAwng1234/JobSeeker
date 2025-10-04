@@ -2,16 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
-const companies = Array.from({ length: 50 }, (_, i) => ({
-  id: i + 1,
-  name: "GLOBle",
-  description:
-    "Every day, there is a new Mystery Country. Your goal is to gue.....",
-  jobs: 5,
-}));
+import axios from "axios";
 
 const Companies = () => {
+  const [companies, setCompanies] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(6);
 
@@ -34,6 +29,28 @@ const Companies = () => {
   };
 
   useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const token = localStorage.getItem("access");
+        const res = await axios.get(
+          "http://127.0.0.1:8000/accounts-employer/company/",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+          }
+        );
+        setCompanies(res.data.companies || []); // API က "companies" key ထဲမှာရှိ
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchCompanies();
+
     updateItemsPerPage();
     window.addEventListener("resize", updateItemsPerPage);
     return () => window.removeEventListener("resize", updateItemsPerPage);
@@ -51,6 +68,10 @@ const Companies = () => {
   const handleNext = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
+
+  if (loading) {
+    return <div className="text-center py-20">Loading companies...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -101,18 +122,18 @@ const Companies = () => {
               key={company.id}
               className="border rounded-lg p-4 text-center shadow-sm hover:shadow-md transition"
             >
-              <Link to="/companies/about">
+              <Link to={`/companies/${company.id}`}>
                 <img
-                  src="/logo.png"
-                  alt={company.name}
+                  src={company.logo ? `http://127.0.0.1:8000${company.logo}` : "/logo.png"}
+                  alt={company.business_name}
                   className="w-16 h-16 mx-auto mb-4"
                 />
-                <h3 className="font-semibold text-lg mb-2">{company.name}</h3>
+                <h3 className="font-semibold text-lg mb-2">{company.business_name}</h3>
                 <p className="text-sm text-gray-500 mb-4">
-                  {company.description}
+                  {company.industry || "No industry info"}
                 </p>
                 <button className="px-4 py-2 text-sm bg-gray-100 text-blue-600 font-medium rounded-md cursor-pointer">
-                  {company.jobs} jobs
+                  {company.jobs_count || "0"} Jobs
                 </button>
               </Link>
             </div>
