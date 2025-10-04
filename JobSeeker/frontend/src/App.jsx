@@ -84,7 +84,6 @@ function App() {
                 <Route path="companies" element={<Companies />} />
                 <Route path="companies/:id" element={<CompanyAbout />} />
 
-
                 <Route
                   path="profile/me"
                   element={
