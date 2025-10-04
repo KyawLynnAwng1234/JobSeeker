@@ -35,11 +35,13 @@ class EmployerUpdateProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ["user"]
 
 class CompanySerializer(serializers.ModelSerializer):
+    job_count = serializers.IntegerField(read_only=True)
     class Meta:
         model=EmployerProfile
-        fields='__all__'
+        fields=['id','first_name','last_name','business_name','city','phone','size','website','industry','logo','founded_year','contact_email','job_count']
 
 class JobcompanySerializer(serializers.ModelSerializer):
+    
     class Meta:
         model=Jobs
         fields='__all__'

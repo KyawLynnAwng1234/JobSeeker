@@ -17,9 +17,9 @@ def avatar_svg(request, user_id):
     color = palette[int(hashlib.md5(key.encode()).hexdigest(), 16) % len(palette)]
 
     svg = f'''<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-<rect width="256" height="256" rx="32" fill=""/>
-<text x="50%" y="50%" dy=".1em" text-anchor="middle" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="110" font-weight="700" fill="#fff">{initials}</text>
-</svg>'''
+    <rect width="256" height="256" rx="32" fill=""/>
+    <text x="50%" y="50%" dy=".1em" text-anchor="middle" font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="110" font-weight="700" fill="#fff">{initials}</text>
+    </svg>'''
     r = HttpResponse(svg, content_type="image/svg+xml; charset=utf-8")
     r["Cache-Control"] = "public, max-age=86400"
     return r

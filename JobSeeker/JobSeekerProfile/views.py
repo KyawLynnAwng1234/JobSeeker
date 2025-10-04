@@ -23,16 +23,16 @@ from django.conf import settings
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @ratelimit(key='ip', rate='5/m', block=False, method='POST')
-def signin_jobseeker_api(request, role):
+def signin_jobseeker(request, role):
     # Check if rate limited
     if getattr(request, 'limited', False):
         return Response({"error": "Too many attempts, please wait one minute before trying again."}, status=status.HTTP_429_TOO_MANY_REQUESTS)
-    
+ 
     serializer = JobSeekerSignInSerializer(data=request.data)
     if not serializer.is_valid():
         # ✅ Always return when invalid
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+ 
     email = serializer.validated_data.get('email')
     if not email:
         return Response({"error": "Please enter your email."},
@@ -60,11 +60,9 @@ def signin_jobseeker_api(request, role):
 
     # ✅ Save to session with timestamp
     request.session['verification_code'] = code
-    print(request.session['verification_code'])
     request.session['email'] = email
     request.session['user_id'] = str(user.id)
     request.session['otp_created_at'] = timezone.now().isoformat()
-
     msg = ("Account created and verification code sent to "
            if created else "Verification code sent to ") + email
 
@@ -77,16 +75,13 @@ def signin_jobseeker_api(request, role):
 #job-seeker-email-verify 
 @api_view(['POST'])
 @ratelimit(key='ip', rate='5/m', block=False, method='POST')
-def otp_verify_jobseeker_api(request):
+def otp_verify_jobseeker(request):
     # Check if rate limited
     if getattr(request, 'limited', False):
         return Response({"detail": "Too many verification attempts. Please wait one minute before trying again."}, status=status.HTTP_429_TOO_MANY_REQUESTS)
-    
     input_code = request.data.get('code')
     code = request.session.get('verification_code')
-    
     user_id = request.session.get('user_id')
-
     if input_code ==code and user_id:
         try:
             user = User.objects.get(id=user_id)
@@ -120,7 +115,7 @@ def otp_verify_jobseeker_api(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 @ratelimit(key='ip', rate='5/m', block=False, method='POST')   # use the scoped rate above
-def otp_resend_jobseeker_api(request):
+def otp_resend_jobseeker(request):
     """
     Resend the email verification code for jobseeker login.
     Priority for email source:
@@ -153,31 +148,15 @@ def otp_resend_jobseeker_api(request):
     request.session['email'] = email
     request.session['user_id'] = str(user.id)
 
-    # 5) (optional) print for quick manual testing
-    print("➡️ Resent jobseeker code:", {"email": email, "code": code, "user_id": str(user.id)})
-
     return Response(
         {"message": "Verification code resent.", "cooldown_seconds": 60},
         status=status.HTTP_200_OK
     )
 
-
-
-
-@api_view(['POST'])
-def sigout_jobseeker_api(request):
+def sigout_jobseeker(request):
     logout(request)
     return Response({"message": "Logged out successfully"},status=status.HTTP_200_OK)
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def profile_jobseeker_api(request):
-    user=request.user
-    return Response({
-        "username":user.username,
-        "email":user.email,
-    })
-    
     
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -190,4 +169,271 @@ def current_user(request):
         "is_verified": getattr(u, "is_verified", False),
         "username": u.email.split("@")[0] if u.email else None,
     })
+
+#start jobseekerprofile
+# Create + Read (List)
+@api_view(['GET', 'POST'])
+# @parser_classes([MultiPartParser, FormParser])
+def jobseekerprofile_list(request):
+    if request.method == 'GET':   # READ all
+        jobseekerprofiles = JobseekerProfile.objects.filter(user=request.user)
+        serializer = JobseekerProfileSerializer(jobseekerprofiles,many=True)
+        return Response(serializer.data)
+    
+    elif request.method == 'POST':   # CREATE
+        serializer = JobseekerProfileSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Read (Single) + Update + Delete
+@api_view(['GET', 'PUT', 'DELETE'])
+def jobseekerprofile_detail(request, jp_id):
+    try:
+        jobseekerprofile = JobseekerProfile.objects.get(pk=jp_id)
+    except JobseekerProfile.DoesNotExist:
+        return Response({"error": "JobseekerProfile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':   # READ one
+        serializer = JobseekerProfileSerializer(jobseekerprofile)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':   # UPDATE
+        serializer = JobseekerProfileSerializer(jobseekerprofile, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':   # DELETE
+        jobseekerprofile.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+#end jobseekerprofile
+
+   
+# Create + Read (skill-List)
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def skill_list(request):
+    if request.method == 'GET':   # READ all
+        skills = Skill.objects.filter(profile__user=request.user)
+        serializer = SkillSerializar(skills, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':   # CREATE
+        try:
+            profile = JobseekerProfile.objects.get(user=request.user)
+        except JobseekerProfile.DoesNotExist:
+            return Response({"error": "Profile not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = SkillSerializar(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(profile=profile)   # ✅ attach profile, not user
+            return Response({"Message": "Skill Successfully Created"},serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Read (Single) skill + Update + Delete
+@api_view(['GET', 'PUT', 'DELETE'])
+def skill_detail(request, s_id):
+    try:
+        skill = Skill.objects.get(profile__user=request.user,pk=s_id)
+    except Skill.DoesNotExist:
+        return Response({"error": "Skill not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':   # READ one
+        serializer = SkillSerializar(skill)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':   # UPDATE
+        serializer = SkillSerializar(skill, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':   # DELETE
+        skill.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+#end skills
+
+# Create + Read (List)
+@api_view(['GET', 'POST'])
+def education_list(request):
+    if request.method == 'GET':   # READ all
+        educations = Education.objects.filter(profile__user=request.user)
+        serializer = EducationSerializer(educations, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':   # CREATE
+        try:
+            profile = JobseekerProfile.objects.get(user=request.user)
+        except JobseekerProfile.DoesNotExist:
+            return Response({"error": "Profile not found"}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = EducationSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(profile=profile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+#Read (Single) + Update + Delete
+@api_view(['GET', 'PUT', 'DELETE'])
+def education_detail(request, e_id):
+    try:
+        education = Education.objects.get(profile__user=request.user,pk=e_id)
+    except Education.DoesNotExist:
+        return Response({"error": "Education not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':   # READ one
+        serializer = EducationSerializer(education)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':   # UPDATE
+        serializer = EducationSerializer(education, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':   # DELETE
+        education.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#end Education
+
+#start Experience 
+# Create + Read (List)
+@api_view(['GET', 'POST'])
+def experience_list(request):
+    if request.method == 'GET':   # READ all
+        experiences = Experience.objects.filter(profile__user=request.user)
+        serializer = ExperienceSerializer(experiences, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':   # CREATE
+        try:
+            profile = JobseekerProfile.objects.get(user=request.user)
+        except JobseekerProfile.DoesNotExist:
+            return Response({"error": "Profile not found"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = ExperienceSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(profile=profile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Read (Single) + Update + Delete
+@api_view(['GET', 'PUT', 'DELETE'])
+def experience_detail(request, ex_id):
+    try:
+        experience = Experience.objects.get(profile__user=request.user,pk=ex_id)
+    except Experience.DoesNotExist:
+        return Response({"error": "Experience not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':   # READ one
+        serializer = ExperienceSerializer(experience)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':   # UPDATE
+        serializer = ExperienceSerializer(experience, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':   # DELETE
+        experience.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+#end experience
+
+#start Language
+# Create + Read (List)
+@api_view(['GET', 'POST'])
+def language_list(request):
+    if request.method == 'GET':   # READ all
+        languages = Language.objects.filter(profile__user=request.user)
+        serializer = LanguageSerializar(languages, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':   # CREATE
+        try:
+            profile = JobseekerProfile.objects.get(user=request.user)
+        except JobseekerProfile.DoesNotExist:
+            return Response({"error": "Profile not found"}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = ExperienceSerializer(data=request.data)
+        serializer = LanguageSerializar(data=request.data)
+        if serializer.is_valid():
+            serializer.save(profile=profile)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Read (Single) + Update + Delete
+@api_view(['GET', 'PUT', 'DELETE'])
+def language_detail(request, l_id):
+    try:
+        language = Language.objects.get(profile__user=request.user,pk=l_id)
+    except Language.DoesNotExist:
+        return Response({"error": "Language not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':   # READ one
+        serializer = LanguageSerializar(language)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':   # UPDATE
+        serializer = LanguageSerializar(language, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':   # DELETE
+        language.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# end Language
+
+#start Resume
+# Create + Read (List)
+@api_view(['GET', 'POST'])
+def resume_list(request):
+    if request.method == 'GET':   # READ all
+        resumes = Resume.objects.all()
+        serializer = ResumeSerializer(resumes, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':   # CREATE
+        serializer = ResumeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# Read (Single) + Update + Delete
+@api_view(['GET', 'PUT', 'DELETE'])
+def resume_detail(request, pk):
+    try:
+        resume = Resume.objects.get(pk=pk)
+    except Resume.DoesNotExist:
+        return Response({"error": "Resume not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':   # READ one
+        serializer = ResumeSerializer(resume)
+        return Response(serializer.data)
+
+    elif request.method == 'PUT':   # UPDATE
+        serializer = ResumeSerializer(resume, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':   # DELETE
+        resume.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 

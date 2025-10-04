@@ -43,8 +43,6 @@ class Resume(models.Model):
     def __str__(self):
         return f"{self.title} ({self.profile.full_name})"
 
-
-
 class Education(models.Model):
     id = models.UUIDField(
         primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
@@ -63,7 +61,6 @@ class Education(models.Model):
     def __str__(self):
         return self.school_name
 
-
 class Experience(models.Model):
     id = models.UUIDField(
         primary_key=True,      # ဒီ field ကို primary key လုပ်မယ်
@@ -81,7 +78,6 @@ class Experience(models.Model):
 
     def __str__(self):
         return self.company_name
-
 
 class Language(models.Model):
     id = models.UUIDField(

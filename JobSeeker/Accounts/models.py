@@ -48,8 +48,6 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = []  # no username required
     objects = CustomUserManager() # specify the custom manager
 
-                           
-
     def __str__(self):
         return self.email
 

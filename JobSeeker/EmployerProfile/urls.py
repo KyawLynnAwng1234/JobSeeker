@@ -4,17 +4,17 @@ from .import views
 urlpatterns = [
 
     #employer authentication paths
-    path('employer/preregister/',views.preregister_employer_api,name="employer-preregisterpage"),
-    path('employer/register/<str:role>/',views.register_employer_api,name="employer-registerpage"),
-    path('employer/login/',views.login_employer_api,name="employer-loginpage"),
-    path('employer/logout/',views.logout_employer_api,name="employer-logoutpage"),
-    path('employer/emailverify/<uidb64>/<token>/',views.emailverify_employer_api,name="employer-emailverifypage"),
-    path('employer/resend-verification-email/',views.resend_verification_api,name="employer-resend-verification-emailpage"),
+    path('employer/preregister/',views.preregister_employer,name="employer-preregisterpage"),
+    path('employer/register/<str:role>/',views.register_employer,name="employer-registerpage"),
+    path('employer/login/',views.login_employer,name="employer-loginpage"),
+    path('employer/logout/',views.logout_employer,name="employer-logoutpage"),
+    path('employer/emailverify/<uidb64>/<token>/',views.emailverify_employer,name="employer-emailverifypage"),
+    path('employer/resend-verification-email/',views.resend_verification,name="employer-resend-verification-emailpage"),
 
     #employer dashboard paths
-    path('employer/dashboard/', views.dashboard_api, name='employer-dashboard'),
-    path('employer/profile/', views.employer_profile_api, name='employer-profile'),
-    path('employer/profile-update/<str:pk>/',views.update_employer_profile_api,name="empployer-profile-update"),
+    path('employer/dashboard/', views.dashboard, name='employer-dashboard'),
+    path('employer/profile/', views.employer_profile, name='employer-profile'),
+    path('employer/profile-update/<str:pk>/',views.update_employer_profile,name="empployer-profile-update"),
 
     #company list
     path('company/',views.company_list,name="company-list"),

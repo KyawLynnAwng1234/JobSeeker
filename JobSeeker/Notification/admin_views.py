@@ -13,7 +13,6 @@ from django.template.response import TemplateResponse
 from django.contrib import messages
 from django.utils.http import urlencode
 from django.utils.http import url_has_allowed_host_and_scheme
-
 from .models import Notification
 from Jobs.models import Jobs  # <-- change if your app label/model name differs
 
@@ -32,15 +31,11 @@ def _safe_next(request, default_name="admin-notifications"):
 def admin_notifications_page(request):
     status_filter = request.GET.get('status', 'unread')
     page_number = request.GET.get('page', 1)
-
     ct_jobs = ContentType.objects.get_for_model(Jobs, for_concrete_model=False)
     qs = Notification.objects.filter(content_type=ct_jobs).select_related('content_type').order_by('-created_at')
-    if status_filter == 'unread':
-        qs = qs.filter(is_read=False)
-
+    if status_filter == 'unread': qs = qs.filter(is_read=False)
     page_obj = Paginator(qs, 5).get_page(page_number)
     unread_count = Notification.objects.filter(content_type=ct_jobs, is_read=False).count()
-
     # 🔑 Include admin site context so the sidebar knows it should render
     ctx = {
         **admin.site.each_context(request),     # <- required for sidebar

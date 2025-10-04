@@ -1,3 +1,7 @@
 
 http://127.0.0.1:8000/accounts-employer/company/
+<<<<<<< HEAD
 http://127.0.0.1:8000/accounts-employer/job/company/company_uuid/
+=======
+http://127.0.0.1:8000/accounts-employer/job/company/company_id/
+>>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
