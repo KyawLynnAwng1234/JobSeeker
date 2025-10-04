@@ -79,20 +79,10 @@ function App() {
                 <Route path="job-search/all" element={<JobSearchAll />} />
                 <Route path="job-search/detail" element={<JobSearchDetail />} />
 
-                <Route path="profile" element={<Profile />} />
+                <Route path="profile"  element={<Profile />} />
 
                 <Route path="companies" element={<Companies />} />
-<<<<<<< HEAD
                 <Route path="companies/:id" element={<CompanyAbout />} />
-                <Route
-                  path="companies/:id/available-jobs"
-=======
-                <Route path="companies/about" element={<CompanyAbout />} />
-                <Route
-                  path="companies/about/available-jobs"
->>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
-                  element={<CompanyAbout />}
-                />
 
                 <Route
                   path="profile/me"
