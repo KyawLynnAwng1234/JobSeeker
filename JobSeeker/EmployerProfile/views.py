@@ -15,12 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser,MultiPartParser, FormParser
 from django.utils import timezone
 from django.db.models import Q
-<<<<<<< HEAD
 import json
-
-=======
->>>>>>> a0f999494cb896c9c6f9c374934f58ec59535377
-#serializers
 from .serializers import *
 #models
 from Jobs.models import Jobs
@@ -55,14 +50,9 @@ def preregister_employer(request):
 
 # register employerprofile
 @api_view(["POST"])
-<<<<<<< HEAD
 def register_employer(request, role):
     serializer = EmployerRegisterSerializer(data=request.data)
-=======
-@parser_classes([ MultiPartParser, FormParser])
-def register_employer_api(request, role):
     data = request.data.copy()
-
     # profile ကို dict ပြောင်း
     profile_str = data.get("profile")
     if profile_str:
@@ -73,16 +63,9 @@ def register_employer_api(request, role):
     else:
         profile_data = {}
     logo_file = request.FILES.get("logo")
-    
     serializer = EmployerRegisterSerializer(data={"profile": profile_data, "logo": logo_file})
-
- 
-
     if not serializer.is_valid():
         print(serializer.errors)  # 🔍 check which field fail
-    
-
->>>>>>> 5f55b2d8505731fbaf3865e04d3cff473a6e6560
     if serializer.is_valid(raise_exception=True):
         profile_data = serializer.validated_data["profile"]
         logo= serializer.validated_data.get("logo")
@@ -292,10 +275,18 @@ def company_list(request):
 #start jobs in company
 @api_view(['GET'])
 def jobs_in_company(request,com_id):
+    company=EmployerProfile.objects.filter(id=com_id)
+    if not company:
+        return Response({
+            "error":"Company not found"
+        },status=status.HTTP_404_NOT_FOUND)
     jobs_in_com=Jobs.objects.filter(employer__id=com_id)
     jobs_in_com_s=JobcompanySerializer(jobs_in_com,many=True).data
+    company_s=CompanySerializer(company,many=True).data
     return Response({
+        "company_s":company_s,
         "jobs_in_com_s":jobs_in_com_s
+        
         
     })
 #end

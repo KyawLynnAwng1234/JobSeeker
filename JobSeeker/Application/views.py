@@ -118,30 +118,36 @@ def employer_application_detail(request, pk):
                                  .get(pk=pk, job__employer__user=request.user)
     except Application.DoesNotExist:
         return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-
     return Response(ApplicationDetailSerializer(app).data)
 
 @api_view(['GET','POST','DELETE'])
 @permission_classes([IsAuthenticated])
 def save_jobs(request, j_id=None):
-    profile=JobseekerProfile.objects.get(user=request.user)
+    try:
+        profile=JobseekerProfile.objects.get(user=request.user)
+    except JobseekerProfile.DoesNotExist:
+        return Response({"detail": "Ah! You have to create profile before save job"}, status=status.HTTP_404_NOT_FOUND)
+        
     if request.method == "GET" and j_id is None:
         savejobs=SaveJob.objects.filter(profile=profile)
         s_savejobs=SaveJobsSerializer(savejobs,many=True).data
         return Response({"s_savejobs":s_savejobs})
-    
     if request.method == "POST" and j_id is not None:
         try :
             job=Jobs.objects.get(id=j_id)
         except Jobs.DoesNotExist:
             return Response({"detail": "Job not found."}, status=status.HTTP_404_NOT_FOUND)
         saved, created = SaveJob.objects.get_or_create(profile=profile, job=job)
-        if not created:
-            return Response({"detail": "Already saved."}, status=status.HTTP_200_OK)
-        serializer = SaveJobsSerializer(saved)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-         # 🔹 DELETE: unsave job
+        if not created:
+            return Response({"message": "Already saved."}, status=status.HTTP_200_OK)
+        serializer = SaveJobsSerializer(saved)
+        return Response({
+            "message": "Job saved successfully!",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
+
+    #DELETE: unsave job
     if request.method == "DELETE" and j_id is not None:
         try:
             saved = SaveJob.objects.get(profile=profile, job_id=j_id)
@@ -149,6 +155,5 @@ def save_jobs(request, j_id=None):
             return Response({"detail": "Job unsaved successfully."}, status=status.HTTP_204_NO_CONTENT)
         except SaveJob.DoesNotExist:
             return Response({"detail": "This job is not saved."}, status=status.HTTP_400_BAD_REQUEST)
-
     return Response({"detail": "Invalid request."}, status=status.HTTP_400_BAD_REQUEST)
 

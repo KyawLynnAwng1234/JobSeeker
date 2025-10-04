@@ -21,6 +21,8 @@ class SaveJob(models.Model):
                 name="unique_save_job_per_jobseeker_job"
         )
     ]
+    def __str__(self):
+        return f"{self.profile} saved {self.job}"
 
 
 
