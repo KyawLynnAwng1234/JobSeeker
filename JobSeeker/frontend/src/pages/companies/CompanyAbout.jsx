@@ -37,7 +37,6 @@ export default function CompanyAbout() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Banner */}
       <section className="">
         <img
           src={
