@@ -15,11 +15,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import JSONParser,MultiPartParser, FormParser
 from django.utils import timezone
 from django.db.models import Q
-<<<<<<< HEAD
+
 import json
 
-=======
->>>>>>> a0f999494cb896c9c6f9c374934f58ec59535377
+
 #serializers
 from .serializers import *
 #models
