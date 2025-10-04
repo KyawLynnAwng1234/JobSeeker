@@ -32,11 +32,9 @@ def application_notification_list(request):
     total_count = base_qs.count()
     read_count = base_qs.filter(is_read=True).count()
     unread_count = total_count - read_count
-
     # Split lists
     read_notifications = base_qs.filter(is_read=True)
     unread_notifications = base_qs.filter(is_read=False)
-
     # Serialize separately (DON’T pass two querysets to one serializer)
     all_ser = NotificationSerializer(base_qs, many=True, context={'request': request})
     read_ser = NotificationSerializer(read_notifications, many=True, context={'request': request})
@@ -76,9 +74,6 @@ def application_notification_mark_all_read(request):
       return Response({"detail": f"Notification {all_noti} marked as read."}, status=status.HTTP_200_OK)
 #end
 
-
-      
-
 #notification unread list
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -100,21 +95,16 @@ def application_notification_delete(request, pk):
     """
     user = request.user
     ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
-
     qs = Notification.objects.filter(user=user, content_type=ct_app, pk=pk)
-
     if not qs.exists():
         return Response(
             {"message": "Notification not found."},
             status=status.HTTP_404_NOT_FOUND,
         )
-
     # Capture message before delete
     notif_message = qs.values_list("message", flat=True).first()
-
     # Delete it
     qs.delete()
-
     return Response(
         {"message": f"'{notif_message}' notification deleted."},
         status=status.HTTP_200_OK,
@@ -131,21 +121,15 @@ def application_notification_delete_all(request):
     user = request.user
     status_param = (request.GET.get("status") or "read").lower()   # read | all | unread
     ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
-
     qs = Notification.objects.filter(user=user, content_type=ct_app)
-
     if status_param == "read":
         qs = qs.filter(is_read=True)
     elif status_param == "unread":
         qs = qs.filter(is_read=False)
-    # status=all → no extra filter
-
-    # Capture before delete
     deleted_notifications = list(
         qs.values("message")
     )
     deleted_count = len(deleted_notifications)
-
     # Perform delete
     qs.delete()
 

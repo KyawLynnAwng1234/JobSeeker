@@ -17,11 +17,13 @@ class EmployerProfile(models.Model):
     size = models.CharField(max_length=50, blank=True,null=True)
     website = models.URLField(blank=True,null=True)
     industry = models.CharField(max_length=200, blank=True,null=True)
-
-
     logo = models.ImageField(upload_to="upload_to_logo",default="logo.png", null=True, blank=True)
     founded_year = models.PositiveIntegerField(blank=True, null=True)
     contact_email = models.EmailField(blank=True)
+    description = models.TextField(blank=True,null=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
+
     
     def __str__(self):
         return self.business_name

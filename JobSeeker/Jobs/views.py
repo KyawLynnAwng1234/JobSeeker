@@ -96,30 +96,16 @@ def job_category_delete(request, pk):
 def jobs_list(request):
     user = request.user
     if user.is_staff:  
-<<<<<<< HEAD
+
         # Admin → All jobs
         jobs = Jobs.objects.all().order_by('-created_at')
     elif hasattr(user, "employerprofile"):
         # Employer → Only their own jobs
         jobs = Jobs.objects.filter(employer__user=user).order_by('-created_at')
     else:  
-=======
-<<<<<<< HEAD
+
         jobs = Jobs.objects.all().order_by('-id')
-    else:  
-        jobs = Jobs.objects.filter(employer__user=user).order_by('-id')
-=======
-        # Admin → All jobs
-        jobs = Jobs.objects.all().order_by('-created_at')
-    elif hasattr(user, "employerprofile"):
-        # Employer → Only their own jobs
-        jobs = Jobs.objects.filter(employer__user=user).order_by('-created_at')
-    else:  
->>>>>>> 72088a531cafc3fc5a62361ff429f255e963a646
-        # Employer → Only their own jobs
-        jobs = Jobs.objects.filter(is_active=True).order_by('-created_at')
-    
->>>>>>> 5f55b2d8505731fbaf3865e04d3cff473a6e6560
+        
     serializer = JobsSerializer(jobs, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 

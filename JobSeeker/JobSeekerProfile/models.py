@@ -13,7 +13,10 @@ class JobseekerProfile(models.Model):
     phone = models.CharField(max_length=20, blank=True)
     address = models.CharField(max_length=255, blank=True)
     profile_picture = models.ImageField(upload_to="profiles/", blank=True, null=True)
-    bio = models.TextField(blank=True)
+    bio = models.TextField(blank=True)    
+    website = models.URLField(blank=True,null=True)
+    linkedin = models.URLField(blank=True,null=True)
+    github = models.URLField(blank=True,null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
