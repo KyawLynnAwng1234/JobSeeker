@@ -79,11 +79,11 @@ function App() {
                 <Route path="job-search/all" element={<JobSearchAll />} />
                 <Route path="job-search/detail" element={<JobSearchDetail />} />
 
-                <Route path="profile" element={<Profile />} />
+                <Route path="profile"  element={<Profile />} />
 
                 <Route path="companies" element={<Companies />} />
                 <Route path="companies/:id" element={<CompanyAbout />} />
-                
+
 
                 <Route
                   path="profile/me"
