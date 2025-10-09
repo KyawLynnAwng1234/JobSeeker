@@ -15,9 +15,9 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   // State to hold user data
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(undefined);
   // State to handle loading status (when API calls are in progress)
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   // State to display messages (success/error)
   const [message, setMessage] = useState("");
 
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-   // ---------------------- Verify OTP Function ----------------------
+  // ---------------------- Verify OTP Function ----------------------
   const verifyOTP = async (email, otp) => {
     if (otp.length !== 6) {
       setMessage("Enter the 6-digit code.");
@@ -75,15 +75,18 @@ export const AuthProvider = ({ children }) => {
   // ---------------------- Auto Fetch User Profile ----------------------
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token && !user) {
-      // If token exists, fetch user profile and update state
-      setLoading(true);
-      fetchProfileAPI()
-        .then((data) => setUser(data))
-        .catch((err) => console.error(err))
-        .finally(() => setLoading(false));
+    if (!token) {
+      setLoading(false);
+      return;
     }
-  }, [user]);
+    fetchProfileAPI()
+      .then((data) => setUser(data))
+      .catch((err) => {
+        console.error(err);
+        setUser(null);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   // ---------------------- Logout Function ----------------------
   const logout = async () => {
@@ -102,7 +105,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-   // ---------------------- Provide Context ----------------------
+  // ---------------------- Provide Context ----------------------
   return (
     <AuthContext.Provider
       value={{

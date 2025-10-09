@@ -9,7 +9,13 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, loading, logout } = useAuth();
 
-  useEffect(() => { console.log("Navbar user:", user); }, [user]);
+  useEffect(() => {
+    if (loading) return;
+
+    if (user) {
+      console.log("Navbar user:", user);
+    }
+  }, [user, loading]);
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Jobs", path: "/job-search" },

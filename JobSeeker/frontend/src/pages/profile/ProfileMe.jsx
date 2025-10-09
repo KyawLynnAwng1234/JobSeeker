@@ -9,13 +9,13 @@ import EducationModal from "./editprofile/EducationModal"; // ✅ Education Moda
 import CertificationModal from "./editprofile/CertificationModal";
 
 export default function ProfileMe() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
 
   const [profile, setProfile] = useState({ name: "", location: "", email: "" });
-  const [isModalOpen, setIsModalOpen] = useState(false); // Summary modal
-  const [isEducationOpen, setIsEducationOpen] = useState(false); // ✅ Education modal
-  const [isCertificationOpen, setIsCertificationOpen] = useState(false); // ✅ Certification modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEducationOpen, setIsEducationOpen] = useState(false);
+  const [isCertificationOpen, setIsCertificationOpen] = useState(false);
 
   const sections = [
     {
@@ -33,19 +33,21 @@ export default function ProfileMe() {
     { title: "Language", btn: "Proficient language" },
   ];
 
-  // ✅ Login check
+  //  Login check
   useEffect(() => {
+    if (loading) return;
+
     if (!user) {
       navigate("/sign-in", { replace: true });
     } else {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/profile/`, {
-        withCredentials: true,
-      })
-      .then((res) => setProfile(res.data))
-      .catch((err) => console.error("Error fetching profile:", err));
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/profile/`, {
+          withCredentials: true,
+        })
+        .then((res) => setProfile(res.data))
+        .catch((err) => console.error("Error fetching profile:", err));
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
   return (
     <div>

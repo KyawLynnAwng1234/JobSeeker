@@ -1,7 +1,62 @@
 // EducationModal.js
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 export default function EducationModal({ isOpen, onClose }) {
+  const [formData, setFormData] = useState({
+    profile: "",
+    school_name: "",
+    degree: "",
+    field_of_study: "",
+    start_year: "",
+    end_year: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // 🛡️ Token ကို localStorage ထဲကယူပါ
+    const token = localStorage.getItem("access");
+    console.log("Access token:", token);
+
+    if (!token) {
+      alert("❌ You must login first before adding education.");
+      return;
+    }
+
+    console.log("Access token:", token);
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/accounts-jobseeker/education/",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201 || response.status === 200) {
+        alert("✅ Education saved successfully!");
+        onClose();
+      }
+    } catch (error) {
+      console.error("❌ Failed to save education:", error.response?.data || error);
+      alert(
+        `Failed to save education.\n${
+          error.response?.data?.detail || "Check your token or form data."
+        }`
+      );
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -14,42 +69,74 @@ export default function EducationModal({ isOpen, onClose }) {
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
-          {/* Educational qualifications */}
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          {/* Profile */}
           <div>
-            <label className="block font-medium mb-1">Educational qualifications</label>
+            <label className="block font-medium mb-1">Profile</label>
             <input
               type="text"
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300" placeholder="Write your educational qualifications."
+              name="profile"
+              value={formData.profile}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="e.g. Software Engineer"
+              required
             />
           </div>
 
-          {/* Institution */}
+          {/* School Name */}
           <div>
-            <label className="block font-medium mb-1">Institution</label>
+            <label className="block font-medium mb-1">School Name</label>
             <input
               type="text"
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300" placeholder="Write your institution."
+              name="school_name"
+              value={formData.school_name}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="e.g. University of Yangon"
+              required
             />
           </div>
 
-          {/* Qualification completion */}
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="completion"
-              className="w-4 h-4 border rounded"
-            />
-            <label htmlFor="completion" className="text-gray-700">
-              Qualification completion
-            </label>
-          </div>
-
-          {/* Finished year */}
+          {/* Degree */}
           <div>
-            <label className="block font-medium mb-1">Finished</label>
-            <select className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300">
-              <option>Select Year</option>
+            <label className="block font-medium mb-1">Degree</label>
+            <input
+              type="text"
+              name="degree"
+              value={formData.degree}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="e.g. Bachelor of Science"
+              required
+            />
+          </div>
+
+          {/* Field of Study */}
+          <div>
+            <label className="block font-medium mb-1">Field of Study</label>
+            <input
+              type="text"
+              name="field_of_study"
+              value={formData.field_of_study}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="e.g. Computer Science"
+              required
+            />
+          </div>
+
+          {/* Start Year */}
+          <div>
+            <label className="block font-medium mb-1">Start Year</label>
+            <select
+              name="start_year"
+              value={formData.start_year}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              required
+            >
+              <option value="">Select Start Year</option>
               {Array.from({ length: 30 }, (_, i) => {
                 const year = 2025 - i;
                 return (
@@ -61,13 +148,26 @@ export default function EducationModal({ isOpen, onClose }) {
             </select>
           </div>
 
-          {/* Course highlight */}
+          {/* End Year */}
           <div>
-            <label className="block font-medium mb-1">Course highlight</label>
-            <textarea
-              rows="4"
+            <label className="block font-medium mb-1">End Year</label>
+            <select
+              name="end_year"
+              value={formData.end_year}
+              onChange={handleChange}
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-            ></textarea>
+              required
+            >
+              <option value="">Select End Year</option>
+              {Array.from({ length: 30 }, (_, i) => {
+                const year = 2025 - i;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
+              })}
+            </select>
           </div>
 
           {/* Buttons */}

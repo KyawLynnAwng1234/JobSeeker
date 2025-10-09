@@ -50,15 +50,8 @@ def preregister_employer(request):
 
 # register employerprofile
 @api_view(["POST"])
-
-def register_employer(request, role):
-    serializer = EmployerRegisterSerializer(data=request.data)
-
-def register_employer(request, role):
-    serializer = EmployerRegisterSerializer(data=request.data)
-
 @parser_classes([ MultiPartParser, FormParser])
-def register_employer_api(request, role):
+def register_employer(request, role):
 
     data = request.data.copy()
     # profile ကို dict ပြောင်း
@@ -122,7 +115,7 @@ def register_employer_api(request, role):
                 "contact_email":employer_profile.contact_email,
             }
         }
-    print(response_data)
+    
     return Response(response_data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 # end register employerprofile
