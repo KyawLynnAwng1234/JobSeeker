@@ -133,7 +133,7 @@ const Companies = () => {
                   {company.industry || "No industry info"}
                 </p>
                 <button className="px-4 py-2 text-sm bg-gray-100 text-blue-600 font-medium rounded-md cursor-pointer">
-                  {company.jobs_count || "0"} Jobs
+                  {company.job_count || "0"} Jobs
                 </button>
               </Link>
             </div>

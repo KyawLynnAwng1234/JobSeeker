@@ -31,7 +31,8 @@ export default function MyJobs() {
     const fetchData = async () => {
       try {
         const res = await getJobs();
-        setJobs(res.data);
+        console.log(res.data);
+        setJobs(res.data.jobs || []);
       } catch (err) {
         console.error("Error fetching jobs:", err);
       }

@@ -11,9 +11,7 @@ const JobCard = ({ job }) => (
       <FaBookmark size={20} />
     </div>
     <h3 className="text-lg font-semibold text-gray-800">{job.title}</h3>
-    <p className="text-sm text-gray-600">
-      {job.employer || "Unknown Company"}
-    </p>
+    <p className="text-sm text-gray-600">{job.employer || "Unknown Company"}</p>
     <p className="text-sm text-gray-500 mt-1">{job.location}</p>
     <p className="text-sm text-gray-700 mt-3">
       {job.description?.slice(0, 100)}...
@@ -41,7 +39,16 @@ const JobSearchAll = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log("Jobs API Response:", data);
-        setJobs(data);
+
+        const jobList = Array.isArray(data)
+          ? data
+          : Array.isArray(data.results)
+          ? data.results
+          : Array.isArray(data.jobs)
+          ? data.jobs
+          : [];
+
+        setJobs(jobList);
         setLoading(false);
       })
       .catch((err) => {
