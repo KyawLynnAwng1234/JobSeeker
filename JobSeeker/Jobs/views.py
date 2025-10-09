@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-from django.db.models import Q,F
+from django.db.models import Q,F,Case, When, Value, IntegerField
 from django.db.models import Count
 from datetime import date
 
@@ -181,30 +181,42 @@ def jobs_delete(request, pk):
 @permission_classes([IsAuthenticated])
 def search(request):
     q   = (request.GET.get("q") or "").strip()
-    loc = (request.GET.get("loc") or "").strip()   # ✅ safe get
-    jobs = Jobs.objects.all()              # base queryset
+    loc = (request.GET.get("loc") or "").strip()
+    today = date.today()
+    not_expired = Q(deadline__isnull=True) | Q(deadline__gte=today)
+    qs = Jobs.objects.filter(is_active=True).filter(not_expired)
 
-    # --- keyword search
+    # --- keyword filter ---
     if q:
-        qs = jobs.filter(
-            Q(title__icontains=q)|
-            Q(location__icontains=q)|
-            Q(category__name__icontains=q)|
+        qs = qs.filter(
+            Q(title__icontains=q) |
+            Q(location__icontains=q) |
+            Q(category__name__icontains=q) |
             Q(description__icontains=q)
         )
-     # --- location filter
+    # --- location filter ---
     if loc:
         qs = qs.filter(location__icontains=loc)
-    
-    qs = qs.annotate(category_name=F("category__name"))
-
+                
+    # --- add priority ranking ---
+    qs = qs.annotate(
+        category_name=F("category__name"),
+        priority_rank=Case(
+            When(priority="FEATURED", then=Value(3)),
+            When(priority="URGENT",   then=Value(2)),
+            default=Value(1),
+            output_field=IntegerField()
+        )
+    ).order_by("-priority_rank", "-created_at")
+    # --- return limited data ---
     data = list(qs.values(
-        "id", "title", "location", "created_at", "category_name"
-    )[:30])# limit results
+        "id", "title", "location", "category_name", "created_at", "priority"
+    )[:30])
+
     return Response({
         "count": len(data),
         "results": data
-    })
+    }, status=status.HTTP_200_OK)
 
 
 
