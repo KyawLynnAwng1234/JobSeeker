@@ -23,7 +23,6 @@ class JobseekerProfile(models.Model):
     def __str__(self):
         return self.full_name
 
-
 # resumes/models.py
 class Resume(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -58,6 +57,10 @@ class Education(models.Model):
     field_of_study = models.CharField(max_length=100)
     start_year = models.IntegerField(blank=True)
     end_year = models.IntegerField(blank=True, null=True)
+    gpa = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)  # e.g., 9.50
+    description = models.TextField(blank=True,null=True)
+    location = models.CharField(max_length=120, blank=True,null=True)
+    is_current = models.BooleanField(default=False,null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
@@ -71,10 +74,13 @@ class Experience(models.Model):
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=255)
+    job_title = models.CharField(max_length=200,null=True)
+    company_name = models.CharField(max_length=255,null=True)
     position = models.CharField(max_length=100)
+    location = models.CharField(max_length=120, blank=True,null=True)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
+    is_current = models.BooleanField(default=False,null=True)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
@@ -103,9 +109,15 @@ class Skill(models.Model):
         default=uuid.uuid4,    # Auto-generate UUID v4
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
+    class ProficiencyLevel(models.IntegerChoices):
+        BEGINNER = 1, 'Beginner'
+        INTERMEDIATE = 2, 'Intermediate'
+        ADVANCED = 3, 'Advanced'
+        EXPERT = 4, 'Expert'
+
     profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE,related_name="skills")
     name = models.CharField(max_length=100)
-    proficiency = models.CharField(max_length=50)
+    proficiency_level = models.IntegerField(choices=ProficiencyLevel.choices, default=ProficiencyLevel.BEGINNER,null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 

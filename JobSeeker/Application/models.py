@@ -38,15 +38,14 @@ class Application(models.Model):
         editable=False         # User လက်နဲ့ မပြင်နိုင်အောင် lock
     )
     job_seeker_profile = models.ForeignKey(JobseekerProfile,on_delete=models.CASCADE,null=True)
-    job = models.ForeignKey(Jobs, on_delete=models.CASCADE, null=True)
+    job = models.ForeignKey(Jobs, on_delete=models.CASCADE,related_name='applications')
     resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True,blank=True)
-    resume_form = models.JSONField(null=True, blank=True, default=None)
+    resume_form = models.JSONField(null=True,blank=True, default=None)
     resume_upload=models.ImageField(upload_to="resume-file",null=True,blank=True)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES,default='P',null=True, blank=True)
+    status = models.CharField(max_length=50,choices=STATUS_CHOICES,default='P',null=True, blank=True)
     cover_letter_text = models.TextField(null=True)
     applied_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at=models.DateTimeField(auto_now=True,null=True, blank=True)
-
 
     class Meta:
         constraints = [

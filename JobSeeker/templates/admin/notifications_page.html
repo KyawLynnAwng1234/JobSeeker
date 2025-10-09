@@ -24,7 +24,7 @@
     display:inline-block; padding:6px 10px; border-radius:6px; text-decoration:none;
     border:1px solid #c3c4c7; background:#f6f7f7; color:#2c3338; font-weight:600;
   }
-  .noti-tabs a.active { background:#1a5bb8;; color:#fff; border-color:black; }
+  .noti-tabs a.active { background:#1a5bb8; color:#fff; border-color:black; }
 
   .noti-badge {
     display:inline-block; min-width:18px; padding:0 6px; line-height:18px;
@@ -40,6 +40,10 @@
   /* checkbox column */
   .sel-col { width:36px; text-align:center; }
   .sel-col input[type="checkbox"] { transform:scale(1.15); cursor:pointer; }
+
+  /* read/unread row styles (optional, nicer UX) */
+  tr.unread { background:#fffdf8; font-weight:600; }
+  tr.read { opacity:.75; }
 </style>
 
 <h1>Job Notifications</h1>
@@ -67,63 +71,63 @@
   </div>
 </div>
 
-{# BULK ACTION FORM (posts back to the same list URL) #}
-<form method="post" action="" id="bulk-form">
+{# === BULK ACTIONS (separate form; NOT wrapping the table) === #}
+<form method="post" action="" id="bulk-form" style="margin:8px 0 12px; display:flex; gap:8px; align-items:center;">
   {% csrf_token %}
   <input type="hidden" name="status" value="{{ status_filter }}">
-  <div class="noti-actions" style="margin:8px 0 12px; display:flex; gap:8px; align-items:center;">
-    <select name="action" id="bulk-action">
-      <option value="bulk_delete">Remove selected</option>
-    </select>
-    <button type="submit" class="button">Go</button>
-  </div>
-
-  <div class="module">
-    <table class="adminlist noti-table">
-      <thead>
-        <tr>
-          <th class="sel-col">
-            <input type="checkbox" id="select-all">
-          </th>
-          <th style="width:28%">User</th>
-          <th>Message</th>
-          <th style="width:140px">Type</th>
-          <th style="width:180px">Created</th>
-          <th style="width:190px">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for n in page_obj.object_list %}
-        <tr {% if not n.is_read %}style="background:#fffdf8"{% endif %}>
-          <td class="sel-col">
-            <input type="checkbox" name="ids" value="{{ n.id }}" class="row-check">
-          </td>
-          <td>{{ n.user.email }}</td>
-          <td>{{ n.message|truncatechars:5 }}</td>
-          <td><span class="pill {% if not n.is_read %}unread{% endif %}">{{ n.type }}</span></td>
-          <td>{{ n.created_at|date:"M d, Y · h:i A" }}</td>
-          <td class="row-actions">
-            <a href="{% url 'admin-notification-detail' n.id %}?status={{ request.GET.status }}&page={{ page_obj.number|default:1 }}"
-               class="button">Detail</a>
-            {% if not n.is_read %}
-              <form method="post" action="{% url 'admin-notifications-mark-read' n.id %}" style="display:inline">
-                {% csrf_token %}
-                <button class="button" type="submit">Mark read</button>
-              </form>
-            {% else %}
-              <span style="color:#4caf50; font-weight:600">Read</span>
-            {% endif %}
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="6">No notifications.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <select name="action" id="bulk-action">
+    <option value="bulk_delete">Remove selected</option>
+  </select>
+  <button type="submit" class="button" id="bulk-go">Go</button>
 </form>
+
+<div class="module">
+  <table class="adminlist noti-table">
+    <thead>
+      <tr>
+        <th class="sel-col">
+          <input type="checkbox" id="select-all">
+        </th>
+        <th style="width:28%">User</th>
+        <th>Message</th>
+        <th style="width:140px">Type</th>
+        <th style="width:180px">Created</th>
+        <th style="width:190px">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for n in page_obj.object_list %}
+      <tr class="{% if n.is_read %}read{% else %}unread{% endif %}">
+        <td class="sel-col">
+          <input type="checkbox" name="ids" value="{{ n.id }}" class="row-check" form="bulk-form">
+        </td>
+        <td>{{ n.user.email }}</td>
+        <td>{{ n.message|truncatechars:80 }}</td>
+        <td><span class="pill {% if not n.is_read %}unread{% endif %}">{{ n.type }}</span></td>
+        <td>{{ n.created_at|date:"M d, Y · h:i A" }}</td>
+        <td class="row-actions">
+          <a href="{% url 'admin-notification-detail' n.id %}?status={{ request.GET.status }}&page={{ page_obj.number|default:1 }}"
+             class="button">Detail</a>
+
+          {% if not n.is_read %}
+            {# Use a separate, tiny form per row (NOT nested inside bulk form) #}
+            <form method="post" action="{% url 'admin-notifications-mark-read' n.id %}" style="display:inline">
+              {% csrf_token %}
+              <button class="button" type="submit">Mark read</button>
+            </form>
+          {% else %}
+            <span style="color:#4caf50; font-weight:600">Read</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6">No notifications.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {# Pagination controls #}
 {% if page_obj.paginator.num_pages > 1 %}
@@ -145,28 +149,30 @@
 {% endif %}
 
 <script>
-  // Select-all toggle
+  // Select-all toggle (targets checkboxes that belong to the bulk form)
   const selectAll = document.getElementById('select-all');
-  const rowChecks = () => document.querySelectorAll('.row-check');
+  const rowChecks = () => document.querySelectorAll('input.row-check[form="bulk-form"]');
   if (selectAll) {
     selectAll.addEventListener('change', e => {
       rowChecks().forEach(c => c.checked = e.target.checked);
     });
   }
 
-  // Confirm before bulk delete
-  document.getElementById("bulk-form").addEventListener("submit", function(e) {
+  // Only validate when the BULK button submitted the bulk form
+  const bulkForm = document.getElementById("bulk-form");
+  bulkForm.addEventListener("submit", function(e) {
+    if (!e.submitter || e.submitter.id !== "bulk-go") { return; } // ignore other submits
     const action = document.getElementById("bulk-action").value;
     if (action === "bulk_delete") {
-      const checked = Array.from(rowChecks()).some(c => c.checked);
+      const checked = !!document.querySelector('input.row-check[form="bulk-form"]:checked');
       if (!checked) {
         alert("Please select at least one notification to remove.");
         e.preventDefault();
-        return false;
+        return;
       }
       if (!confirm("Are you sure you want to remove the selected notifications?")) {
         e.preventDefault();
-        return false;
+        return;
       }
     }
   });

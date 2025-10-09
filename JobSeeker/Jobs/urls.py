@@ -18,6 +18,9 @@ urlpatterns = [
     path('jobs/update/<uuid:pk>/', views.jobs_update, name='job-update'),
     path('jobs/delete/<uuid:pk>/', views.jobs_delete, name='job-delete'),
 
+    #search
+    path('search/',views.search,name="search-list")
+
 
 ]
 

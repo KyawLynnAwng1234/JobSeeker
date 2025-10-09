@@ -49,63 +49,73 @@ def profile_requirements(request, job_id=None):
 @permission_classes([IsAuthenticated])
 @parser_classes([JSONParser, MultiPartParser, FormParser])
 def apply_job(request, pk):
-    job = get_object_or_404(Jobs, id=pk)
     profile = get_object_or_404(JobseekerProfile, user=request.user)
-
-    # Friendly guard
-    existing = Application.objects.filter(job=job, job_seeker_profile=profile).first()
-    if existing:
-        return Response(
-            {
-                "code": "ALREADY_APPLIED",
-                "message": "You’ve already applied to this job.",
-                "application_id": str(existing.id),
-                "applied_at": existing.applied_at,
-            },
-            status=status.HTTP_409_CONFLICT,
-        )
-
-    allow_auto_general = True
-
-    # ====== PARTIAL PERSIST (no atomic!) ======
-    # If resume_form present, persist it so data survives even if we return 400.
-    raw_form = request.data.get("resume_form")
-    if raw_form:
-        form_obj = raw_form
-        if isinstance(raw_form, str):
-            try:
-                form_obj = json.loads(raw_form)
-            except Exception:
-                return Response({"resume_form": "Invalid JSON."}, status=400)
-        form_obj = jsonify_dates(form_obj)
-        persist_resume_sections(profile, form_obj)
-
-        # Check completeness after persisting
-        snapshot = _snapshot_from_db(profile)
-        missing = _require_all_sections(snapshot)
-        if missing:
+    with transaction.atomic():
+        job = Jobs.objects.select_for_update().get(id=pk)
+        # Friendly guard: already applied
+        existing = Application.objects.filter(job=job, job_seeker_profile=profile).first()
+        if existing:
             return Response(
                 {
-                    "code": "MISSING_REQUIRED_SECTIONS",
-                    "message": "Please complete required sections before applying.",
-                    "missing": missing,
+                    "code": "ALREADY_APPLIED",
+                    "message": "You’ve already applied to this job.",
+                    "application_id": str(existing.id),
+                    "applied_at": existing.applied_at,
                 },
-                status=400,
+                status=status.HTTP_409_CONFLICT,
             )
 
-    # ====== CREATE (small atomic block) ======
-    ser = ApplicationCreateSerializer(
-        data=request.data,
-        context={"job": job, "profile": profile, "allow_auto_general": allow_auto_general},
-    )
-    ser.is_valid(raise_exception=True)
+        # Hard guard: job already closed
+        if not job.is_active:
+            return Response(
+                {"code": "JOB_CLOSED", "message": "This job is no longer accepting applications."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
 
-    # Only wrap the creation in atomic
-    with transaction.atomic():
+        allow_auto_general = True
+
+        # ====== PARTIAL PERSIST ======
+        raw_form = request.data.get("resume_form")
+        if raw_form:
+            form_obj = raw_form
+            if isinstance(raw_form, str):
+                try:
+                    form_obj = json.loads(raw_form)
+                except Exception:
+                    return Response({"resume_form": "Invalid JSON."}, status=400)
+            form_obj = jsonify_dates(form_obj)
+            persist_resume_sections(profile, form_obj)
+            snapshot = _snapshot_from_db(profile)
+            missing = _require_all_sections(snapshot)
+            if missing:
+                return Response(
+                    {
+                        "code": "MISSING_REQUIRED_SECTIONS",
+                        "message": "Please complete required sections before applying.",
+                        "missing": missing,
+                    },
+                    status=400,
+                )
+
+        # ====== CREATE APPLICATION ======
+        ser = ApplicationCreateSerializer(
+            data=request.data,
+            context={"job": job, "profile": profile, "allow_auto_general": allow_auto_general},
+        )
+        ser.is_valid(raise_exception=True)
         app = ser.save()
 
-    return Response(ApplicationDetailSerializer(app).data, status=status.HTTP_201_CREATED)
+        # ====== CHECK JOB LIMIT ======
+        total = Application.objects.filter(job=job).count()
+        max_apps = int(job.max_applicants or 0)
+        print(f"[DEBUG] total={total}, max={max_apps}, active={job.is_active}")
 
+        if max_apps > 0 and total >= max_apps and job.is_active:
+            job.is_active = False
+            job.save(update_fields=["is_active"])
+            print(f"[DEBUG] Job {job.id} reached limit → set inactive")
+
+    return Response(ApplicationDetailSerializer(app).data, status=status.HTTP_201_CREATED)
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])

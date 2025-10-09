@@ -52,7 +52,10 @@ def preregister_employer(request):
 @api_view(["POST"])
 @parser_classes([ MultiPartParser, FormParser])
 def register_employer(request, role):
+<<<<<<< HEAD
 
+=======
+>>>>>>> f1944196316b208ac9dd68b92cff54f9d9a925f2
     data = request.data.copy()
     # profile ကို dict ပြောင်း
     profile_str = data.get("profile")
@@ -117,9 +120,7 @@ def register_employer(request, role):
         }
     
     return Response(response_data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 # end register employerprofile
-
 
 #sign in employer
 @api_view(["POST"])
@@ -150,7 +151,6 @@ def logout_employer(request):
     logout(request)
     return Response({"detail": "Logged out successfully"}, status=status.HTTP_200_OK)
 #end sign out employer
-
 
 # employer Email verification
 @api_view(["GET"])
@@ -192,7 +192,6 @@ def resend_verification(request):
     return Response({"detail": "Verification email sent."}, status=200)
 #end resend email verification link
 
-
 #dashboard
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -208,13 +207,11 @@ def dashboard(request):
         'total_jobs':total_jobs,
         'total_applications':total_applications,
         'active_jobs':active_jobs,
-        # 'expired_jobs_count':expired_jobs_count
         'expired_jobs':expired_jobs
 
         })
 #end dashboard
     
-
 #employer profile
 @api_view(["GET", "PUT", "PATCH"])
 @permission_classes([IsAuthenticated])
@@ -278,18 +275,11 @@ def company_list(request):
 def jobs_in_company(request,com_id):
     company=EmployerProfile.objects.filter(id=com_id)
     if not company:
-        return Response({
-            "error":"Company not found"
-        },status=status.HTTP_404_NOT_FOUND)
+        return Response({"error":"Company not found"},status=status.HTTP_404_NOT_FOUND)
     jobs_in_com=Jobs.objects.filter(employer__id=com_id)
     jobs_in_com_s=JobcompanySerializer(jobs_in_com,many=True).data
     company_s=CompanySerializer(company,many=True).data
-    return Response({
-        "company_s":company_s,
-        "jobs_in_com_s":jobs_in_com_s
-        
-        
-    })
+    return Response({"company_s":company_s,"jobs_in_com_s":jobs_in_com_s})
 #end
 
 
