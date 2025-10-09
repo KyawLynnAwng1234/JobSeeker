@@ -5,7 +5,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q,F
+from django.db.models import Count
+from datetime import date
 
 # import Application
 from Application.models import Application
@@ -94,20 +96,21 @@ def job_category_delete(request, pk):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def jobs_list(request):
+    today = date.today()
     user = request.user
+    Jobs.objects.filter(is_active=True, deadline__lt=today).update(is_active=False)
     if user.is_staff:  
-
         # Admin → All jobs
         jobs = Jobs.objects.all().order_by('-created_at')
     elif hasattr(user, "employerprofile"):
         # Employer → Only their own jobs
-        jobs = Jobs.objects.filter(employer__user=user).order_by('-created_at')
+        jobs = Jobs.objects.filter(employer__user=user,is_active=True).order_by('-created_at')
     else:  
-
         jobs = Jobs.objects.all().order_by('-id')
-        
     serializer = JobsSerializer(jobs, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({
+        "jobs":serializer.data,
+    }, status=status.HTTP_200_OK)
 
 # jobs create
 @api_view(['POST'])
@@ -173,6 +176,35 @@ def jobs_delete(request, pk):
     job.delete()
     return Response({'message': 'Job deleted'}, status=status.HTTP_204_NO_CONTENT)
 
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def search(request):
+    q   = (request.GET.get("q") or "").strip()
+    loc = (request.GET.get("loc") or "").strip()   # ✅ safe get
+    jobs = Jobs.objects.all()              # base queryset
+
+    # --- keyword search
+    if q:
+        qs = jobs.filter(
+            Q(title__icontains=q)|
+            Q(location__icontains=q)|
+            Q(category__name__icontains=q)|
+            Q(description__icontains=q)
+        )
+     # --- location filter
+    if loc:
+        qs = qs.filter(location__icontains=loc)
+    
+    qs = qs.annotate(category_name=F("category__name"))
+
+    data = list(qs.values(
+        "id", "title", "location", "created_at", "category_name"
+    )[:30])# limit results
+    return Response({
+        "count": len(data),
+        "results": data
+    })
 
 
 

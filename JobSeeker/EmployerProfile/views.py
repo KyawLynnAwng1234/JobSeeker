@@ -114,9 +114,8 @@ def register_employer(request, role):
                 "contact_email":employer_profile.contact_email,
             }
         }
-    print(response_data)
+    
     return Response(response_data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 # end register employerprofile
 
 #sign in employer

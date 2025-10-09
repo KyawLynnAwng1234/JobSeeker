@@ -78,10 +78,7 @@ class ApplicationCreateSerializer(serializers.ModelSerializer):
         fields = ["id", "resume", "resume_form", "resume_upload", "status", "cover_letter_text"]
         read_only_fields = ["id", "resume"]
 
-class SaveJobsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=SaveJob
-        fields='__all__'
+
 
     def validate(self, attrs):
         has_form  = bool(attrs.get("resume_form"))
@@ -181,3 +178,8 @@ class SaveJobsSerializer(serializers.ModelSerializer):
             cover_letter_text=attrs.get("cover_letter_text", ""),
         )
         return app
+
+class SaveJobsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SaveJob
+        fields='__all__'
