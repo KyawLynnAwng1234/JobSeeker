@@ -9,7 +9,7 @@ export default function JobSearch() {
   const location = useLocation();
   const { id } = useParams();
 
-  // URL query param မှာ Maximized ရှိမရှိ စစ်ပြီး initial state set
+  
   const query = new URLSearchParams(location.search);
   const initialMaximized = query.get("maximized") === "true";
   const [isMaximized, setIsMaximized] = useState(initialMaximized);
@@ -19,7 +19,7 @@ export default function JobSearch() {
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedJobId, setSelectedJobId] = useState(null);
 
-  // ✅ URL မှာ id ရှိတယ်ဆိုရင် အလိုအလျောက် Detail View ပြ
+  
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -35,9 +35,14 @@ export default function JobSearch() {
         console.log("Router ID from URL:", id, typeof id);
         console.log("Full API Response:", res.data);
 
-        const jobList = res.data.results ? res.data.results : res.data;
-        setJobs(jobList);
-        setLoading(false);
+        const jobList = Array.isArray(res.data.jobs)
+        ? res.data.jobs
+        : res.data.results
+        ? res.data.results
+        : [];
+
+      setJobs(jobList);
+      setLoading(false);
 
         if (id) {
           const job = jobList.find((j) => String(j.id) === String(id));

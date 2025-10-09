@@ -10,4 +10,7 @@ http://127.0.0.1:8000/accounts-jobseeker/experience/experience_id/
 http://127.0.0.1:8000/accounts-jobseeker/language/
 http://127.0.0.1:8000/accounts-jobseeker/language/language_id/
 
+http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/
+
+
 

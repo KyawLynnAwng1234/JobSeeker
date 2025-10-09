@@ -15,6 +15,9 @@ export const getCSRFToken = () => {
 export const fetchNotifications = async () => {
   const res = await axios.get(NOTIFICATION_ENDPOINTS.LIST, {
     withCredentials: true,
+    headers: {
+      "X-CSRFToken": getCSRFToken(),
+    },
   });
   return res.data;
 };
