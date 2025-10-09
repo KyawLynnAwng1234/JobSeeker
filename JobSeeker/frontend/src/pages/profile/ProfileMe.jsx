@@ -28,8 +28,17 @@ export default function ProfileMe() {
   const [isCertificationOpen, setIsCertificationOpen] = useState(false);
 
   const sections = [
-    { title: "Education", desc: "Tell us about your education level", btn: "Education", onClick: () => setIsEducationOpen(true) },
-    { title: "Certifications", btn: "Certifications", onClick: () => setIsCertificationOpen(true) },
+    {
+      title: "Education",
+      desc: "Tell us about your education level",
+      btn: "Education",
+      onClick: () => setIsEducationOpen(true),
+    },
+    {
+      title: "Certifications",
+      btn: "Certifications",
+      onClick: () => setIsCertificationOpen(true),
+    },
     { title: "Skills", btn: "Your Skills" },
     { title: "Language", btn: "Proficient language" },
   ];
@@ -40,7 +49,10 @@ export default function ProfileMe() {
     if (!user) {
       navigate("/sign-in", { replace: true });
     } else {
-      axios.get(`${import.meta.env.VITE_API_URL}/profile/`, { withCredentials: true })
+      axios
+        .get(`${import.meta.env.VITE_API_URL}/profile/`, {
+          withCredentials: true,
+        })
         .then((res) => setProfile(res.data))
         .catch((err) => console.error("Error fetching profile:", err));
     }
@@ -49,64 +61,65 @@ export default function ProfileMe() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-[#002366] to-[#003AB3] text-white py-12">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center md:items-start gap-8">
-          
+      <section className="relative bg-gradient-to-r from-[#002366] to-[#003AB3] text-white py-8 rounded-b-2xl shadow-lg">
+        <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8 items-center md:items-center h-[300px]">
           {/* Profile Picture */}
-          <div className="flex-shrink-0">
+          <div className="flex justify-center md:justify-start">
             <img
               src={profile.profile_picture || "/default-avatar.png"}
               alt={profile.full_name || "Profile Picture"}
-              className="w-32 h-32 rounded-full object-cover border-4 border-white"
+              className="w-36 h-36 rounded-full object-cover border-4 border-white shadow-md"
             />
           </div>
 
           {/* Profile Info */}
-          <div className="flex-1">
-            <h1 className="text-4xl font-bold mb-2">{profile.full_name || "Full Name"}</h1>
-            {profile.bio && <p className="mb-4 text-[#ffffffcf]">{profile.bio}</p>}
+          <div className="space-y-3 text-center md:text-left">
+            <h1 className="text-4xl font-bold">
+              {profile.full_name || "Full Name"}
+            </h1>
+            <p className="text-[#ffffffcc]">{profile.bio || "ProfileMe Bio"}</p>
 
-            <div className="flex flex-col space-y-2 mb-4 text-[#ffffffcf]">
-              {profile.address && (
-                <div className="flex items-center space-x-2">
-                  <FaLocationDot />
-                  <span>{profile.address}</span>
-                </div>
-              )}
-              {profile.phone && (
-                <div className="flex items-center space-x-2">
-                  <CiPhone />
-                  <span>{profile.phone}</span>
-                </div>
-              )}
-              {profile.website && (
-                <div className="flex items-center space-x-2">
-                  <CiGlobe />
-                  <span>{profile.website}</span>
-                </div>
-              )}
-              {profile.linkedin && (
-                <div className="flex items-center space-x-2">
-                  <FaLinkedin />
-                  <span>{profile.linkedin}</span>
-                </div>
-              )}
-              {profile.github && (
-                <div className="flex items-center space-x-2">
-                  <FaGithub />
-                  <span>{profile.github}</span>
-                </div>
-              )}
+            {/* Address, Phone & Email */}
+            <div className="flex flex-col items-center md:items-start gap-1 text-[#ffffffb0]">
+              <div className="flex items-center gap-2">
+                <FaLocationDot />
+                <span>{profile.address || "Address"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CiPhone />
+                <span>{profile.phone || "Phone"}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CiMail />
+                <span>{profile.email || "Email"}</span>
+              </div>
             </div>
+          </div>
 
-            <button
-              onClick={() => navigate("/profile/me/edit")}
-              className="border border-white px-4 py-2 rounded-lg hover:bg-white/20 transition"
-            >
-              Edit Profile
-            </button>
+          {/* Social Links */}
+          <div className="flex flex-col items-center md:items-start gap-2 text-[#ffffffb0]">
+            <div className="flex items-center gap-2">
+              <CiGlobe />
+              <span>{profile.website || "Website"}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <FaLinkedin />
+              <span>{profile.linkedin || "Linkedin"}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <FaGithub />
+              <span>{profile.github || "Github"}</span>
+            </div>
           </div>
         </div>
+
+        {/* Edit (+) Button */}
+        <button
+          onClick={() => navigate("/profile/me/edit")}
+          className="absolute top-10 right-10 bg-white text-blue-700 font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-200 transition"
+        >
+          ✎
+        </button>
       </section>
 
       {/* Features Section */}
@@ -114,7 +127,9 @@ export default function ProfileMe() {
         {/* Left Section */}
         <div className="flex-1 space-y-6">
           <div>
-            <label className="block text-lg font-semibold mb-2">Summary (Job Purpose)</label>
+            <label className="block text-lg font-semibold mb-2">
+              Summary (Job Purpose)
+            </label>
             <div className="relative" onClick={() => setIsModalOpen(true)}>
               <input
                 type="text"
@@ -129,7 +144,9 @@ export default function ProfileMe() {
           {sections.map((item, idx) => (
             <div key={idx}>
               <h2 className="text-lg font-semibold">{item.title}</h2>
-              {item.desc && <p className="text-sm text-gray-500 mb-2">{item.desc}</p>}
+              {item.desc && (
+                <p className="text-sm text-gray-500 mb-2">{item.desc}</p>
+              )}
               <button
                 className="border border-[#0D74CE] text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50"
                 onClick={item.onClick}
@@ -145,21 +162,38 @@ export default function ProfileMe() {
           <h2 className="text-lg font-semibold mb-2">Resume</h2>
           <div className="flex flex-col gap-4">
             <div>
-              <p className="text-sm text-gray-600 mb-2">Upload your resume and cover letter.</p>
-              <button className="border border-blue-400 text-blue-600 p-1.5 rounded-lg hover:bg-blue-50">Add Resume</button>
+              <p className="text-sm text-gray-600 mb-2">
+                Upload your resume and cover letter.
+              </p>
+              <button className="border border-blue-400 text-blue-600 p-1.5 rounded-lg hover:bg-blue-50">
+                Add Resume
+              </button>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-2">Create your resume for the job.</p>
-              <button className="bg-blue-600 text-white p-1.5 rounded-lg hover:bg-blue-700">Create Resume</button>
+              <p className="text-sm text-gray-600 mb-2">
+                Create your resume for the job.
+              </p>
+              <button className="bg-blue-600 text-white p-1.5 rounded-lg hover:bg-blue-700">
+                Create Resume
+              </button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Modals */}
-      <EditSummaryModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      <EducationModal isOpen={isEducationOpen} onClose={() => setIsEducationOpen(false)} />
-      <CertificationModal isOpen={isCertificationOpen} onClose={() => setIsCertificationOpen(false)} />
+      <EditSummaryModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      <EducationModal
+        isOpen={isEducationOpen}
+        onClose={() => setIsEducationOpen(false)}
+      />
+      <CertificationModal
+        isOpen={isCertificationOpen}
+        onClose={() => setIsCertificationOpen(false)}
+      />
     </div>
   );
 }
