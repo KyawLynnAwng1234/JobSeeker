@@ -52,10 +52,6 @@ def preregister_employer(request):
 @api_view(["POST"])
 @parser_classes([ MultiPartParser, FormParser])
 def register_employer(request, role):
-<<<<<<< HEAD
-
-=======
->>>>>>> f1944196316b208ac9dd68b92cff54f9d9a925f2
     data = request.data.copy()
     # profile ကို dict ပြောင်း
     profile_str = data.get("profile")

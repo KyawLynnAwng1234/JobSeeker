@@ -1,40 +1,74 @@
 // EducationModal.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function EducationModal({ isOpen, onClose }) {
   const [formData, setFormData] = useState({
-    profile: "",
     school_name: "",
     degree: "",
     field_of_study: "",
     start_year: "",
     end_year: "",
+    gpa: "",
+    description: "",
+    location: "",
+    is_current: false,
   });
 
+  const [profileId, setProfileId] = useState(null);
+
+  // ✅ Load user profile on mount
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("access");
+      if (!token) return;
+
+      try {
+        const res = await axios.get(
+          "http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.data.length > 0) {
+          setProfileId(res.data[0].id); // user profile id
+        }
+      } catch (err) {
+        console.error("Failed to load profile:", err.response?.data || err);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 🛡️ Token ကို localStorage ထဲကယူပါ
     const token = localStorage.getItem("access");
-    console.log("Access token:", token);
-
     if (!token) {
       alert("❌ You must login first before adding education.");
       return;
     }
 
-    console.log("Access token:", token);
+    if (!profileId) {
+      alert("❌ Profile not found. Cannot save education.");
+      return;
+    }
 
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/accounts-jobseeker/education/",
-        formData,
+        { ...formData, profile: profileId },
         {
           headers: {
             "Content-Type": "application/json",
@@ -61,25 +95,23 @@ export default function EducationModal({ isOpen, onClose }) {
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-10 p-6 animate-slideDown">
-        {/* Header */}
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-14 max-h-[90vh] overflow-y-auto animate-slideDown p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Add Education</h2>
           <button onClick={onClose} className="text-gray-600 text-lg">✕</button>
         </div>
 
-        {/* Form */}
         <form className="space-y-5" onSubmit={handleSubmit}>
+
           {/* Profile */}
           <div>
-            <label className="block font-medium mb-1">Profile</label>
+            <label className="block font-medium mb-1">School Name</label>
             <input
               type="text"
               name="profile"
               value={formData.profile}
-              onChange={handleChange}
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="e.g. Software Engineer"
+              placeholder="e.g. Profile Name"
               required
             />
           </div>
@@ -139,11 +171,7 @@ export default function EducationModal({ isOpen, onClose }) {
               <option value="">Select Start Year</option>
               {Array.from({ length: 30 }, (_, i) => {
                 const year = 2025 - i;
-                return (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                );
+                return <option key={year} value={year}>{year}</option>;
               })}
             </select>
           </div>
@@ -156,21 +184,65 @@ export default function EducationModal({ isOpen, onClose }) {
               value={formData.end_year}
               onChange={handleChange}
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              required
             >
               <option value="">Select End Year</option>
               {Array.from({ length: 30 }, (_, i) => {
                 const year = 2025 - i;
-                return (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                );
+                return <option key={year} value={year}>{year}</option>;
               })}
             </select>
           </div>
 
-          {/* Buttons */}
+          {/* GPA */}
+          <div>
+            <label className="block font-medium mb-1">GPA</label>
+            <input
+              type="number"
+              step="0.01"
+              name="gpa"
+              value={formData.gpa}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="e.g. 3.75"
+            />
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="block font-medium mb-1">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="Optional"
+            />
+          </div>
+
+          {/* Location */}
+          <div>
+            <label className="block font-medium mb-1">Location</label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              placeholder="City, Country"
+            />
+          </div>
+
+          {/* Is Current */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="is_current"
+              checked={formData.is_current}
+              onChange={handleChange}
+            />
+            <label>Currently Studying</label>
+          </div>
+
           <div className="flex gap-4 mt-6">
             <button
               type="submit"

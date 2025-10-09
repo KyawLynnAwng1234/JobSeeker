@@ -18,6 +18,7 @@ import VerifyOTP from "./pages/jobseeker/VerifyOTP";
 
 // ProfileMe for user
 import ProfileMe from "./pages/profile/ProfileMe";
+import EditProfile from "./pages/profile/editprofile/EditProfile";
 
 // Auth Employer
 import EmployerSignIn from "./pages/employer/EmployerSignIn";
@@ -73,13 +74,15 @@ function App() {
                 {/* Home */}
                 <Route index element={<Home />} />
 
-                <Route path="job-search" element={<JobSearch />} />
-                <Route path="job-search/:id" element={<JobSearch />} />
-                <Route path="job-search/:id/detail" element={<JobSearch />} />
-                <Route path="job-search/all" element={<JobSearchAll />} />
-                <Route path="job-search/detail" element={<JobSearchDetail />} />
+                <Route path="job-search">
+                  <Route index element={<JobSearch />} />
+                  <Route path=":id" element={<JobSearch />} />
+                  <Route path=":id/detail" element={<JobSearch />} />
+                  <Route path="all" element={<JobSearchAll />} />
+                  <Route path="detail" element={<JobSearchDetail />} />
+                </Route>
 
-                <Route path="profile"  element={<Profile />} />
+                <Route path="profile" element={<Profile />} />
 
                 <Route path="companies" element={<Companies />} />
                 <Route path="companies/:id" element={<CompanyAbout />} />
@@ -89,6 +92,14 @@ function App() {
                   element={
                     <ProtectedRoute>
                       <ProfileMe />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="profile/me/edit"
+                  element={
+                    <ProtectedRoute>
+                      <EditProfile />
                     </ProtectedRoute>
                   }
                 />
