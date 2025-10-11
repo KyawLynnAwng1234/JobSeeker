@@ -174,7 +174,7 @@ def current_user(request):
 # Create + Read (List)
 @api_view(['GET', 'POST'])
 # @parser_classes([MultiPartParser, FormParser])
-def jobseekerprofile_list(request):
+def jobseekerprofile(request):
     if request.method == 'GET':   # READ all
         jobseekerprofiles = JobseekerProfile.objects.filter(user=request.user)
         serializer = JobseekerProfileSerializer(jobseekerprofiles,many=True)

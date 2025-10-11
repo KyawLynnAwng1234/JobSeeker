@@ -104,9 +104,9 @@ def jobs_list(request):
         jobs = Jobs.objects.all().order_by('-created_at')
     elif hasattr(user, "employerprofile"):
         # Employer → Only their own jobs
-        jobs = Jobs.objects.filter(employer__user=user,is_active=True).order_by('-created_at')
+        jobs = Jobs.objects.filter(employer__user=user).order_by('-created_at')
     else:  
-        jobs = Jobs.objects.all().order_by('-id')
+        jobs = Jobs.objects.all().order_by('-created_at')
     serializer = JobsSerializer(jobs, many=True)
     return Response({
         "jobs":serializer.data,

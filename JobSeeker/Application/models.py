@@ -25,7 +25,6 @@ class SaveJob(models.Model):
         return f"{self.profile} saved {self.job}"
 
 
-
 class Application(models.Model):
     STATUS_CHOICES = [
         ('P', 'Pending'),
@@ -62,18 +61,7 @@ class Application(models.Model):
         ),
     ]
         
-    def clean(self):
-        """
-        Custom validation before saving (called by ModelForm.is_valid() or full_clean()).
-        """
-        if self.resume and self.resume_form:
-            raise ValidationError("❌ Choose either an uploaded resume OR fill the manual resume form, not both.")
 
-        if not self.resume and not self.resume_form:
-            raise ValidationError("❌ You must provide either an uploaded resume OR fill the manual resume form.")
-       
-    def __str__(self):
-        return f"{self.job_seeker_profile} → {self.job} ({self.status})"
 
 
 

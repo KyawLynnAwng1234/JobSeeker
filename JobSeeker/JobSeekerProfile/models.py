@@ -26,13 +26,13 @@ class JobseekerProfile(models.Model):
 # resumes/models.py
 class Resume(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    profile = models.ForeignKey(JobseekerProfile, on_delete=models.CASCADE,related_name="resumes")
+    profile = models.ForeignKey(JobseekerProfile,on_delete=models.CASCADE,related_name="resumes")
     title = models.CharField(max_length=200)
-    file  = models.FileField(upload_to="resume-file/", null=True, blank=True)  # PDF/DOC/DOCX
-    data  = models.JSONField(null=True, blank=True)# snapshot from Education/Experience/Skills…
+    file  = models.FileField(upload_to="resume-file/",null=True, blank=True)# PDF/DOC/DOCX
+    data  = models.JSONField(null=True,blank=True)#snapshot from Education/Experience/Skills…
     is_default = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
     class Meta:
         constraints = [
