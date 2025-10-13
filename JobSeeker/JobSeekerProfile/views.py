@@ -1,8 +1,9 @@
 # Create your views here.
-from rest_framework.decorators import api_view, permission_classes, throttle_classes
+from rest_framework.decorators import api_view, permission_classes, throttle_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework import status
 from rest_framework.throttling import ScopedRateThrottle
 from django.db import IntegrityError
@@ -18,6 +19,7 @@ from django_ratelimit.decorators import ratelimit
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 
 @api_view(['POST'])
@@ -400,22 +402,26 @@ def language_detail(request, l_id):
 #start Resume
 # Create + Read (List)
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+@parser_classes([MultiPartParser, FormParser, JSONParser]) 
 def resume_list(request):
+    profile=get_object_or_404(JobseekerProfile,user=request.user)
     if request.method == 'GET':   # READ all
-        resumes = Resume.objects.all()
-        serializer = ResumeSerializer(resumes, many=True)
+        resumes = Resume.objects.filter(profile=profile).order_by("-created_at")
+        serializer = ResumeSerializer(resumes, many=True, context={"request": request})
         return Response(serializer.data)
 
     elif request.method == 'POST':   # CREATE
-        serializer = ResumeSerializer(data=request.data)
-        if serializer.is_valid():
+        serializer = ResumeSerializer(data=request.data,context={"request": request, "profile": profile})
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(ResumeSerializer(serializer, context={"request": request}).data, status=status.HTTP_201_CREATED)
 
 
 # Read (Single) + Update + Delete
 @api_view(['GET', 'PUT', 'DELETE'])
+@parser_classes([MultiPartParser, FormParser, JSONParser]) 
 def resume_detail(request, pk):
     try:
         resume = Resume.objects.get(pk=pk)

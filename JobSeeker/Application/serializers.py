@@ -33,36 +33,47 @@ class SaveJobsSerializer(serializers.ModelSerializer):
 
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):
+       # new: write-only field that sets the FK `resume`
+    resume_id = serializers.PrimaryKeyRelatedField(
+        queryset=Resume.objects.none(),  # set real queryset in __init__
+        write_only=True,
+        required=False,
+        allow_null=True,
+        source="resume",
+        help_text="Existing saved resume UUID"
+    )
     resume_form   = serializers.JSONField(required=False, allow_null=True, write_only=True)
     resume_upload = serializers.FileField(required=False, allow_null=True, write_only=True)
     resume = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Application
-        fields = ["id", "resume", "resume_form", "resume_upload", "status", "cover_letter_text"]
+        fields = ["id", "resume","resume_id", "resume_form", "resume_upload", "status", "cover_letter_text"]
         read_only_fields = ["id", "resume"]
-       
+
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        profile = self.context.get("profile")
+        if profile:
+            # Only allow picking resumes owned by this user
+            self.fields["resume_id"].queryset = Resume.objects.filter(profile=profile)       
 
     def validate(self, attrs):
-        """
-        Validate that user provides exactly one resume option:
-        - Either resume_upload (file)
-        - OR resume_form (JSON)
-        """
-        has_form = bool(attrs.get("resume_form")) and attrs.get("resume_form") != {}
-        has_file = bool(attrs.get("resume_upload"))
+        # detect which option(s) were provided
+        has_saved = bool(attrs.get("resume"))              # via resume_id → source="resume"
+        has_form  = bool(attrs.get("resume_form")) and attrs.get("resume_form") != {}
+        has_file  = bool(attrs.get("resume_upload"))
         allow_auto = bool(self.context.get("allow_auto_general", False))
 
-        # Case 1: both given → invalid
-        if has_form and has_file:
-            raise serializers.ValidationError({
-                "detail": "Choose only one: Upload a file OR Fill the quick form."
-            })
+        provided = sum([has_saved, has_form, has_file])
 
-        # Case 2: none given → invalid (unless auto allowed)
-        if not allow_auto and not has_form and not has_file:
+        if provided > 1:
             raise serializers.ValidationError({
-                "detail": "Provide one resume option: file upload or quick form."
+                "detail": "Choose only ONE: saved resume, file upload, OR quick form."
             })
-
+        if provided == 0 and not allow_auto:
+            raise serializers.ValidationError({
+                "detail": "Provide one resume option: saved resume (resume_id), file upload, or quick form."
+            })
         return attrs

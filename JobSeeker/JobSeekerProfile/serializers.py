@@ -52,3 +52,4 @@ class SkillSerializar(serializers.ModelSerializer):
         model = Skill
         fields = '__all__'
 
+

@@ -51,7 +51,16 @@ def apply_job(request, pk):
             context={"job": job, "profile": profile},
         )
         ser.is_valid(raise_exception=True)
-        app = ser.save(job=job, job_seeker_profile=profile)
+        v = ser.validated_data
+        app = Application.objects.create(
+        job_seeker_profile=profile,
+        job=job,
+        resume=v.get("resume"),                 # <-- saved resume FK
+        resume_form=v.get("resume_form"),
+        resume_upload=v.get("resume_upload"),
+        cover_letter_text=v.get("cover_letter_text", ""),
+        status="P",
+        )
 
         # ====== CHECK JOB LIMIT ======
         total = Application.objects.filter(job=job).count()
