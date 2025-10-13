@@ -12,7 +12,7 @@ urlpatterns = [
     path('jobseeker/currentuser/',views.current_user,name="jobseeker-currentuser"),
 
     # start jobseekerprofile
-    path('jobseekerprofile/', views.jobseekerprofile_list, name='jobseeker-profile'),
+    path('jobseekerprofile/', views.jobseekerprofile, name='jobseeker-profile'),
     path('jobseekerprofile/<uuid:jp_id>/', views.jobseekerprofile_detail, name='jobseekerprofile-detail'),
     # end JobseekerProfile
     

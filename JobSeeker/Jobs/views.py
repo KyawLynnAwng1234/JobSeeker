@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import BasePermission, IsAuthenticated
 from rest_framework.response import Response
 from django.utils import timezone
-from django.db.models import Q,F,Case, When, Value, IntegerField
+from django.db.models import Q,F, Case, When, Value, IntegerField
 from django.db.models import Count
 from datetime import date
 
@@ -104,9 +104,9 @@ def jobs_list(request):
         jobs = Jobs.objects.all().order_by('-created_at')
     elif hasattr(user, "employerprofile"):
         # Employer → Only their own jobs
-        jobs = Jobs.objects.filter(employer__user=user,is_active=True).order_by('-created_at')
+        jobs = Jobs.objects.filter(employer__user=user).order_by('-created_at')
     else:  
-        jobs = Jobs.objects.all().order_by('-id')
+        jobs = Jobs.objects.all().order_by('-created_at')
     serializer = JobsSerializer(jobs, many=True)
     return Response({
         "jobs":serializer.data,
@@ -182,8 +182,11 @@ def jobs_delete(request, pk):
 def search(request):
     q   = (request.GET.get("q") or "").strip()
     loc = (request.GET.get("loc") or "").strip()
+
     today = date.today()
     not_expired = Q(deadline__isnull=True) | Q(deadline__gte=today)
+
+    # 🟢 Base queryset: only active and not expired
     qs = Jobs.objects.filter(is_active=True).filter(not_expired)
 
     # --- keyword filter ---
@@ -194,20 +197,22 @@ def search(request):
             Q(category__name__icontains=q) |
             Q(description__icontains=q)
         )
+
     # --- location filter ---
     if loc:
         qs = qs.filter(location__icontains=loc)
-                
+
     # --- add priority ranking ---
     qs = qs.annotate(
         category_name=F("category__name"),
         priority_rank=Case(
-            When(priority="FEATURED", then=Value(3)),
-            When(priority="URGENT",   then=Value(2)),
+            When(priority="FEATURED",then=Value(3)),
+            When(priority="URGENT",then=Value(2)),
             default=Value(1),
             output_field=IntegerField()
         )
     ).order_by("-priority_rank", "-created_at")
+
     # --- return limited data ---
     data = list(qs.values(
         "id", "title", "location", "category_name", "created_at", "priority"

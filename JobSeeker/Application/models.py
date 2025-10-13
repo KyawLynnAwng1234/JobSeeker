@@ -25,7 +25,6 @@ class SaveJob(models.Model):
         return f"{self.profile} saved {self.job}"
 
 
-
 class Application(models.Model):
     STATUS_CHOICES = [
         ('P', 'Pending'),
@@ -39,13 +38,16 @@ class Application(models.Model):
     )
     job_seeker_profile = models.ForeignKey(JobseekerProfile,on_delete=models.CASCADE,null=True)
     job = models.ForeignKey(Jobs, on_delete=models.CASCADE,related_name='applications')
-    resume = models.ForeignKey(Resume, on_delete=models.SET_NULL, null=True,blank=True)
+    resume = models.ForeignKey(Resume, on_delete=models.PROTECT, null=True,blank=True)
     resume_form = models.JSONField(null=True,blank=True, default=None)
     resume_upload=models.ImageField(upload_to="resume-file",null=True,blank=True)
     status = models.CharField(max_length=50,choices=STATUS_CHOICES,default='P',null=True, blank=True)
     cover_letter_text = models.TextField(null=True)
     applied_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at=models.DateTimeField(auto_now=True,null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.job_seeker_profile} applied for {self.job}"
 
     class Meta:
         constraints = [
@@ -62,18 +64,7 @@ class Application(models.Model):
         ),
     ]
         
-    def clean(self):
-        """
-        Custom validation before saving (called by ModelForm.is_valid() or full_clean()).
-        """
-        if self.resume and self.resume_form:
-            raise ValidationError("❌ Choose either an uploaded resume OR fill the manual resume form, not both.")
 
-        if not self.resume and not self.resume_form:
-            raise ValidationError("❌ You must provide either an uploaded resume OR fill the manual resume form.")
-       
-    def __str__(self):
-        return f"{self.job_seeker_profile} → {self.job} ({self.status})"
 
 
 

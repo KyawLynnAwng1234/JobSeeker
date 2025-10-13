@@ -16,34 +16,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Jobs, JobseekerProfile
 from .serializers import *
-from .serializers import _snapshot_from_db, _require_all_sections # make sure these are correct
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes, parser_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Jobs, JobseekerProfile
-from .utils import *
 
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def profile_requirements(request, job_id=None):
-    profile = JobseekerProfile.objects.get(user=request.user)
-    snapshot = build_resume_snapshot(profile)
-    missing = check_requirements(snapshot, MIN_REQ)
-    return Response({
-        "ok": not missing,
-        "missing": decorate_missing(missing),
-        "requirements": MIN_REQ,
-        "have": {
-            "education": len(snapshot.get("education", [])),
-            "experience": len(snapshot.get("experience", [])),
-            "skills": len(snapshot.get("skills", [])),
-            "languages": len(snapshot.get("languages", [])),
-            "summary": 1 if (snapshot.get("summary") or "").strip() else 0,
-        }
-    },status=status.HTTP_200_OK)
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -72,50 +45,44 @@ def apply_job(request, pk):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        allow_auto_general = True
-
-        # ====== PARTIAL PERSIST ======
-        raw_form = request.data.get("resume_form")
-        if raw_form:
-            form_obj = raw_form
-            if isinstance(raw_form, str):
-                try:
-                    form_obj = json.loads(raw_form)
-                except Exception:
-                    return Response({"resume_form": "Invalid JSON."}, status=400)
-            form_obj = jsonify_dates(form_obj)
-            persist_resume_sections(profile, form_obj)
-            snapshot = _snapshot_from_db(profile)
-            missing = _require_all_sections(snapshot)
-            if missing:
-                return Response(
-                    {
-                        "code": "MISSING_REQUIRED_SECTIONS",
-                        "message": "Please complete required sections before applying.",
-                        "missing": missing,
-                    },
-                    status=400,
-                )
-
         # ====== CREATE APPLICATION ======
         ser = ApplicationCreateSerializer(
             data=request.data,
-            context={"job": job, "profile": profile, "allow_auto_general": allow_auto_general},
+            context={"job": job, "profile": profile},
         )
         ser.is_valid(raise_exception=True)
-        app = ser.save()
+        v = ser.validated_data
+        app = Application.objects.create(
+        job_seeker_profile=profile,
+        job=job,
+        resume=v.get("resume"),                 # <-- saved resume FK
+        resume_form=v.get("resume_form"),
+        resume_upload=v.get("resume_upload"),
+        cover_letter_text=v.get("cover_letter_text", ""),
+        status="P",
+        )
 
         # ====== CHECK JOB LIMIT ======
         total = Application.objects.filter(job=job).count()
         max_apps = int(job.max_applicants or 0)
-        print(f"[DEBUG] total={total}, max={max_apps}, active={job.is_active}")
-
         if max_apps > 0 and total >= max_apps and job.is_active:
             job.is_active = False
             job.save(update_fields=["is_active"])
-            print(f"[DEBUG] Job {job.id} reached limit → set inactive")
-
     return Response(ApplicationDetailSerializer(app).data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def application_list(request):
+    app=Application.objects.all()#filter(job_seeker_profile__user=request.user)
+    app_count=app.count()
+    print(app)
+    print(app_count)
+    s_app=ApplicationListSerializer(app,many=True).data
+
+    
+
+    
+    return Response({"Applications":s_app})
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
