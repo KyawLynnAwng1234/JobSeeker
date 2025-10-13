@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { useAuth } from "../../hooks/userAuth";
 
 export default function Navbar() {
-
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, loading, logout } = useAuth();
@@ -13,7 +12,7 @@ export default function Navbar() {
     if (loading) return;
 
     if (user) {
-      console.log("Navbar user:", user);
+      console.log("Navbar user:", JSON.stringify(user, null, 2));
     }
   }, [user, loading]);
   const navLinks = [
@@ -84,7 +83,12 @@ export default function Navbar() {
                   >
                     {loading
                       ? "Loading"
-                      : user?.name || user?.username || (user?.email ? user.email.split("@")[0] : "AC Name")} ▼
+                      : user?.name ||
+                        user?.username ||
+                        (user?.email
+                          ? user.email.split("@")[0]
+                          : "AC Name")}{" "}
+                    ▼
                   </button>
 
                   {dropdownOpen && (
@@ -190,7 +194,10 @@ export default function Navbar() {
                         className="block text-blue-600 font-semibold cursor-pointer"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                       >
-                        {loading ? "Loading" : user.name || user.username || "AC Name"} ▼
+                        {loading
+                          ? "Loading"
+                          : user.name || user.username || "AC Name"}{" "}
+                        ▼
                       </span>
                       {dropdownOpen && (
                         <ul className="ml-4 space-y-2">

@@ -17,6 +17,7 @@ class JobseekerProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobseekerProfile
         fields = '__all__' 
+        read_only_fields = ('user', 'id', 'created_at', 'updated_at')
 
 
 class ResumeSerializer(serializers.ModelSerializer):

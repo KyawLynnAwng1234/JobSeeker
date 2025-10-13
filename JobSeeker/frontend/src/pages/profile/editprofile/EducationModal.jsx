@@ -1,8 +1,12 @@
-// EducationModal.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 
-export default function EducationModal({ isOpen, onClose }) {
+export default function EducationModal({
+  isOpen,
+  onClose,
+  profileId,
+  profileName,
+}) {
   const [formData, setFormData] = useState({
     school_name: "",
     degree: "",
@@ -15,33 +19,22 @@ export default function EducationModal({ isOpen, onClose }) {
     is_current: false,
   });
 
-  const [profileId, setProfileId] = useState(null);
-
-  // ✅ Load user profile on mount
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem("access");
-      if (!token) return;
-
-      try {
-        const res = await axios.get(
-          "http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (res.data.length > 0) {
-          setProfileId(res.data[0].id); // user profile id
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.startsWith(name + "=")) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
         }
-      } catch (err) {
-        console.error("Failed to load profile:", err.response?.data || err);
       }
-    };
+    }
+    return cookieValue;
+  }
 
-    fetchProfile();
-  }, []);
+  if (!isOpen) return null;
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -54,11 +47,7 @@ export default function EducationModal({ isOpen, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = localStorage.getItem("access");
-    if (!token) {
-      alert("❌ You must login first before adding education.");
-      return;
-    }
+    const csrftoken = getCookie("csrftoken");
 
     if (!profileId) {
       alert("❌ Profile not found. Cannot save education.");
@@ -72,8 +61,9 @@ export default function EducationModal({ isOpen, onClose }) {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "X-CSRFToken": csrftoken,
           },
+          withCredentials: true,
         }
       );
 
@@ -82,7 +72,10 @@ export default function EducationModal({ isOpen, onClose }) {
         onClose();
       }
     } catch (error) {
-      console.error("❌ Failed to save education:", error.response?.data || error);
+      console.error(
+        "❌ Failed to save education:",
+        error.response?.data || error
+      );
       alert(
         `Failed to save education.\n${
           error.response?.data?.detail || "Check your token or form data."
@@ -98,21 +91,20 @@ export default function EducationModal({ isOpen, onClose }) {
       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-14 max-h-[90vh] overflow-y-auto animate-slideDown p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Add Education</h2>
-          <button onClick={onClose} className="text-gray-600 text-lg">✕</button>
+          <button onClick={onClose} className="text-gray-600 text-lg">
+            ✕
+          </button>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
-
-          {/* Profile */}
+          {/* Profile Name */}
           <div>
-            <label className="block font-medium mb-1">School Name</label>
+            <label className="block font-medium mb-1">Profile</label>
             <input
               type="text"
-              name="profile"
-              value={formData.profile}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="e.g. Profile Name"
-              required
+              value={profileName || "No Profile Name"}
+              readOnly
+              className="w-full border rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed text-gray-600"
             />
           </div>
 
@@ -171,7 +163,11 @@ export default function EducationModal({ isOpen, onClose }) {
               <option value="">Select Start Year</option>
               {Array.from({ length: 30 }, (_, i) => {
                 const year = 2025 - i;
-                return <option key={year} value={year}>{year}</option>;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
               })}
             </select>
           </div>
@@ -188,7 +184,11 @@ export default function EducationModal({ isOpen, onClose }) {
               <option value="">Select End Year</option>
               {Array.from({ length: 30 }, (_, i) => {
                 const year = 2025 - i;
-                return <option key={year} value={year}>{year}</option>;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
               })}
             </select>
           </div>
