@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -85,101 +84,6 @@ export default function EducationModal({
     }
   };
 
-=======
-// EducationModal.js
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-export default function EducationModal({ isOpen, onClose }) {
-  const [formData, setFormData] = useState({
-    school_name: "",
-    degree: "",
-    field_of_study: "",
-    start_year: "",
-    end_year: "",
-    gpa: "",
-    description: "",
-    location: "",
-    is_current: false,
-  });
-
-  const [profileId, setProfileId] = useState(null);
-
-  // ✅ Load user profile on mount
-  useEffect(() => {
-    const fetchProfile = async () => {
-      const token = localStorage.getItem("access");
-      if (!token) return;
-
-      try {
-        const res = await axios.get(
-          "http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if (res.data.length > 0) {
-          setProfileId(res.data[0].id); // user profile id
-        }
-      } catch (err) {
-        console.error("Failed to load profile:", err.response?.data || err);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const token = localStorage.getItem("access");
-    if (!token) {
-      alert("❌ You must login first before adding education.");
-      return;
-    }
-
-    if (!profileId) {
-      alert("❌ Profile not found. Cannot save education.");
-      return;
-    }
-
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/accounts-jobseeker/education/",
-        { ...formData, profile: profileId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (response.status === 201 || response.status === 200) {
-        alert("✅ Education saved successfully!");
-        onClose();
-      }
-    } catch (error) {
-      console.error("❌ Failed to save education:", error.response?.data || error);
-      alert(
-        `Failed to save education.\n${
-          error.response?.data?.detail || "Check your token or form data."
-        }`
-      );
-    }
-  };
-
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
   if (!isOpen) return null;
 
   return (
@@ -193,7 +97,6 @@ export default function EducationModal({ isOpen, onClose }) {
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
-<<<<<<< HEAD
           {/* Profile Name */}
           <div>
             <label className="block font-medium mb-1">Profile</label>
@@ -202,19 +105,6 @@ export default function EducationModal({ isOpen, onClose }) {
               value={profileName || "No Profile Name"}
               readOnly
               className="w-full border rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed text-gray-600"
-=======
-
-          {/* Profile */}
-          <div>
-            <label className="block font-medium mb-1">School Name</label>
-            <input
-              type="text"
-              name="profile"
-              value={formData.profile}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="e.g. Profile Name"
-              required
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
             />
           </div>
 
@@ -273,7 +163,11 @@ export default function EducationModal({ isOpen, onClose }) {
               <option value="">Select Start Year</option>
               {Array.from({ length: 30 }, (_, i) => {
                 const year = 2025 - i;
-                return <option key={year} value={year}>{year}</option>;
+                return (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                );
               })}
             </select>
           </div>
@@ -290,15 +184,11 @@ export default function EducationModal({ isOpen, onClose }) {
               <option value="">Select End Year</option>
               {Array.from({ length: 30 }, (_, i) => {
                 const year = 2025 - i;
-<<<<<<< HEAD
                 return (
                   <option key={year} value={year}>
                     {year}
                   </option>
                 );
-=======
-                return <option key={year} value={year}>{year}</option>;
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
               })}
             </select>
           </div>
