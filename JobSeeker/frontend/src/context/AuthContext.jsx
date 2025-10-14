@@ -14,10 +14,6 @@ export const AuthProvider = ({ children }) => {
 
   // State to hold user data
   const [user, setUser] = useState(undefined);
-<<<<<<< HEAD
-
-=======
->>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   // State to handle loading status (when API calls are in progress)
   const [loading, setLoading] = useState(true);
@@ -45,12 +41,9 @@ export const AuthProvider = ({ children }) => {
   };
 
 
-<<<<<<< HEAD
-  // ---------------------- Verify OTP ----------------------
 
-=======
   // ---------------------- Verify OTP Function ----------------------
->>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
+
   const verifyOTP = async (email, otp) => {
     if (otp.length !== 6) {
       setMessage("Enter the 6-digit code.");
@@ -87,10 +80,7 @@ export const AuthProvider = ({ children }) => {
 
   // ---------------------- Auto Fetch User ----------------------
   useEffect(() => {
-<<<<<<< HEAD
 
-=======
->>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
     const savedToken = localStorage.getItem("token");
     if (!savedToken) {
       setLoading(false);
@@ -101,19 +91,6 @@ export const AuthProvider = ({ children }) => {
       .then((data) => setUser(data))
       .catch((err) => {
         console.error("Fetch profile error:", err);
-<<<<<<< HEAD
-      })
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-    fetchProfileAPI()
-      .then((data) => setUser(data))
-      .catch((err) => {
-        console.error(err);
-=======
->>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
         setUser(null);
       })
       .finally(() => setLoading(false));

@@ -1,23 +1,9 @@
 # Create your views here.
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
-=======
-<<<<<<< HEAD
->>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view, permission_classes, throttle_classes, parser_classes
-<<<<<<< HEAD
-
-=======
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
->>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
->>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -204,20 +190,9 @@ def current_user(request):
 #start jobseekerprofile
 # Create + Read (List)
 @api_view(['GET', 'POST'])
-
+@permission_classes([IsAuthenticated])
 @parser_classes([ MultiPartParser, FormParser])
-
-# @parser_classes([MultiPartParser, FormParser])
 def jobseekerprofile(request):
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-
-=======
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
->>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
->>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
     if request.method == 'GET':   # READ all
         jobseekerprofiles = JobseekerProfile.objects.filter(user=request.user)
         serializer = JobseekerProfileSerializer(jobseekerprofiles,many=True)
@@ -229,6 +204,16 @@ def jobseekerprofile(request):
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PATCH':
+        # UPDATE existing profile (important for file uploads)
+        profile = JobseekerProfile.objects.filter(user=user).first()
+        if not profile:
+            return Response({"detail": "Profile not found."}, status=404)
+        serializer = JobseekerProfileSerializer(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
