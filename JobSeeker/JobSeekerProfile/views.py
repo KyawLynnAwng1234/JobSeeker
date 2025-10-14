@@ -1,7 +1,16 @@
 # Create your views here.
+<<<<<<< HEAD
 
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
+=======
+<<<<<<< HEAD
+from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+=======
+from rest_framework.decorators import api_view, permission_classes, throttle_classes, parser_classes
+>>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -177,9 +186,18 @@ def current_user(request):
 #start jobseekerprofile
 # Create + Read (List)
 @api_view(['GET', 'POST'])
+<<<<<<< HEAD
+@parser_classes([ MultiPartParser, FormParser])
+def jobseekerprofile_list(request):
+    print("Authenticated user:", request.user)  
+=======
 # @parser_classes([MultiPartParser, FormParser])
 def jobseekerprofile(request):
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
     if request.method == 'GET':   # READ all
         jobseekerprofiles = JobseekerProfile.objects.filter(user=request.user)
         serializer = JobseekerProfileSerializer(jobseekerprofiles,many=True)

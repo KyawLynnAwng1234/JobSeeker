@@ -9,7 +9,10 @@ import EducationModal from "./editprofile/EducationModal";
 import ExperienceModal from "./editprofile/ExperienceModal";
 import SkillModal from "./editprofile/SkillModal";
 import LanguageModal from "./editprofile/LanguageModal";
+<<<<<<< HEAD
 import ResumeModal from "./editprofile/ResumeModal";
+=======
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
 
 export default function ProfileMe() {
   const { user, loading } = useAuth();
@@ -32,7 +35,10 @@ export default function ProfileMe() {
   const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
   const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+<<<<<<< HEAD
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
+=======
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
 
   const sections = [
     {
@@ -229,10 +235,14 @@ export default function ProfileMe() {
               <p className="text-sm text-gray-600 mb-2">
                 Upload your resume and cover letter.
               </p>
+<<<<<<< HEAD
               <button
                 className="border border-blue-400 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-100 transition"
                 onClick={() => setIsResumeModalOpen(true)}
               >
+=======
+              <button className="border border-blue-400 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-100 transition">
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
                 Add Resume
               </button>
             </div>
@@ -276,12 +286,15 @@ export default function ProfileMe() {
         onClose={() => setIsLanguageModalOpen(false)}
         profileId={profile.id}
         profileName={profile.full_name}
+<<<<<<< HEAD
       />
       <ResumeModal
         isOpen={isResumeModalOpen}
         onClose={() => setIsResumeModalOpen(false)}
         profileId={profile.id}
         profileName={profile.full_name}
+=======
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
       />
     </div>
   );

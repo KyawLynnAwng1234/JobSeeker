@@ -11,8 +11,16 @@ http://127.0.0.1:8000/accounts-jobseeker/language/
 http://127.0.0.1:8000/accounts-jobseeker/language/language_id/
 
 http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/
+<<<<<<< HEAD
+=======
 
 http://127.0.0.1:8000/accounts-jobseeker/resume/
 
 
+<<<<<<< HEAD
+=======
+>>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
+
+
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
  

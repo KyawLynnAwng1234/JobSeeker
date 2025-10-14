@@ -12,7 +12,11 @@ export default function Navbar() {
     if (loading) return;
 
     if (user) {
+<<<<<<< HEAD
+      console.log("Navbar user:", JSON.stringify(user, null, 2));
+=======
       console.log("Navbar user:", user);
+>>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
     }
   }, [user, loading]);
   const navLinks = [
