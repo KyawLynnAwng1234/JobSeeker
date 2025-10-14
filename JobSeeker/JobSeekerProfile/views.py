@@ -1,10 +1,9 @@
 # Create your views here.
-<<<<<<< HEAD
+
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
 from rest_framework.parsers import MultiPartParser, FormParser
-=======
 from rest_framework.decorators import api_view, permission_classes, throttle_classes, parser_classes
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -166,28 +165,37 @@ def sigout_jobseeker(request):
 
     
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def current_user(request):
     u = request.user
+
+    # if user not logged in or doesn't exist, return default safe response
+    if not u or u.is_anonymous:
+        return Response({
+            "id": None,
+            "email": None,
+            "role": None,
+            "is_verified": False,
+            "username": None,
+        }, status=200)
+
+    # if user exists, return actual info
     return Response({
         "id": str(u.id),
         "email": u.email,
         "role": getattr(u, "role", None),
         "is_verified": getattr(u, "is_verified", False),
         "username": u.email.split("@")[0] if u.email else None,
-    })
-
+    }, status=200)
 #start jobseekerprofile
 # Create + Read (List)
 @api_view(['GET', 'POST'])
-<<<<<<< HEAD
+
 @parser_classes([ MultiPartParser, FormParser])
-def jobseekerprofile_list(request):
-    print("Authenticated user:", request.user)  
-=======
+
 # @parser_classes([MultiPartParser, FormParser])
 def jobseekerprofile(request):
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
+
     if request.method == 'GET':   # READ all
         jobseekerprofiles = JobseekerProfile.objects.filter(user=request.user)
         serializer = JobseekerProfileSerializer(jobseekerprofiles,many=True)

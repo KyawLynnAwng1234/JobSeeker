@@ -12,7 +12,7 @@ class JobseekerProfile(models.Model):
     full_name = models.CharField(max_length=150)
     phone = models.CharField(max_length=20, blank=True)
     address = models.CharField(max_length=255, blank=True)
-    profile_picture = models.ImageField(upload_to="profiles/", blank=True, null=True)
+    profile_picture = models.ImageField(upload_to="profiles/",default="logo.png", blank=True, null=True)
     bio = models.TextField(blank=True)    
     website = models.URLField(blank=True,null=True)
     linkedin = models.URLField(blank=True,null=True)

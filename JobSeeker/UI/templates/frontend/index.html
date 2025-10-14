@@ -1,24 +1,17 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" type=" image/svg+xml" href="/assets/vite.svg'" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="{% static 'frontend/assets/vite.svg' %}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite + React</title>
 
-
-<<<<<<< HEAD
-    <script type="module"  crossorigin src="{% static "frontend/assets/index-DwnuhCgX.js" %}"></script>
-    <link rel="stylesheet" crossorigin href="{% static "frontend/assets/index-CtgPMTXK.css" %}">
-=======
-    <script type="module"  crossorigin src="{% static "frontend/assets/index-DznWlXc5.js" %}"></script>
-    <link rel="stylesheet" crossorigin href="{% static "frontend/assets/index-DQMkItdM.css" %}">
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
-
-
-  <body>
-    <div id="root">
-    </div>
-  </body>
+  <!-- match your build filenames exactly -->
+  <script type="module" crossorigin src="{% static 'frontend/assets/index-CrLjml6D.js' %}"></script>
+  <link rel="stylesheet" crossorigin href="{% static 'frontend/assets/index-CtgPMTXK.css' %}">
+</head>
+<body>
+  <div id="root"></div>
+</body>
 </html>
