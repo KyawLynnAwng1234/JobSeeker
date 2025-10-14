@@ -14,7 +14,10 @@ export default function Navbar() {
     if (user) {
 
       console.log("Navbar user:", user);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
     }
   }, [user, loading]);
   const navLinks = [

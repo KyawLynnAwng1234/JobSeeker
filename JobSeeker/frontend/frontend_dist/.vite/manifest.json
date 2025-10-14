@@ -1,11 +1,35 @@
 {
   "index.html": {
+<<<<<<< HEAD
     "file": "assets/index-CrLjml6D.js",
+=======
+<<<<<<< HEAD
+    "file": "assets/index-Dy8YVzZ9.js",
+=======
+<<<<<<< HEAD
+    "file": "assets/index-DwnuhCgX.js",
+=======
+    "file": "assets/index-DznWlXc5.js",
+>>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
+>>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "css": [
+<<<<<<< HEAD
       "assets/index-CtgPMTXK.css"
+=======
+<<<<<<< HEAD
+      "assets/index-BPQnc0RV.css"
+=======
+<<<<<<< HEAD
+      "assets/index-CtgPMTXK.css"
+=======
+      "assets/index-DQMkItdM.css"
+>>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
+>>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
+>>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
     ],
     "assets": [
       "assets/logotwo-exDaVGaC.png",
