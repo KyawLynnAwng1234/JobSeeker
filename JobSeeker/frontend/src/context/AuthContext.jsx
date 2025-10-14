@@ -12,18 +12,12 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
-<<<<<<< HEAD
-  const [user, setUser] = useState(undefined);
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [loading, setLoading] = useState(true);
-=======
   // State to hold user data
   const [user, setUser] = useState(undefined);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   // State to handle loading status (when API calls are in progress)
   const [loading, setLoading] = useState(true);
   // State to display messages (success/error)
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
   const [message, setMessage] = useState("");
 
   // ---------------------- Sign In ----------------------
@@ -46,15 +40,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-<<<<<<< HEAD
 
-=======
-<<<<<<< HEAD
-  // ---------------------- Verify OTP ----------------------
-=======
->>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
   // ---------------------- Verify OTP Function ----------------------
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
   const verifyOTP = async (email, otp) => {
     if (otp.length !== 6) {
       setMessage("Enter the 6-digit code.");
@@ -91,11 +78,6 @@ export const AuthProvider = ({ children }) => {
 
   // ---------------------- Auto Fetch User ----------------------
   useEffect(() => {
-<<<<<<< HEAD
-    const savedToken = localStorage.getItem("token");
-    if (!savedToken) {
-=======
-<<<<<<< HEAD
     const savedToken = localStorage.getItem("token");
     if (!savedToken) {
       setLoading(false);
@@ -106,23 +88,6 @@ export const AuthProvider = ({ children }) => {
       .then((data) => setUser(data))
       .catch((err) => {
         console.error("Fetch profile error:", err);
-=======
-    const token = localStorage.getItem("token");
-    if (!token) {
->>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
-      setLoading(false);
-      return;
-    }
-    setToken(savedToken);
-    fetchProfileAPI()
-      .then((data) => setUser(data))
-      .catch((err) => {
-<<<<<<< HEAD
-        console.error("Fetch profile error:", err);
-=======
-        console.error(err);
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
->>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
         setUser(null);
       })
       .finally(() => setLoading(false));
