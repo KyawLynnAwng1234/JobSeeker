@@ -12,17 +12,12 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
-<<<<<<< HEAD
-  const [user, setUser] = useState(undefined);
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [loading, setLoading] = useState(true);
-=======
   // State to hold user data
   const [user, setUser] = useState(undefined);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
   // State to handle loading status (when API calls are in progress)
   const [loading, setLoading] = useState(true);
   // State to display messages (success/error)
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
   const [message, setMessage] = useState("");
 
   // ---------------------- Sign In ----------------------
@@ -45,11 +40,8 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-<<<<<<< HEAD
-  // ---------------------- Verify OTP ----------------------
-=======
+
   // ---------------------- Verify OTP Function ----------------------
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
   const verifyOTP = async (email, otp) => {
     if (otp.length !== 6) {
       setMessage("Enter the 6-digit code.");
@@ -86,7 +78,6 @@ export const AuthProvider = ({ children }) => {
 
   // ---------------------- Auto Fetch User ----------------------
   useEffect(() => {
-<<<<<<< HEAD
     const savedToken = localStorage.getItem("token");
     if (!savedToken) {
       setLoading(false);
@@ -97,17 +88,6 @@ export const AuthProvider = ({ children }) => {
       .then((data) => setUser(data))
       .catch((err) => {
         console.error("Fetch profile error:", err);
-=======
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-    fetchProfileAPI()
-      .then((data) => setUser(data))
-      .catch((err) => {
-        console.error(err);
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
         setUser(null);
       })
       .finally(() => setLoading(false));
