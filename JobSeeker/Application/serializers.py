@@ -3,6 +3,7 @@ import json
 from uuid import UUID
 from datetime import date, datetime
 from .models import *
+from Jobs.serializers import JobsSerializer
 from Application.models import Resume
 from JobSeekerProfile.models import Education, Experience, Skill, Language
 
@@ -25,12 +26,13 @@ class ApplicationDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Application
         fields = "__all__"
+
 class SaveJobsSerializer(serializers.ModelSerializer):
+    job=JobsSerializer(read_only=True)
+    job_id=serializers.UUIDField(write_only=True)
     class Meta:
         model=SaveJob
         fields='__all__'
-
-
 
 class ApplicationCreateSerializer(serializers.ModelSerializer):
        # new: write-only field that sets the FK `resume`

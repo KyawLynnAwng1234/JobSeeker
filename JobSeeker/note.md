@@ -6,3 +6,9 @@ todo list for today's morning:
     2.update jobseeker profile
     3.resume(finished)
     4.add resume
+
+14/10/2025
+todo lists
+    1.image update in jobseeker profile
+    2.apply job
+    3.search and study advance search
