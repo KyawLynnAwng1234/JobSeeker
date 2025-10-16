@@ -83,10 +83,17 @@ export default function Navbar() {
                     {loading
                       ? "Loading..."
                       : user?.name ||
+<<<<<<< HEAD
                         user?.username ||
                         (user?.email
                           ? user.email.split("@")[0]
                           : "Account")}{" "}
+=======
+                      user?.username ||
+                      (user?.email
+                        ? user.email.split("@")[0]
+                        : "AC Name")}{" "}
+>>>>>>> 54b68bf32ce8cb80f418424cfa5dcf75904592bf
                     ▼
                   </button>
 

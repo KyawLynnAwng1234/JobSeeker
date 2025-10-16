@@ -1,5 +1,12 @@
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
+<<<<<<< HEAD
+=======
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import api_view, permission_classes, throttle_classes, parser_classes
+>>>>>>> 54b68bf32ce8cb80f418424cfa5dcf75904592bf
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -161,23 +168,40 @@ def sigout_jobseeker(request):
 
     
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def current_user(request):
     u = request.user
+
+    # if user not logged in or doesn't exist, return default safe response
+    if not u or u.is_anonymous:
+        return Response({
+            "id": None,
+            "email": None,
+            "role": None,
+            "is_verified": False,
+            "username": None,
+        }, status=200)
+
+    # if user exists, return actual info
     return Response({
         "id": str(u.id),
         "email": u.email,
         "role": getattr(u, "role", None),
         "is_verified": getattr(u, "is_verified", False),
         "username": u.email.split("@")[0] if u.email else None,
-    })
-
+    }, status=200)
 #start jobseekerprofile
 # Create + Read (List)
 @api_view(['GET', 'POST'])
+<<<<<<< HEAD
 @parser_classes([ MultiPartParser, FormParser])
 def jobseekerprofile(request):
 
+=======
+@permission_classes([IsAuthenticated])
+@parser_classes([ MultiPartParser, FormParser])
+def jobseekerprofile(request):
+>>>>>>> 54b68bf32ce8cb80f418424cfa5dcf75904592bf
     if request.method == 'GET':   # READ all
         jobseekerprofiles = JobseekerProfile.objects.filter(user=request.user)
         serializer = JobseekerProfileSerializer(jobseekerprofiles,many=True)
@@ -189,6 +213,16 @@ def jobseekerprofile(request):
         if serializer.is_valid():
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'PATCH':
+        # UPDATE existing profile (important for file uploads)
+        profile = JobseekerProfile.objects.filter(user=user).first()
+        if not profile:
+            return Response({"detail": "Profile not found."}, status=404)
+        serializer = JobseekerProfileSerializer(profile, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

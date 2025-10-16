@@ -12,33 +12,55 @@ from django.contrib.contenttypes.models import ContentType
 from django.db.models import Q
 
 
-# application notifications list
+from rest_framework.permissions import AllowAny
+
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def application_notification_list(request):
     """
-    Login user ရဲ့ jobs notification list ပြရန်
+    Return job application notifications for employer user.
+    If no user, no employer, or no notifications → return empty data safely.
     """
     user = request.user
+
+    # 1️⃣ Handle case: no logged-in user
+    if not user or user.is_anonymous:
+        return Response({
+            "counts": {"total": 0, "read": 0, "unread": 0},
+            "all_list": [],
+            "read_list": [],
+            "unread_list": [],
+        }, status=200)
+
+    # 2️⃣ Handle case: not an employer or no such user
+    if getattr(user, "role", None) != "employer":
+        return Response({
+            "counts": {"total": 0, "read": 0, "unread": 0},
+            "all_list": [],
+            "read_list": [],
+            "unread_list": [],
+        }, status=200)
+
+    # 3️⃣ Normal case: employer exists → load notifications
     ct_app = ContentType.objects.get_for_model(Application, for_concrete_model=False)
-    # Base queryset (all application notifications for this user)
     base_qs = (
         Notification.objects
-        .filter(user=request.user,user__role="employer", content_type=ct_app)
+        .filter(user=user, user__role="employer", content_type=ct_app)
         .select_related('content_type')
         .order_by('-created_at')
     )
-    # Counts (cheap + consistent)
+
     total_count = base_qs.count()
     read_count = base_qs.filter(is_read=True).count()
     unread_count = total_count - read_count
-    # Split lists
+
     read_notifications = base_qs.filter(is_read=True)
     unread_notifications = base_qs.filter(is_read=False)
-    # Serialize separately (DON’T pass two querysets to one serializer)
+
     all_ser = NotificationSerializer(base_qs, many=True, context={'request': request})
     read_ser = NotificationSerializer(read_notifications, many=True, context={'request': request})
     unread_ser = NotificationSerializer(unread_notifications, many=True, context={'request': request})
+
     return Response({
         "counts": {
             "total": total_count,
@@ -48,8 +70,8 @@ def application_notification_list(request):
         "all_list": all_ser.data,
         "read_list": read_ser.data,
         "unread_list": unread_ser.data,
-    })
-#end
+    }, status=200)
+
 
 #notification read list 
 @api_view(['POST'])

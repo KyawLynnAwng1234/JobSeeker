@@ -2,11 +2,16 @@ from django.urls import path
 from .views import *
 
 urlpatterns = [
+    #apply jobs jobseeker
+    path("application/apply/jobs/list/",applied_jobs,name="apply-jobs-list"),
+    path("application/apply/job/detail/<uuid:app_id>/",applied_job_detail,name="apply-job-detail"),
+    path("application/apply/job/remove/<uuid:app_id>/",applied_job_remove,name="apply-job-remove"),
+    path("application/<uuid:job_id>/apply/",apply_job, name="apply-job"),
 
-    path("application/<uuid:pk>/apply/", apply_job, name="apply-job"),
-    path("employer/applications/<uuid:pk>/", employer_application_detail, name="employer-application-detail"),
-    path("application/application/list/",application_list,name="application-list"),
     #save jobs
-    path("saved-jobs/", save_jobs, name="saved-job-list"),  
-    path("saved-jobs/<uuid:j_id>/",save_jobs,name="save-jobs"),
+    path("save/job/<uuid:job_id>/", save_job, name="save-job"), 
+    path("saved/jobs/", saved_jobs, name="saved-job-list"),   
+    path("saved/job/detail/<uuid:sj_id>/",saved_job_detail, name="saved-job-detail"),
+    path("saved/job/remove/<uuid:sj_id>/",saved_job_remove,name="save-job-remove"),
+
 ]

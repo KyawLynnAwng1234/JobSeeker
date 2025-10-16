@@ -41,7 +41,9 @@ export const AuthProvider = ({ children }) => {
   };
 
 
+
   // ---------------------- Verify OTP Function ----------------------
+
   const verifyOTP = async (email, otp) => {
     if (otp.length !== 6) {
       setMessage("Enter the 6-digit code.");
@@ -78,6 +80,7 @@ export const AuthProvider = ({ children }) => {
 
   // ---------------------- Auto Fetch User ----------------------
   useEffect(() => {
+
     const savedToken = localStorage.getItem("token");
     if (!savedToken) {
       setLoading(false);

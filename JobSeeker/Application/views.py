@@ -1,30 +1,23 @@
 # applications/views.py
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404  # see below
+from django.db import IntegrityError, transaction
+from .models import Jobs, JobseekerProfile
+from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
 from .models import *
 from Jobs.models import *
 from .serializers import *
-from django.shortcuts import get_object_or_404  # see below
-from django.db import IntegrityError, transaction
-from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view, permission_classes, parser_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import JSONParser, MultiPartParser, FormParser
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Jobs, JobseekerProfile
-from .serializers import *
-
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 @parser_classes([JSONParser, MultiPartParser, FormParser])
-def apply_job(request, pk):
+def apply_job(request, job_id):
     profile = get_object_or_404(JobseekerProfile, user=request.user)
     with transaction.atomic():
-        job = Jobs.objects.select_for_update().get(id=pk)
+        job = Jobs.objects.select_for_update().get(id=job_id)
         # Friendly guard: already applied
         existing = Application.objects.filter(job=job, job_seeker_profile=profile).first()
         if existing:
@@ -61,7 +54,6 @@ def apply_job(request, pk):
         cover_letter_text=v.get("cover_letter_text", ""),
         status="P",
         )
-
         # ====== CHECK JOB LIMIT ======
         total = Application.objects.filter(job=job).count()
         max_apps = int(job.max_applicants or 0)
@@ -70,67 +62,90 @@ def apply_job(request, pk):
             job.save(update_fields=["is_active"])
     return Response(ApplicationDetailSerializer(app).data, status=status.HTTP_201_CREATED)
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def application_list(request):
-    app=Application.objects.all()#filter(job_seeker_profile__user=request.user)
-    app_count=app.count()
-    print(app)
-    print(app_count)
-    s_app=ApplicationListSerializer(app,many=True).data
-
-    
-
-    
-    return Response({"Applications":s_app})
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def employer_application_detail(request, pk):
-    """
-    Employer can view details of an application ONLY if it belongs to their job.
-    """
-    try:
-        app = Application.objects.select_related('job', 'job__employer', 'job__employer__user')\
-                                 .get(pk=pk, job__employer__user=request.user)
-    except Application.DoesNotExist:
-        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-    return Response(ApplicationDetailSerializer(app).data)
-
-@api_view(['GET','POST','DELETE'])
-@permission_classes([IsAuthenticated])
-def save_jobs(request, j_id=None):
+def save_job(request,job_id):
     try:
         profile=JobseekerProfile.objects.get(user=request.user)
     except JobseekerProfile.DoesNotExist:
         return Response({"detail": "Ah! You have to create profile before save job"}, status=status.HTTP_404_NOT_FOUND)
-        
-    if request.method == "GET" and j_id is None:
-        savejobs=SaveJob.objects.filter(profile=profile)
-        s_savejobs=SaveJobsSerializer(savejobs,many=True).data
-        return Response({"s_savejobs":s_savejobs})
-    if request.method == "POST" and j_id is not None:
-        try :
-            job=Jobs.objects.get(id=j_id)
-        except Jobs.DoesNotExist:
-            return Response({"detail": "Job not found."}, status=status.HTTP_404_NOT_FOUND)
-        saved, created = SaveJob.objects.get_or_create(profile=profile, job=job)
-
-        if not created:
-            return Response({"message": "Already saved."}, status=status.HTTP_200_OK)
-        serializer = SaveJobsSerializer(saved)
+    
+    try:
+        job=Jobs.objects.get(id=job_id)
+    except Jobs.DoesNotExist:
+        return Response({"detail": "This job does not exist"}, status=status.HTTP_404_NOT_FOUND)
+    try:
+        save_job=SaveJob.objects.create(profile=profile,job=job)
+        s_save_job=SaveJobsSerializer(save_job).data
         return Response({
-            "message": "Job saved successfully!",
-            "data": serializer.data
+            "success": True,
+            "message": f"Job '{job.title}' has been saved successfully.",
+            "data": s_save_job
         }, status=status.HTTP_201_CREATED)
+    except IntegrityError:
+        return Response({"detail": "You have already saved this job"}, status=status.HTTP_400_BAD_REQUEST)
 
-    #DELETE: unsave job
-    if request.method == "DELETE" and j_id is not None:
+
+@api_view(['GET',])
+@permission_classes([IsAuthenticated])
+def saved_jobs(request):
+    try:
+        profile=JobseekerProfile.objects.get(user=request.user)
+    except JobseekerProfile.DoesNotExist:
+        return Response({"detail": "Ah! You have to create profile before save job"}, status=status.HTTP_404_NOT_FOUND)
+    
+    savejobs=SaveJob.objects.filter(profile=profile)
+    s_savejobs=SaveJobsSerializer(savejobs,many=True).data
+    return Response({"s_savejobs":s_savejobs})
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def saved_job_detail(request,sj_id):
+    try:
+        profile=JobseekerProfile.objects.get(user=request.user)
+    except JobseekerProfile.DoesNotExist:
+        return Response({"detail": "Ah! You have to create profile before save job"}, status=status.HTTP_404_NOT_FOUND)
+    try:
+        saved_job=SaveJob.objects.get(profile=profile,id=sj_id)
+    except SaveJob.DoesNotExist:
+        return Response({"detail": "This job is not saved."}, status=status.HTTP_404_NOT_FOUND)
+    s_saved_job=SaveJobsSerializer(saved_job).data
+    return Response({"saved_job":s_saved_job})
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def saved_job_remove(request,sj_id):
+    if request.method == "DELETE":
         try:
-            saved = SaveJob.objects.get(profile=profile, job_id=j_id)
-            saved.delete()
-            return Response({"detail": "Job unsaved successfully."}, status=status.HTTP_204_NO_CONTENT)
+            profile=JobseekerProfile.objects.get(user=request.user)
+        except JobseekerProfile.DoesNotExist:
+            return Response({"detail": "Ah! You have to create profile before save job"}, status=status.HTTP_404_NOT_FOUND)
+        try:
+            saved_job=SaveJob.objects.get(profile=profile,id=sj_id)
         except SaveJob.DoesNotExist:
-            return Response({"detail": "This job is not saved."}, status=status.HTTP_400_BAD_REQUEST)
-    return Response({"detail": "Invalid request."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "This job is not saved."}, status=status.HTTP_404_NOT_FOUND)
+        saved_job.delete()
+        return Response({"Message":f"Job {saved_job.job.title} Succssfully Remove"},status=status.HTTP_200_OK)
+    else:
+        return Response({"Message":"Something Wrong Please try again"})
 
+@api_view(['GET'])
+def applied_jobs(request):
+    applications = Application.objects.filter(job_seeker_profile__user=request.user)
+    app_job=ApplicationListSerializer(applications,many=True).data
+    return Response({"apply_jobs": app_job})
+
+@api_view(['GET'])
+def applied_job_detail(request,app_id):
+    application = get_object_or_404(Application,id=app_id, job_seeker_profile__user=request.user)
+    app_detail=ApplicationDetailSerializer(application).data
+    return Response({"application_detail": app_detail})
+
+@api_view(['DELETE'])
+def applied_job_remove(request,app_id):
+    if request.method == "DELETE":
+        application=get_object_or_404(Application,id=app_id,job_seeker_profile__user=request.user)
+        application.delete()
+        return Response({"Message":f"Job {application.job.title} Succssfully Remove"},status=status.HTTP_200_OK)
+    else:
+        return Response({"Message":"Something Wrong Please try again"})
