@@ -6,6 +6,8 @@ import Home from "./pages/homepage/Home";
 import JobSearch from "./pages/jobsearch/JobSearch";
 import JobSearchAll from "./pages/jobsearch/JobSearchAll";
 import JobSearchDetail from "./pages/jobsearch/JobSearchDetail";
+import SavedJobs from "./components/Navbar/SaveJobs";
+
 
 import Profile from "./pages/profile/Profile";
 
@@ -80,6 +82,7 @@ function App() {
                   <Route path=":id/detail" element={<JobSearch />} />
                   <Route path="all" element={<JobSearchAll />} />
                   <Route path="detail" element={<JobSearchDetail />} />
+                  <Route path="saved" element={<SavedJobs />} />
                 </Route>
 
                 <Route path="profile" element={<Profile />} />

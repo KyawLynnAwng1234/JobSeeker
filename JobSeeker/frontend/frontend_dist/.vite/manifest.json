@@ -1,30 +1,13 @@
 {
   "index.html": {
-<<<<<<< HEAD
-    "file": "assets/index-Dy8YVzZ9.js",
-=======
-<<<<<<< HEAD
-    "file": "assets/index-DwnuhCgX.js",
-=======
-    "file": "assets/index-DznWlXc5.js",
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
->>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
+    "file": "assets/index-DRvB9wcD.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "css": [
-<<<<<<< HEAD
-      "assets/index-BPQnc0RV.css"
-=======
-<<<<<<< HEAD
-      "assets/index-CtgPMTXK.css"
-=======
-      "assets/index-DQMkItdM.css"
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
->>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
+      "assets/index-B2gdAP6a.css"
     ],
     "assets": [
-      "assets/logotwo-exDaVGaC.png",
       "assets/ajax-loader-BcnMEykj.gif",
       "assets/slick-BlzDm7g2.svg"
     ]
@@ -36,9 +19,5 @@
   "node_modules/slick-carousel/slick/fonts/slick.svg": {
     "file": "assets/slick-BlzDm7g2.svg",
     "src": "node_modules/slick-carousel/slick/fonts/slick.svg"
-  },
-  "src/assets/images/logotwo.png": {
-    "file": "assets/logotwo-exDaVGaC.png",
-    "src": "src/assets/images/logotwo.png"
   }
 }

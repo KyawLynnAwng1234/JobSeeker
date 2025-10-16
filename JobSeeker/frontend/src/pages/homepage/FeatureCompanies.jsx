@@ -1,21 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import Slider from "react-slick";
+import axios from "axios";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import logo from "../../assets/images/logotwo.png";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const companyData = [
-  { name: "Global", jobs: 7 },
-  { name: "Global", jobs: 5 },
-  { name: "Global", jobs: 6 },
-  { name: "Global", jobs: 3 },
-  { name: "Global", jobs: 4 },
-  { name: "Global", jobs: 8 },
-  { name: "Global", jobs: 9 },
-];
-
-// Custom arrow components
 const NextArrow = ({ onClick, show }) => {
   if (!show) return null;
   return (
@@ -42,17 +31,23 @@ const PrevArrow = ({ onClick, show }) => {
 
 export default function FeaturedCompanies() {
   const sliderRef = useRef(null);
+  const [companies, setCompanies] = useState([]);
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [slidesToShow, setSlidesToShow] = useState(5); // default
+  const [slidesToShow, setSlidesToShow] = useState(5);
 
   useEffect(() => {
-    // detect actual slidesToShow after mount (responsive)
-    if (sliderRef.current) {
-      const actualSlidesToShow =
-        sliderRef.current.innerSlider.props.slidesToShow;
-      setSlidesToShow(actualSlidesToShow);
-    }
-  }, []);
+  axios
+    .get("http://127.0.0.1:8000/accounts-employer/company/")
+    .then((res) => {
+      console.log("Company API Response:", res.data);
+      const data = res.data.companies || []; // 👈 correct key
+      setCompanies(data);
+    })
+    .catch((err) => {
+      console.error("Error fetching companies:", err);
+    });
+}, []);
+
 
   const settings = {
     dots: true,
@@ -69,44 +64,42 @@ export default function FeaturedCompanies() {
     ],
   };
 
-  const lastSlideIndex = companyData.length - slidesToShow;
+  const lastSlideIndex = companies.length - slidesToShow;
 
   return (
     <div className="relative px-4 py-4">
-      {/* Prev Arrow */}
       <PrevArrow
         onClick={() => sliderRef.current.slickPrev()}
         show={currentSlide !== 0}
       />
 
-      {/* Slider */}
       <Slider ref={sliderRef} {...settings}>
-        {companyData.map((company, i) => (
+        {companies.map((company, i) => (
           <div key={i} className="px-3">
             <div className="border rounded-lg shadow-sm text-center py-4 bg-white">
               <img
-                src={logo}
-                alt="Company Logo"
-                className="h-10 mx-auto mb-4"
+                src={company.logo || "/default-logo.png"}
+                alt={company.business_name}
+                className="h-12 mx-auto mb-4 object-contain"
               />
-              <h3 className="font-semibold py-4 text-2xl">{company.name}</h3>
+              <h3 className="font-semibold py-2 text-lg">
+                {company.business_name}
+              </h3>
+              <p className="text-sm text-gray-500 mb-3">
+                {company.industry || "No industry info"}
+              </p>
               <button className="px-4 py-1 rounded-md bg-[#EFEFEF]">
-                <a href="" className="text-lg">
-                  {company.jobs} jobs
-                </a>
+                {company.job_count || 0} jobs
               </button>
             </div>
           </div>
         ))}
       </Slider>
 
-      {/* Next Arrow */}
       <NextArrow
         onClick={() => sliderRef.current.slickNext()}
         show={currentSlide < lastSlideIndex}
       />
-
-      
     </div>
   );
 }
