@@ -26,7 +26,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', False)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', '.railway.app']
 
 
 # Application definition
@@ -110,12 +110,20 @@ WSGI_APPLICATION = 'JobSeeker.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+import dj_database_url
+
+# Use SQLite locally if DATABASE_URL is not set
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Optional but recommended:
 TIME_ZONE = "Asia/Yangon"
@@ -215,20 +223,19 @@ TOKEN_MODEL = None
 
 
 CORS_ALLOWED_ORIGINS = [
-    
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://192.168.130.155:5173",
-    
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "https://*.railway.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://192.168.130.155:5173",
-
+    "https://*.railway.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
