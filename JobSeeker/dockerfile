@@ -18,5 +18,8 @@ COPY . .
 # Expose the port Railway provides
 EXPOSE 8000
 
-# Start the Django server using dynamic port
-CMD ["python", "manage.py", "runserver", "0.0.0.0:$PORT"]
+# Make start.sh executable
+RUN chmod +x ./start.sh
+
+# Start the application using start.sh
+CMD ["./start.sh"]

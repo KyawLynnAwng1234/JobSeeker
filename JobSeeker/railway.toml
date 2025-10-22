@@ -1,9 +1,9 @@
 [build]
   builder = "nixpacks"
-  buildCommand = "python manage.py collectstatic --noinput"
+  buildCommand = "chmod +x ./start.sh"
 
 [deploy]
-  startCommand = "gunicorn JobSeeker.wsgi:application"
+  startCommand = "./start.sh"
   healthcheckPath = "/"
   healthcheckTimeout = 300
   restartPolicyType = "on_failure"
