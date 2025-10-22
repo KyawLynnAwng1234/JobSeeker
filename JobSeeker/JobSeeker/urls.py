@@ -33,6 +33,7 @@ urlpatterns = [
     path('notifications/',include('Notification.urls')),
     path('application/',include('Application.urls')),
     path('accounts/',include('Accounts.urls')),
+    path('legal/',include('legal.urls')),
     
     #allauth and dj-rest-auth
     path("auth/", include("dj_rest_auth.urls")),

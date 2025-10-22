@@ -19,6 +19,13 @@ class JobseekerProfileSerializer(serializers.ModelSerializer):
         fields = '__all__' 
         read_only_fields = ('user', 'id', 'created_at', 'updated_at')
 
+    def update(self, instance, validated_data):
+        # Only replace image if a new one is uploaded
+        profile_picture = validated_data.get("profile_picture", None)
+        if profile_picture is None or isinstance(profile_picture, str):
+            validated_data.pop("profile_picture", None)
+        return super().update(instance, validated_data)
+
 
 class ResumeSerializer(serializers.ModelSerializer):
     class Meta:

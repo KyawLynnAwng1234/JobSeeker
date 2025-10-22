@@ -29,19 +29,11 @@ class Resume(models.Model):
     profile = models.ForeignKey(JobseekerProfile,on_delete=models.CASCADE,related_name="resumes")
     title = models.CharField(max_length=200)
     file  = models.FileField(upload_to="resume-file/",null=True)# PDF/DOC/DOCX
-    data  = models.JSONField(null=True,blank=True)#snapshot from Education/Experience/Skills…
     is_default = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True,null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True,null=True, blank=True)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["profile"],
-                condition=models.Q(is_default=True),
-                name="one_default_resume_per_profile",
-            )
-        ]
+        
     def __str__(self):
         return f"{self.title} ({self.profile.full_name})"
 

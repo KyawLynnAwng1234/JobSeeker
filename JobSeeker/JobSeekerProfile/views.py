@@ -1,29 +1,24 @@
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.decorators import api_view, permission_classes, throttle_classes, parser_classes
+from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework import status
 from rest_framework.throttling import ScopedRateThrottle
 from django.db import IntegrityError
-from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
 from .serializers import *
 from .utils import send_verification_code
 from django.contrib.auth import get_user_model,login,logout
 from Accounts.models import CustomUser
-User = get_user_model()
 from django.views.decorators.csrf import csrf_exempt
 from django_ratelimit.decorators import ratelimit
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+User = get_user_model()
 
 
 @api_view(['POST'])
@@ -207,7 +202,7 @@ def jobseekerprofile(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'PATCH':
         # UPDATE existing profile (important for file uploads)
-        profile = JobseekerProfile.objects.filter(user=user).first()
+        profile = JobseekerProfile.objects.filter(user=request.user).first()
         if not profile:
             return Response({"detail": "Profile not found."}, status=404)
         serializer = JobseekerProfileSerializer(profile, data=request.data, partial=True)
