@@ -1,12 +1,7 @@
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
-<<<<<<< HEAD
-=======
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.decorators import api_view, permission_classes, throttle_classes, parser_classes
->>>>>>> 54b68bf32ce8cb80f418424cfa5dcf75904592bf
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -193,15 +188,11 @@ def current_user(request):
 #start jobseekerprofile
 # Create + Read (List)
 @api_view(['GET', 'POST'])
-<<<<<<< HEAD
 @parser_classes([ MultiPartParser, FormParser])
-def jobseekerprofile(request):
-
-=======
 @permission_classes([IsAuthenticated])
 @parser_classes([ MultiPartParser, FormParser])
 def jobseekerprofile(request):
->>>>>>> 54b68bf32ce8cb80f418424cfa5dcf75904592bf
+
     if request.method == 'GET':   # READ all
         jobseekerprofiles = JobseekerProfile.objects.filter(user=request.user)
         serializer = JobseekerProfileSerializer(jobseekerprofiles,many=True)
@@ -458,9 +449,9 @@ def resume_list(request):
 # Read (Single) + Update + Delete
 @api_view(['GET', 'PUT', 'DELETE'])
 @parser_classes([MultiPartParser, FormParser, JSONParser]) 
-def resume_detail(request, pk):
+def resume_detail(request, r_id):
     try:
-        resume = Resume.objects.get(pk=pk)
+        resume = Resume.objects.get(id=r_id)
     except Resume.DoesNotExist:
         return Response({"error": "Resume not found"}, status=status.HTTP_404_NOT_FOUND)
 

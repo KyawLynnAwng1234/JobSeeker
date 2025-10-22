@@ -1,13 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-export default function SkillModal({ isOpen, onClose, profileId, profileName }) {
+export default function SkillModal({
+  isOpen,
+  onClose,
+  profileId,
+  profileName,
+  editData,
+  onSuccess,
+}) {
   const [formData, setFormData] = useState({
     name: "",
-    proficiency_level: "",
+    proficiency_level: 1,
   });
 
-  // ✅ CSRF Token Helper
+  // ✅ Cookie getter (for CSRF)
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
@@ -23,9 +30,23 @@ export default function SkillModal({ isOpen, onClose, profileId, profileName }) 
     return cookieValue;
   }
 
+  // ✅ If editData exists, fill form
+  useEffect(() => {
+    if (editData) {
+      setFormData({
+        name: editData.name || "",
+        proficiency_level: editData.proficiency_level || 1,
+      });
+    } else {
+      setFormData({
+        name: "",
+        proficiency_level: 1,
+      });
+    }
+  }, [editData]);
+
   if (!isOpen) return null;
 
-  // ✅ Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -34,44 +55,50 @@ export default function SkillModal({ isOpen, onClose, profileId, profileName }) 
     }));
   };
 
-  // ✅ Handle Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const csrftoken = getCookie("csrftoken");
-
-    if (!profileId) {
-      alert("❌ Profile not found. Cannot save skill.");
-      return;
-    }
+    if (!profileId) return alert("Profile not found.");
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/accounts-jobseeker/skill/",
-        { ...formData, profile: profileId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken,
-          },
-          withCredentials: true,
-        }
-      );
+      let response;
+      if (editData) {
+        // ✅ Update existing skill
+        response = await axios.put(
+          `http://127.0.0.1:8000/accounts-jobseeker/skill/${editData.id}/`,
+          { ...formData, profile: profileId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        );
+      } else {
+        // ✅ Create new skill
+        response = await axios.post(
+          "http://127.0.0.1:8000/accounts-jobseeker/skill/",
+          { ...formData, profile: profileId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        );
+      }
 
-      if (response.status === 201 || response.status === 200) {
-        alert("✅ Skill saved successfully!");
+      if (response.status === 200 || response.status === 201) {
+        alert("Skill updated successfully!");
+        onSuccess?.(response.data);
         onClose();
       }
-    } catch (error) {
-      console.error(
-        "❌ Failed to save skill:",
-        error.response?.data || error
-      );
-      alert(
-        `Failed to save skill.\n${
-          error.response?.data?.detail || "Check your token or form data."
-        }`
-      );
+    } catch (err) {
+      console.error("Error saving skill:", err);
+      alert("Failed to save skill. Check your form data.");
     }
   };
 
@@ -79,7 +106,9 @@ export default function SkillModal({ isOpen, onClose, profileId, profileName }) 
     <div className="fixed inset-0 flex items-start justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-14 max-h-[90vh] overflow-y-auto animate-slideDown p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Add Skill</h2>
+          <h2 className="text-xl font-semibold">
+            {editData ? "Edit Skill" : "Add Skill"}
+          </h2>
           <button onClick={onClose} className="text-gray-600 text-lg">
             ✕
           </button>
@@ -93,7 +122,7 @@ export default function SkillModal({ isOpen, onClose, profileId, profileName }) 
               type="text"
               value={profileName || "No Profile Name"}
               readOnly
-              className="w-full border rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed text-gray-600"
+              className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-600 cursor-not-allowed"
             />
           </div>
 
@@ -105,9 +134,9 @@ export default function SkillModal({ isOpen, onClose, profileId, profileName }) 
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="e.g. React.js"
               required
+              className="w-full border rounded-lg px-3 py-2"
+              placeholder="e.g. React.js"
             />
           </div>
 
@@ -118,10 +147,9 @@ export default function SkillModal({ isOpen, onClose, profileId, profileName }) 
               name="proficiency_level"
               value={formData.proficiency_level}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
               required
+              className="w-full border rounded-lg px-3 py-2"
             >
-              <option value="">Select Level</option>
               <option value={1}>Beginner</option>
               <option value={2}>Intermediate</option>
               <option value={3}>Advanced</option>
@@ -133,13 +161,13 @@ export default function SkillModal({ isOpen, onClose, profileId, profileName }) 
           <div className="flex gap-4 mt-6">
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg"
             >
-              Save
+              Update
             </button>
             <button
               type="button"
-              className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200 transition"
+              className="bg-blue-100 text-blue-600 px-6 py-2 rounded-lg"
               onClick={onClose}
             >
               Cancel

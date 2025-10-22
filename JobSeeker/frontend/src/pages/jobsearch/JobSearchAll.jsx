@@ -3,10 +3,14 @@ import { FaBookmark } from "react-icons/fa";
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from "react-icons/hi";
 import EnterSearch from "../EnterSearch";
 import QuickSearchSection from "../homepage/QuickSearchSection";
+import { useNavigate } from "react-router-dom";
 
 // Job Card Component
-const JobCard = ({ job }) => (
-  <div className="border border-gray-300 rounded-lg p-4 relative shadow-sm hover:shadow-md transition-shadow duration-300">
+const JobCard = ({ job, onClick }) => (
+  <div
+    onClick={onClick}
+    className="border border-gray-300 rounded-lg p-4 relative shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer"
+  >
     <div className="absolute top-4 right-4 text-blue-500">
       <FaBookmark size={20} />
     </div>
@@ -23,6 +27,7 @@ const JobCard = ({ job }) => (
 );
 
 const JobSearchAll = () => {
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -86,7 +91,11 @@ const JobSearchAll = () => {
         ) : currentJobs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
             {currentJobs.map((job) => (
-              <JobCard key={job.id} job={job} />
+              <JobCard
+                key={job.id}
+                job={job}
+                onClick={() => navigate(`/job-search/${job.id}`)}
+              />
             ))}
           </div>
         ) : (

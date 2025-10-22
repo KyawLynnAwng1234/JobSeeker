@@ -38,6 +38,6 @@ urlpatterns = [
     
     # start Resume
     path('resume/', views.resume_list, name='resume-list'),
-    path('resume/<int:pk>/', views.resume_detail, name='resume-detail'),
+    path('resume/<uuid:r_id>/', views.resume_detail, name='resume-detail'),
     # end Resume
 ]

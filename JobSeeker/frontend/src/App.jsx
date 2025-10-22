@@ -5,9 +5,12 @@ import Home from "./pages/homepage/Home";
 
 import JobSearch from "./pages/jobsearch/JobSearch";
 import JobSearchAll from "./pages/jobsearch/JobSearchAll";
-import JobSearchDetail from "./pages/jobsearch/JobSearchDetail";
-import SavedJobs from "./components/Navbar/SaveJobs";
+import JobDetailView from "./pages/jobsearch/JobDetailView";
 
+import SaveJobs from "./components/Navbar/SaveJobs";
+import SavedJobDetail from "./components/Navbar/SaveJobDetail";
+import JobApplications from "./components/Navbar/JobApplication";
+import JobApplicationDetail from "./components/Navbar/JobApplicationDetail";
 
 import Profile from "./pages/profile/Profile";
 
@@ -79,10 +82,12 @@ function App() {
                 <Route path="job-search">
                   <Route index element={<JobSearch />} />
                   <Route path=":id" element={<JobSearch />} />
-                  <Route path=":id/detail" element={<JobSearch />} />
+                  <Route path=":id" element={<JobDetailView />} />
                   <Route path="all" element={<JobSearchAll />} />
-                  <Route path="detail" element={<JobSearchDetail />} />
-                  <Route path="saved" element={<SavedJobs />} />
+                  <Route path="saved" element={<SaveJobs />} />
+                  <Route path="saved/:id" element={<SavedJobDetail />} />
+                  <Route path="applications" element={<JobApplications />} />
+                  <Route path="applications/:id" element={<JobApplicationDetail />} />
                 </Route>
 
                 <Route path="profile" element={<Profile />} />

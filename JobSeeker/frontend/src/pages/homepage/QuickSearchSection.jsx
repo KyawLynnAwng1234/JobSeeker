@@ -31,7 +31,7 @@ export default function QuickSearchSection() {
       <div className="container mx-auto px-4">
         {/* Main Title Row */}
         <div className="py-6 text-center">
-          <h2 className="text-gray-800 text-2xl font-bold">Quick Search</h2>
+          <h2 className="gray-text-custom text-2xl font-bold">Quick Search</h2>
         </div>
 
         {/* Grid Columns */}
@@ -39,7 +39,7 @@ export default function QuickSearchSection() {
           {quickSearchData.map((col, index) => (
             <div key={index} className="gap-8">
               {/* Heading */}
-              <h4 className="font-semibold whitespace-nowrap">{col.heading}</h4>
+              <h4 className="font-semibold whitespace-nowrap gray-text-custom">{col.heading}</h4>
 
               {/* List Items */}
               <ul className="flex flex-row gap-5 flex-wrap my-4">

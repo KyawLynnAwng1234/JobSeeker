@@ -1,9 +1,15 @@
 import React from "react";
+import companyImage from "../assets/images/companies.jpg"
 
 function EnterSearch() {
   return (
-    <section className="bg-blue-custom py-8">
-      <div className="w-full px-4 h-[300px]">
+    <section
+      className="bg-cover bg-center bg-no-repeat py-8"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${companyImage})`,
+      }}
+    >
+      <div className="w-full px-4 h-[500px]">
         {/* Center contents both vertically and horizontally */}
         <div className="h-full w-full flex items-center justify-center md:relative">
           {/* Grid layout */}
@@ -15,7 +21,7 @@ function EnterSearch() {
                 placeholder="Enter keywords"
                 className="p-3 h-[60px] border border-[#999] rounded-md bg-[#ffffffcf] text-lg w-full blue-placeholder"
               />
-              <p className="absolute top-20 text-[#ffffffcf] text-xl hidden md:block">
+              <p className="absolute top-47 text-[#ffffffcf] text-xl hidden md:block">
                 What
               </p>
             </div>
@@ -27,7 +33,7 @@ function EnterSearch() {
                 placeholder="Enter location"
                 className="p-3 h-[60px] border border-[#999] rounded-md bg-[#ffffffcf] text-lg w-full blue-placeholder"
               />
-              <p className="absolute top-20 text-[#ffffffcf] text-xl hidden md:block">
+              <p className="absolute top-47 text-[#ffffffcf] text-xl hidden md:block">
                 Where
               </p>
             </div>

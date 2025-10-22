@@ -1,21 +1,14 @@
 {
   "index.html": {
-<<<<<<< HEAD
-    "file": "assets/index-DRvB9wcD.js",
-=======
-    "file": "assets/index-CQme2MJ3.js",
->>>>>>> 54b68bf32ce8cb80f418424cfa5dcf75904592bf
+    "file": "assets/index-eKbbFqB2.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "css": [
-<<<<<<< HEAD
-      "assets/index-B2gdAP6a.css"
-=======
-      "assets/index-BMj8OkvD.css"
->>>>>>> 54b68bf32ce8cb80f418424cfa5dcf75904592bf
+      "assets/index-D8HDTiiO.css"
     ],
     "assets": [
+      "assets/companies-CHiPRevC.jpg",
       "assets/ajax-loader-BcnMEykj.gif",
       "assets/slick-BlzDm7g2.svg"
     ]
@@ -27,5 +20,9 @@
   "node_modules/slick-carousel/slick/fonts/slick.svg": {
     "file": "assets/slick-BlzDm7g2.svg",
     "src": "node_modules/slick-carousel/slick/fonts/slick.svg"
+  },
+  "src/assets/images/companies.jpg": {
+    "file": "assets/companies-CHiPRevC.jpg",
+    "src": "src/assets/images/companies.jpg"
   }
 }

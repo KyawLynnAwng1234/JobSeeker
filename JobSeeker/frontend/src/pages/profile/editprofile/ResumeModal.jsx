@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function ResumeModal({
@@ -6,6 +6,8 @@ export default function ResumeModal({
   onClose,
   profileId,
   profileName,
+  editData, // ✅ edit mode အတွက်
+  onSuccess, // ✅ refresh callback
 }) {
   const [formData, setFormData] = useState({
     title: "",
@@ -13,6 +15,28 @@ export default function ResumeModal({
     data: "",
     is_default: false,
   });
+
+  // ✅ formData ကို editData အပေါ်မူတည်ပြီး ပြန်ဖြည့်
+  useEffect(() => {
+    if (editData) {
+      setFormData({
+        title: editData.title || "",
+        file: null,
+        data:
+          typeof editData.data === "object"
+            ? JSON.stringify(editData.data.text || "")
+            : editData.data || "",
+        is_default: editData.is_default || false,
+      });
+    } else {
+      setFormData({
+        title: "",
+        file: null,
+        data: "",
+        is_default: false,
+      });
+    }
+  }, [editData]);
 
   // ✅ Get CSRF Token
   function getCookie(name) {
@@ -42,7 +66,7 @@ export default function ResumeModal({
     }));
   };
 
-  // ✅ Submit Handler
+  // ✅ Submit Handler (POST or PUT)
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -57,16 +81,14 @@ export default function ResumeModal({
     const dataToSend = new FormData();
     dataToSend.append("profile", profileId);
     dataToSend.append("title", formData.title);
-    dataToSend.append("file", formData.file);
+    if (formData.file) dataToSend.append("file", formData.file);
 
-    // ✅ JSONField → stringify before sending
+    // ✅ JSONField stringify
     if (formData.data) {
       try {
-        // Try to parse user input as JSON (or fallback to text)
         const jsonParsed = JSON.parse(formData.data);
         dataToSend.append("data", JSON.stringify(jsonParsed));
       } catch {
-        // If not valid JSON, wrap it as string
         dataToSend.append("data", JSON.stringify({ text: formData.data }));
       }
     }
@@ -74,21 +96,41 @@ export default function ResumeModal({
     dataToSend.append("is_default", formData.is_default);
 
     try {
-      const res = await axios.post(
-        "http://127.0.0.1:8000/accounts-jobseeker/resume/",
-        dataToSend,
-        {
-          headers: {
-            Authorization: token ? `Bearer ${token}` : "",
-            "Content-Type": "multipart/form-data",
-            "X-CSRFToken": csrftoken,
-          },
-          withCredentials: true,
-        }
-      );
+      let res;
+      if (editData) {
+        // ✅ PUT Update
+        res = await axios.put(
+          `http://127.0.0.1:8000/accounts-jobseeker/resume/${editData.id}/`,
+          dataToSend,
+          {
+            headers: {
+              Authorization: token ? `Bearer ${token}` : "",
+              "Content-Type": "multipart/form-data",
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        );
+        alert("✅ Resume updated successfully!");
+      } else {
+        // ✅ POST Create
+        res = await axios.post(
+          "http://127.0.0.1:8000/accounts-jobseeker/resume/",
+          dataToSend,
+          {
+            headers: {
+              Authorization: token ? `Bearer ${token}` : "",
+              "Content-Type": "multipart/form-data",
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        );
+        alert("✅ Resume uploaded successfully!");
+      }
 
       console.log("✅ Resume saved:", res.data);
-      alert("✅ Resume uploaded successfully!");
+      onSuccess?.(res.data);
       onClose();
     } catch (error) {
       console.error("❌ Failed to save resume:", error.response?.data || error);
@@ -104,7 +146,9 @@ export default function ResumeModal({
       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-14 max-h-[90vh] overflow-y-auto animate-slideDown p-6">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-blue-700">Add Resume</h2>
+          <h2 className="text-xl font-semibold text-blue-700">
+            {editData ? "Edit Resume" : "Add Resume"}
+          </h2>
           <button onClick={onClose} className="text-gray-600 text-lg">
             ✕
           </button>
@@ -148,8 +192,17 @@ export default function ResumeModal({
               accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
               onChange={handleChange}
               className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              required
             />
+            {editData?.file && (
+              <a
+                href={editData.file}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 text-sm underline mt-1 inline-block"
+              >
+                View Current File
+              </a>
+            )}
           </div>
 
           {/* Data (Optional Note) */}
@@ -183,7 +236,7 @@ export default function ResumeModal({
               type="submit"
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
             >
-              Save
+              {editData ? "Update" : "Save"}
             </button>
             <button
               type="button"

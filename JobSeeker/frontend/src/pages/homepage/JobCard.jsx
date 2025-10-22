@@ -1,12 +1,31 @@
 import { Save, ChevronDown } from "lucide-react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function JobCard({ job }) {
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+  const navigate = useNavigate();
+
   function getRelativeTime(dateString) {
     if (!dateString) return "No deadline";
 
     const date = new Date(dateString);
     const now = new Date();
-    const diffMs = now - date; // positive = past, negative = future
+    const diffMs = now - date;
     const diffSec = Math.floor(diffMs / 1000);
 
     const minutes = Math.floor(diffSec / 60);
@@ -26,25 +45,56 @@ export default function JobCard({ job }) {
     return "Just now";
   }
 
+  const csrftoken = getCookie("csrftoken");
+
+  async function handleSaveJob(e) {
+    e.stopPropagation(); // prevent triggering navigation
+    try {
+      const response = await axios.post(
+        `http://127.0.0.1:8000/application/save/job/${job.id}/`,
+        {},
+        {
+          headers: {
+            "X-CSRFToken": csrftoken,
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      alert("Job saved successfully!");
+      console.log(response.data);
+    } catch (error) {
+      console.error("Failed to save job:", error);
+      alert("Failed to save job!");
+    }
+  }
+
   return (
-    <div className="bg-white p-4 rounded shadow hover:shadow-md transition">
-      <h3 className="font-semibold text-lg">{job.title}</h3>
-      <p className="text-sm text-gray-600">
+    <div
+      className="bg-white p-4 rounded shadow hover:shadow-md transition cursor-pointer"
+      onClick={() => navigate(`/job-search/${job.id}`)} // 👈 navigate to detail page
+    >
+      <h3 className="font-semibold text-lg gray-text-custom">{job.title}</h3>
+      <p className="text-sm gray-text-custom">
         {job.category_name || "Not specified"}
       </p>
-      <p className="text-sm text-gray-600">
+      <p className="text-sm gray-text-custom">
         {job.employer || "Unknown Company"}
       </p>
-      <ul className="text-sm mt-2 list-disc list-inside text-gray-600">
-        <li>{job.location || "No location"}</li>
-        <li>${job.salary || "Negotiable"}</li>
-        <li>{job.description || "No description available"}</li>
+      <ul className="text-sm mt-2 list-disc list-inside gray-text-custom">
+        <li className="gray-text-custom">{job.location || "No location"}</li>
+        <li className="gray-text-custom">${job.salary || "Negotiable"}</li>
+        <li className="gray-text-custom">
+          {job.description || "No description available"}
+        </li>
       </ul>
       <div className="flex items-center justify-between mt-3">
-        <p className="text-xs text-gray-400">{getRelativeTime(job.deadline)}</p>
+        <p className="text-xs gray-text-custom">{getRelativeTime(job.deadline)}</p>
         <div className="flex items-center gap-3">
-          <ChevronDown className="text-gray-500 cursor-pointer" />
-          <Save className="text-blue-500 cursor-pointer" />
+          <Save
+            className="text-blue-500 cursor-pointer"
+            onClick={handleSaveJob}
+          />
         </div>
       </div>
     </div>

@@ -1,5 +1,4 @@
-// src/components/editprofile/LanguageModal.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function LanguageModal({
@@ -7,13 +6,16 @@ export default function LanguageModal({
   onClose,
   profileId,
   profileName,
+  editData,
+  onSuccess,
 }) {
   const [formData, setFormData] = useState({
     name: "",
-    proficiency: "",
+    proficiency: "Beginner",
   });
+  const [loading, setLoading] = useState(false);
 
-  // ✅ CSRF Token Helper
+  // ✅ CSRF Helper
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
@@ -29,9 +31,24 @@ export default function LanguageModal({
     return cookieValue;
   }
 
+  // ✅ When editing, prefill data
+  useEffect(() => {
+    if (editData) {
+      setFormData({
+        name: editData.name || "",
+        proficiency: editData.proficiency || "Beginner",
+      });
+    } else {
+      setFormData({
+        name: "",
+        proficiency: "Beginner",
+      });
+    }
+  }, [editData]);
+
   if (!isOpen) return null;
 
-  // ✅ Handle Input Change
+  // ✅ Input change handler
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -40,7 +57,7 @@ export default function LanguageModal({
     }));
   };
 
-  // ✅ Handle Submit
+  // ✅ Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -51,33 +68,49 @@ export default function LanguageModal({
       return;
     }
 
+    setLoading(true);
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/accounts-jobseeker/language/",
-        { ...formData, profile: profileId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken,
-          },
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 201 || response.status === 200) {
-        alert("✅ Language saved successfully!");
-        onClose();
+      let response;
+      if (editData) {
+        // Update existing
+        response = await axios.put(
+          `http://127.0.0.1:8000/accounts-jobseeker/language/${editData.id}/`,
+          { ...formData, profile: profileId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        );
+      } else {
+        // Create new
+        response = await axios.post(
+          "http://127.0.0.1:8000/accounts-jobseeker/language/",
+          { ...formData, profile: profileId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        );
       }
+
+      onSuccess(response.data);
+      alert("✅ Language saved successfully!");
+      onClose();
     } catch (error) {
-      console.error(
-        "❌ Failed to save language:",
-        error.response?.data || error
-      );
+      console.error("❌ Failed to save language:", error.response?.data || error);
       alert(
         `Failed to save language.\n${
           error.response?.data?.detail || "Check your token or form data."
         }`
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,14 +118,16 @@ export default function LanguageModal({
     <div className="fixed inset-0 flex items-start justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-14 max-h-[90vh] overflow-y-auto animate-slideDown p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Add Language</h2>
+          <h2 className="text-xl font-semibold">
+            {editData ? "Edit Language" : "Add Language"}
+          </h2>
           <button onClick={onClose} className="text-gray-600 text-lg">
             ✕
           </button>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
-          {/* Profile */}
+          {/* Profile Name */}
           <div>
             <label className="block font-medium mb-1">Profile</label>
             <input
@@ -107,41 +142,46 @@ export default function LanguageModal({
           <div>
             <label className="block font-medium mb-1">Language Name</label>
             <input
-              type="text"
               name="name"
+              type="text"
               value={formData.name}
               onChange={handleChange}
-              placeholder="e.g. English, Japanese"
+              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+              placeholder="e.g. English"
               required
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
 
           {/* Proficiency */}
           <div>
             <label className="block font-medium mb-1">Proficiency</label>
-            <input
-              type="text"
+            <select
               name="proficiency"
               value={formData.proficiency}
               onChange={handleChange}
-              placeholder="e.g. Beginner, Intermediate, Advanced, Expert"
+              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
               required
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-            ></input>
+            >
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Fluent">Fluent</option>
+              <option value="Native">Native</option>
+            </select>
           </div>
 
           {/* Buttons */}
           <div className="flex gap-4 mt-6">
             <button
               type="submit"
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg"
+              disabled={loading}
             >
-              Save
+              {loading ? "Updating..." : "Update"}
             </button>
             <button
               type="button"
-              className="bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200 transition"
+              className="bg-blue-100 text-blue-600 px-6 py-2 rounded-lg"
               onClick={onClose}
             >
               Cancel
