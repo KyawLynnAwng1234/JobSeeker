@@ -1,6 +1,6 @@
 [build]
   builder = "nixpacks"
-  buildCommand = "chmod +x ./start.sh"
+  buildCommand = "chmod +x ./start.sh && python manage.py collectstatic --noinput"
 
 [deploy]
   startCommand = "./start.sh"
