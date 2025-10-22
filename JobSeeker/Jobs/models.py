@@ -18,6 +18,23 @@ class JobCategory(models.Model):
     def __str__(self):
         return self.name
 
+#manager job
+class JobsManager(models.Manager):  
+    
+    def quick_search_by_city(self, city_name):
+        qs=self.get_queryset()
+        if city_name:
+            qs=qs.filter(location__icontains=city_name)
+        return qs 
+    
+    def quick_search_by_category(self, category_name):
+        qs=self.get_queryset()
+        if category_name:
+            qs=qs.filter(category__name__icontains=category_name)
+        return qs
+
+
+
 class Jobs(models.Model):
     PRIORITY_CHOICES = [
         ("NORMAL", "Normal"),
@@ -82,6 +99,8 @@ class Jobs(models.Model):
         default="NORMAL",blank=True,null=True,
         help_text="Use FEATURED for top placement or URGENT for visible badge."
     )
+
+    objects = JobsManager()
 
     def __str__(self):
         return self.title

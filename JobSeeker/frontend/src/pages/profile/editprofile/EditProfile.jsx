@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import {toast} from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 // Helper to get CSRF token from cookies
 function getCookie(name) {
@@ -67,9 +67,14 @@ export default function EditProfile({
 
   // Handle input changes
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    setProfile({ ...profile, [name]: files ? files[0] : value });
-  };
+  const { name, value, files } = e.target;
+  if (files && files.length > 0) {
+    setProfile({ ...profile, [name]: files[0] }); // Real File
+  } else {
+    setProfile({ ...profile, [name]: value }); // Text field
+  }
+};
+
 
   // Handle form submit
   const handleSubmit = async (e) => {
@@ -80,9 +85,20 @@ export default function EditProfile({
     setError(null);
 
     const formData = new FormData();
+
     Object.entries(profile).forEach(([key, value]) => {
-      if (value !== null && value !== undefined) formData.append(key, value);
+      if (value === null || value === undefined) return;
+
+      if (key === "profile_picture") {
+        // ✅ Only include if it's a File (from <input type="file">)
+        if (value instanceof File) {
+          formData.append(key, value);
+        }
+      } else {
+        formData.append(key, value);
+      }
     });
+
 
     const csrftoken = getCookie("csrftoken");
 

@@ -106,7 +106,7 @@ def jobs_list(request):
         # Employer → Only their own jobs
         jobs = Jobs.objects.filter(employer__user=user).order_by('-created_at')
     else:  
-        jobs = Jobs.objects.all().order_by('-created_at')
+        jobs = Jobs.objects.filter(is_active=True).order_by('-created_at')
     serializer = JobsSerializer(jobs, many=True)
     return Response({
         "jobs":serializer.data,
@@ -182,10 +182,8 @@ def jobs_delete(request, pk):
 def search(request):
     q   = (request.GET.get("q") or "").strip()
     loc = (request.GET.get("loc") or "").strip()
-
     today = date.today()
     not_expired = Q(deadline__isnull=True) | Q(deadline__gte=today)
-
     # 🟢 Base queryset: only active and not expired
     qs = Jobs.objects.filter(is_active=True).filter(not_expired)
 
@@ -224,5 +222,23 @@ def search(request):
     }, status=status.HTTP_200_OK)
 
 
+#quck search 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def quick_search_by_location(request):
+   location=request.GET.get("city_name")
+   jobs=Jobs.objects.quick_search_by_city(location)
+   serializer=JobsSerializer(jobs,many=True)
+   return Response({"jobs":serializer.data},status=status.HTTP_200_OK)
 
-    
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def quick_search_by_category(request):
+   category=request.GET.get("category")
+   jobs=Jobs.objects.quick_search_by_category(category)
+   serializer=JobsSerializer(jobs,many=True)
+   return Response({"jobs":serializer.data},status=status.HTTP_200_OK)
+        
+
+

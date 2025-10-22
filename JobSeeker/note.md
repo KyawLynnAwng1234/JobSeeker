@@ -9,6 +9,6 @@ todo list for today's morning:
 
 14/10/2025
 todo lists
-    1.image update in jobseeker profile
-    2.apply job
+    1.image update in jobseeker profile #done
+    2.apply job #done
     3.search and study advance search

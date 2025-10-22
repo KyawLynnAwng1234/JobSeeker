@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    
 
     # jobs category urls
     path('job-categories/', views.job_category_list, name='job-categories'),
@@ -19,8 +18,11 @@ urlpatterns = [
     path('jobs/delete/<uuid:pk>/', views.jobs_delete, name='job-delete'),
 
     #search
-    path('search/',views.search,name="search-list")
+    path('search/',views.search,name="search-list"),
 
+    #quick search
+    path('quick-search-city/',views.quick_search_by_location,name="quick-search"),
+    path('quick-search-category/',views.quick_search_by_category,name="quick-search-category"),
 
 ]
 
