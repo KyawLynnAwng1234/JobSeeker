@@ -1,6 +1,7 @@
 from django.db import models
 from Accounts.models import CustomUser
 import uuid
+
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
