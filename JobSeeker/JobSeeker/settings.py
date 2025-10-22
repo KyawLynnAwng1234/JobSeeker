@@ -190,7 +190,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'google': {
             'APP': {
                 'client_id': os.getenv('GOOGLE_CLIENT_ID'),
-                'secret': os.getenv('GOOGLE_SECRET'),
+                'secret':   os.getenv('GOOGLE_SECRET'),
                 'key': ''  # Usually not required for OAuth2 providers
             },
             'SCOPE': [
@@ -245,4 +245,3 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 #Meaida files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#MEDIA_ROOT = BASE_DIR / 'media'

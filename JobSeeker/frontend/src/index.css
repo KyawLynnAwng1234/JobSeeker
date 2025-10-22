@@ -3,14 +3,7 @@
 @import "slick-carousel/slick/slick-theme.css";
 
 @layer utilities {
-  .bg-blue-custom {
-    background-image: linear-gradient(
-      95.77deg,
-      #002366 24.85%,
-      rgba(0, 58, 179, 0.78) 57.2%,
-      #002366 106.21%
-    );
-  }
+
   .custom-blue-border {
     border-color: var(--blue-11, #0d74ce);
   }
@@ -28,6 +21,13 @@
   }
   .blue-bg-hover:hover {
     background-color: var(--blue-11, #0d74ce);
+  }
+  .blue-border-color {
+    border: var(--blue-11, #0d74ce);
+  }
+
+  .gray-text-custom {
+    color: var(--blue-11, #363636);
   }
 
   /* ✅ SlideDown Animation */

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function EducationModal({
@@ -6,6 +6,8 @@ export default function EducationModal({
   onClose,
   profileId,
   profileName,
+  editData, // <-- edit mode အတွက်
+  onSuccess, // <-- POST / PUT ပြီးနောက် refresh လုပ်ဖို့
 }) {
   const [formData, setFormData] = useState({
     school_name: "",
@@ -19,6 +21,7 @@ export default function EducationModal({
     is_current: false,
   });
 
+  // Cookie getter
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
@@ -34,6 +37,36 @@ export default function EducationModal({
     return cookieValue;
   }
 
+  // editData ရှိရင် form ထဲပြန်ဖြည့်
+  useEffect(() => {
+    if (editData) {
+      setFormData({
+        school_name: editData.school_name || "",
+        degree: editData.degree || "",
+        field_of_study: editData.field_of_study || "",
+        start_year: editData.start_year || "",
+        end_year: editData.end_year || "",
+        gpa: editData.gpa || "",
+        description: editData.description || "",
+        location: editData.location || "",
+        is_current: editData.is_current || false,
+      });
+    } else {
+      // clear form for new entry
+      setFormData({
+        school_name: "",
+        degree: "",
+        field_of_study: "",
+        start_year: "",
+        end_year: "",
+        gpa: "",
+        description: "",
+        location: "",
+        is_current: false,
+      });
+    }
+  }, [editData]);
+
   if (!isOpen) return null;
 
   const handleChange = (e) => {
@@ -44,67 +77,90 @@ export default function EducationModal({
     }));
   };
 
+  const handleSave = async (formData) => {
+    try {
+      const res = await axios.post(
+        `http://127.0.0.1:8000/accounts-jobseeker/education/`,
+        formData,
+        { withCredentials: true }
+      );
+
+      // Success callback
+      if (onSuccess) {
+        // onSuccess ကို refresh လုပ်စရာမလိုပဲ new data return
+        onSuccess(res.data);
+      }
+      onClose();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const csrftoken = getCookie("csrftoken");
-
-    if (!profileId) {
-      alert("❌ Profile not found. Cannot save education.");
-      return;
-    }
+    if (!profileId) return alert("Profile not found.");
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/accounts-jobseeker/education/",
-        { ...formData, profile: profileId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken,
-          },
-          withCredentials: true,
-        }
-      );
+      let response;
+      if (editData) {
+        response = await axios.put(
+          `http://127.0.0.1:8000/accounts-jobseeker/education/${editData.id}/`,
+          { ...formData, profile: profileId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        );
+      } else {
+        response = await axios.post(
+          "http://127.0.0.1:8000/accounts-jobseeker/education/",
+          { ...formData, profile: profileId },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": csrftoken,
+            },
+            withCredentials: true,
+          }
+        );
+      }
 
-      if (response.status === 201 || response.status === 200) {
-        alert("✅ Education saved successfully!");
+      if (response.status === 200 || response.status === 201) {
+        alert(editData ? "Education updated!" : "Education added!");
+        onSuccess?.(response.data); // ← refresh လိုစရာမလိုဘဲ data update
         onClose();
       }
-    } catch (error) {
-      console.error(
-        "❌ Failed to save education:",
-        error.response?.data || error
-      );
-      alert(
-        `Failed to save education.\n${
-          error.response?.data?.detail || "Check your token or form data."
-        }`
-      );
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save education. Check your form data.");
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-start justify-center z-50">
       <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-14 max-h-[90vh] overflow-y-auto animate-slideDown p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Add Education</h2>
+          <h2 className="text-xl font-semibold">
+            {editData ? "Edit Education" : "Add Education"}
+          </h2>
           <button onClick={onClose} className="text-gray-600 text-lg">
             ✕
           </button>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
-          {/* Profile Name */}
           <div>
             <label className="block font-medium mb-1">Profile</label>
             <input
               type="text"
               value={profileName || "No Profile Name"}
               readOnly
-              className="w-full border rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed text-gray-600"
+              className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-600 cursor-not-allowed"
             />
           </div>
 
@@ -116,9 +172,8 @@ export default function EducationModal({
               name="school_name"
               value={formData.school_name}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="e.g. University of Yangon"
               required
+              className="w-full border rounded-lg px-3 py-2"
             />
           </div>
 
@@ -130,9 +185,8 @@ export default function EducationModal({
               name="degree"
               value={formData.degree}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="e.g. Bachelor of Science"
               required
+              className="w-full border rounded-lg px-3 py-2"
             />
           </div>
 
@@ -144,9 +198,8 @@ export default function EducationModal({
               name="field_of_study"
               value={formData.field_of_study}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="e.g. Computer Science"
               required
+              className="w-full border rounded-lg px-3 py-2"
             />
           </div>
 
@@ -157,8 +210,8 @@ export default function EducationModal({
               name="start_year"
               value={formData.start_year}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
               required
+              className="w-full border rounded-lg px-3 py-2"
             >
               <option value="">Select Start Year</option>
               {Array.from({ length: 30 }, (_, i) => {
@@ -179,7 +232,7 @@ export default function EducationModal({
               name="end_year"
               value={formData.end_year}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full border rounded-lg px-3 py-2"
             >
               <option value="">Select End Year</option>
               {Array.from({ length: 30 }, (_, i) => {
@@ -202,8 +255,7 @@ export default function EducationModal({
               name="gpa"
               value={formData.gpa}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="e.g. 3.75"
+              className="w-full border rounded-lg px-3 py-2"
             />
           </div>
 
@@ -214,8 +266,7 @@ export default function EducationModal({
               name="description"
               value={formData.description}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="Optional"
+              className="w-full border rounded-lg px-3 py-2"
             />
           </div>
 
@@ -227,12 +278,11 @@ export default function EducationModal({
               name="location"
               value={formData.location}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              placeholder="City, Country"
+              className="w-full border rounded-lg px-3 py-2"
             />
           </div>
 
-          {/* Is Current */}
+          {/* Current */}
           <div className="flex items-center gap-2">
             <input
               type="checkbox"
@@ -248,7 +298,7 @@ export default function EducationModal({
               type="submit"
               className="bg-blue-600 text-white px-6 py-2 rounded-lg"
             >
-              Save
+              {editData ? "Update" : "Save"}
             </button>
             <button
               type="button"

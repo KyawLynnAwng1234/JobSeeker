@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-export default function ExperienceModal({ isOpen, onClose, profileId, profileName }) {
+export default function ExperienceModal({ isOpen, onClose, profileId, profileName, editData, onSuccess }) {
   const [formData, setFormData] = useState({
     job_title: "",
     company_name: "",
@@ -13,7 +13,36 @@ export default function ExperienceModal({ isOpen, onClose, profileId, profileNam
     description: "",
   });
 
-  // ✅ CSRF Helper
+  // ✅ preload edit data
+  useEffect(() => {
+    if (editData) {
+      setFormData({
+        id: editData.id || "",
+        job_title: editData.job_title || "",
+        company_name: editData.company_name || "",
+        position: editData.position || "",
+        location: editData.location || "",
+        start_date: editData.start_date || "",
+        end_date: editData.end_date || "",
+        is_current: editData.is_current || false,
+        description: editData.description || "",
+      });
+    } else {
+      setFormData({
+        job_title: "",
+        company_name: "",
+        position: "",
+        location: "",
+        start_date: "",
+        end_date: "",
+        is_current: false,
+        description: "",
+      });
+    }
+  }, [editData]);
+
+  if (!isOpen) return null;
+
   function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
@@ -29,9 +58,6 @@ export default function ExperienceModal({ isOpen, onClose, profileId, profileNam
     return cookieValue;
   }
 
-  if (!isOpen) return null;
-
-  // ✅ Input change handler
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -40,160 +66,145 @@ export default function ExperienceModal({ isOpen, onClose, profileId, profileNam
     }));
   };
 
-  // ✅ Form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const csrftoken = getCookie("csrftoken");
-
     if (!profileId) {
-      alert("❌ Profile not found. Cannot save experience.");
+      alert("Profile not found!");
       return;
     }
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/accounts-jobseeker/experience/",
-        { ...formData, profile: profileId },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken,
-          },
-          withCredentials: true,
-        }
-      );
+      const url = formData.id
+        ? `http://127.0.0.1:8000/accounts-jobseeker/experience/${formData.id}/`
+        : "http://127.0.0.1:8000/accounts-jobseeker/experience/";
+      const method = formData.id ? "put" : "post";
 
-      if (response.status === 201 || response.status === 200) {
-        alert("✅ Experience saved successfully!");
-        onClose();
-      }
-    } catch (error) {
-      console.error("❌ Failed to save experience:", error.response?.data || error);
-      alert(
-        `Failed to save experience.\n${
-          error.response?.data?.detail || "Check your token or form data."
-        }`
-      );
+      const res = await axios({
+        method,
+        url,
+        data: { ...formData, profile: profileId },
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true,
+      });
+
+      onSuccess(res.data);
+      onClose();
+    } catch (err) {
+      console.error("Error saving experience:", err.response?.data || err);
+      alert("Failed to update experience.");
     }
   };
 
   return (
-    <div className="fixed inset-0 flex items-start justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-14 max-h-[90vh] overflow-y-auto animate-slideDown p-6">
+    <div className="fixed inset-0 flex items-start justify-center z-50 bg-black/30">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-xl mt-14 max-h-[90vh] overflow-y-auto p-6 animate-slideDown">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Add Experience</h2>
+          <h2 className="text-xl font-semibold">
+            {formData.id ? "Edit Experience" : "Add Experience"}
+          </h2>
           <button onClick={onClose} className="text-gray-600 text-lg">
             ✕
           </button>
         </div>
 
         <form className="space-y-5" onSubmit={handleSubmit}>
-          {/* Profile Name */}
           <div>
             <label className="block font-medium mb-1">Profile</label>
             <input
               type="text"
-              value={profileName || "No Profile Name"}
+              value={profileName || "My Profile"}
               readOnly
-              className="w-full border rounded-lg px-3 py-2 bg-gray-100 cursor-not-allowed text-gray-600"
+              className="w-full border rounded-lg px-3 py-2 bg-gray-100 text-gray-600 cursor-not-allowed"
             />
           </div>
 
-          {/* Job Title */}
           <div>
             <label className="block font-medium mb-1">Job Title</label>
             <input
               name="job_title"
-              type="text"
               value={formData.job_title}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
-              placeholder="e.g. Frontend Developer"
+              className="w-full border rounded-lg px-3 py-2"
+              placeholder="e.g. Software Engineer"
               required
             />
           </div>
 
-          {/* Company Name */}
           <div>
             <label className="block font-medium mb-1">Company Name</label>
             <input
               name="company_name"
-              type="text"
               value={formData.company_name}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+              className="w-full border rounded-lg px-3 py-2"
               placeholder="e.g. Google"
               required
             />
           </div>
 
-          {/* Position */}
           <div>
             <label className="block font-medium mb-1">Position</label>
             <input
               name="position"
-              type="text"
               value={formData.position}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
-              placeholder="e.g. Senior Engineer"
+              className="w-full border rounded-lg px-3 py-2"
+              placeholder="e.g. Frontend Developer"
               required
             />
           </div>
 
-          {/* Location */}
           <div>
             <label className="block font-medium mb-1">Location</label>
             <input
               name="location"
-              type="text"
               value={formData.location}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+              className="w-full border rounded-lg px-3 py-2"
               placeholder="e.g. Yangon"
             />
           </div>
 
-          {/* Start & End Date */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block font-medium mb-1">Start Date</label>
               <input
-                name="start_date"
                 type="date"
+                name="start_date"
                 value={formData.start_date}
                 onChange={handleChange}
-                className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+                className="w-full border rounded-lg px-3 py-2"
                 required
               />
             </div>
-
             <div>
               <label className="block font-medium mb-1">End Date</label>
               <input
-                name="end_date"
                 type="date"
+                name="end_date"
                 value={formData.end_date}
                 onChange={handleChange}
-                className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
+                className="w-full border rounded-lg px-3 py-2"
                 disabled={formData.is_current}
               />
             </div>
           </div>
 
-          {/* Currently Working */}
           <div className="flex items-center gap-2">
             <input
-              name="is_current"
               type="checkbox"
+              name="is_current"
               checked={formData.is_current}
               onChange={handleChange}
             />
             <label>Currently Working</label>
           </div>
 
-          {/* Description */}
           <div>
             <label className="block font-medium mb-1">Description</label>
             <textarea
@@ -201,18 +212,17 @@ export default function ExperienceModal({ isOpen, onClose, profileId, profileNam
               rows="4"
               value={formData.description}
               onChange={handleChange}
-              className="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-300"
-              placeholder="Describe your role and responsibilities..."
+              className="w-full border rounded-lg px-3 py-2"
+              placeholder="Describe your responsibilities..."
             ></textarea>
           </div>
 
-          {/* Buttons */}
           <div className="flex gap-4 mt-6">
             <button
               type="submit"
               className="bg-blue-600 text-white px-6 py-2 rounded-lg"
             >
-              Save
+              Update
             </button>
             <button
               type="button"

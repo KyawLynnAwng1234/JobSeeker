@@ -3,23 +3,27 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import EnterSearch from "../EnterSearch";
 import JobDetailView from "./JobDetailView";
+import { useAuth } from "../../hooks/userAuth";
+import ApplyModal from "../../components/Navbar/ApplyModal"; // <-- Fix this import path if needed
 
 export default function JobSearch() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
+  const { user, loading } = useAuth();
 
-  
   const query = new URLSearchParams(location.search);
   const initialMaximized = query.get("maximized") === "true";
   const [isMaximized, setIsMaximized] = useState(initialMaximized);
 
   const [jobs, setJobs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingJobs, setLoadingJobs] = useState(true);
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedJobId, setSelectedJobId] = useState(null);
 
-  
+  // Modal open state
+  const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -32,41 +36,44 @@ export default function JobSearch() {
           },
         });
 
-        console.log("Router ID from URL:", id, typeof id);
-        console.log("Full API Response:", res.data);
-
         const jobList = Array.isArray(res.data.jobs)
-        ? res.data.jobs
-        : res.data.results
-        ? res.data.results
-        : [];
+          ? res.data.jobs
+          : res.data.results
+          ? res.data.results
+          : [];
 
-      setJobs(jobList);
-      setLoading(false);
+        setJobs(jobList);
+        setLoadingJobs(false);
 
         if (id) {
           const job = jobList.find((j) => String(j.id) === String(id));
-          console.log("Selected Job:", job);
           setSelectedJob(job || null);
           setSelectedJobId(job ? job.id : null);
         }
       } catch (error) {
         console.error("Error fetching jobs:", error);
-        setLoading(false);
+        setLoadingJobs(false);
       }
     };
     fetchJobs();
   }, [id]);
 
+  // ✅ Apply Now handler
   const handleApplyNow = () => {
-    navigate("/sign-in");
+    if (loading) return; // still checking auth
+    if (user) {
+      // ✅ If logged in, open modal
+      setIsApplyModalOpen(true);
+    } else {
+      // ❌ Not logged in -> redirect
+      navigate("/sign-in");
+    }
   };
 
   const handleMaximizeToggle = () => {
     const newState = !isMaximized;
     setIsMaximized(newState);
 
-    // query param update
     const searchParams = new URLSearchParams(location.search);
     if (newState) {
       searchParams.set("maximized", "true");
@@ -102,7 +109,7 @@ export default function JobSearch() {
         {/* Job List */}
         {!isMaximized && (
           <div className="md:col-span-1 space-y-4 h-[800px] overflow-y-auto pr-3">
-            {loading ? (
+            {loadingJobs ? (
               <p className="text-gray-500 text-center">Loading jobs...</p>
             ) : jobs.length > 0 ? (
               jobs.map((job) => (
@@ -167,6 +174,15 @@ export default function JobSearch() {
           />
         </div>
       </div>
+
+      {/* ✅ Apply Modal */}
+      {isApplyModalOpen && (
+        <ApplyModal
+          isOpen={isApplyModalOpen} // ✅ Add this line
+          job={selectedJob}
+          onClose={() => setIsApplyModalOpen(false)}
+        />
+      )}
     </>
   );
 }

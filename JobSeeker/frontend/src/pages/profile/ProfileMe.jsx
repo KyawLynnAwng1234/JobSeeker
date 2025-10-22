@@ -10,6 +10,12 @@ import ExperienceModal from "./editprofile/ExperienceModal";
 import SkillModal from "./editprofile/SkillModal";
 import LanguageModal from "./editprofile/LanguageModal";
 import ResumeModal from "./editprofile/ResumeModal";
+import EducationList from "./editprofile/ProfileListDetail/EducationList";
+import ExperienceList from "./editprofile/ProfileListDetail/ExperienceList";
+import LanguageList from "./editprofile/ProfileListDetail/LanguageList";
+import SkillList from "./editprofile/ProfileListDetail/SkillList";
+import ResumeList from "./editprofile/ProfileListDetail/ResumeList";
+import ProfilePhoto from "./editprofile/ProfilePhoto";
 
 export default function ProfileMe() {
   const { user, loading } = useAuth();
@@ -27,41 +33,98 @@ export default function ProfileMe() {
     email: "",
   });
 
+  const [educationList, setEducationList] = useState([]);
+  const [experienceList, setExperienceList] = useState([]);
+  const [languageList, setLanguageList] = useState([]);
+  const [skillList, setSkillList] = useState([]);
+  const [resumeList, setResumeList] = useState([]);
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editData, setEditData] = useState(null);
   const [isEducationOpen, setIsEducationOpen] = useState(false);
   const [isExperienceModalOpen, setIsExperienceModalOpen] = useState(false);
-  const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+  const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
 
-  const sections = [
-    {
-      title: "Education",
-      desc: "Tell us about your education level",
-      btn: "Education",
-      onClick: () => setIsEducationOpen(true),
-    },
-    {
-      title: "Experiences",
-      desc: "Add your professional Experiences",
-      btn: "Experiences",
-      onClick: () => setIsExperienceModalOpen(true),
-    },
-    {
-      title: "Skills",
-      desc: "List your skills to impress employers",
-      btn: "Your Skills",
-      onClick: () => setIsSkillModalOpen(true),
-    },
-    {
-      title: "Languages",
-      desc: "Show languages you’re proficient in",
-      btn: "Proficient Languages",
-      onClick: () => setIsLanguageModalOpen(true),
-    },
-  ];
+  // ✅ Profile completeness message
+  const [profileMessage, setProfileMessage] = useState({ type: "", text: "" });
 
-  // ✅ Fetch Profile Data
+  // ✅ Fetch Education
+  const fetchEducations = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/education/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setEducationList(res.data);
+    } catch (err) {
+      console.error("Error fetching education:", err);
+    }
+  };
+
+  // ✅ Fetch Experience
+  const fetchExperiences = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/experience/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setExperienceList(res.data);
+    } catch (err) {
+      console.error("Error fetching experience:", err);
+    }
+  };
+
+  // ✅ Fetch Language
+  const fetchLanguages = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/language/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setLanguageList(res.data);
+    } catch (err) {
+      console.error("Error fetching languages:", err);
+    }
+  };
+
+  // ✅ Fetch Skill
+  const fetchSkills = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/skill/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setSkillList(res.data);
+    } catch (err) {
+      console.error("Error fetching skills:", err);
+    }
+  };
+
+  // ✅ Handlers for edit buttons
+  const handleEditEducation = (edu) => {
+    setEditData(edu);
+    setIsEducationOpen(true);
+  };
+  const handleEditExperience = (exp) => {
+    setEditData(exp);
+    setIsExperienceModalOpen(true);
+  };
+  const handleEditLanguage = (lang) => {
+    setEditData(lang);
+    setIsLanguageModalOpen(true);
+  };
+  const handleEditSkill = (skill) => {
+    setEditData(skill);
+    setIsSkillModalOpen(true);
+  };
+
+  // ✅ Fetch profile info
   useEffect(() => {
     if (loading) return;
 
@@ -73,22 +136,76 @@ export default function ProfileMe() {
           `${
             import.meta.env.VITE_API_URL
           }/accounts-jobseeker/jobseekerprofile/`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         )
         .then((res) => {
           const profileData =
             Array.isArray(res.data) && res.data.length > 0 ? res.data[0] : {};
           setProfile({
             ...profileData,
-            // ✅ login user email
             email: user.email || "",
           });
         })
         .catch((err) => console.error("Error fetching profile:", err));
     }
   }, [user, loading, navigate]);
+
+  // ✅ When profile loaded, fetch all lists
+  useEffect(() => {
+    if (profile.id) {
+      fetchEducations();
+      fetchExperiences();
+      fetchLanguages();
+      fetchSkills();
+    }
+  }, [profile]);
+
+  // ✅ Profile completeness checker
+  const checkProfileCompleteness = () => {
+    const missingFields = [];
+
+    if (!profile.full_name) missingFields.push("Full Name");
+    if (!profile.address) missingFields.push("Address");
+    if (!profile.phone) missingFields.push("Phone");
+    if (!profile.bio) missingFields.push("Bio");
+    if (!profile.profile_picture) missingFields.push("Profile Picture");
+
+    if (educationList.length === 0) missingFields.push("Education");
+    if (experienceList.length === 0) missingFields.push("Experience");
+    if (languageList.length === 0) missingFields.push("Language");
+    if (skillList.length === 0) missingFields.push("Skill");
+    if (resumeList.length === 0) missingFields.push("Resume");
+
+    return missingFields;
+  };
+
+  const handleProfileUpdateMessage = () => {
+    const missing = checkProfileCompleteness();
+
+    if (missing.length === 0) {
+      setProfileMessage({
+        type: "success",
+        text: "🎉 Your profile is complete!",
+      });
+    } else {
+      setProfileMessage({
+        type: "error",
+        text: `⚠️ Please fill the following: ${missing.join(", ")}`,
+      });
+    }
+  };
+
+  // ✅ Call message check whenever lists change
+  useEffect(() => {
+    if (profile.id) handleProfileUpdateMessage();
+  }, [
+    profile,
+    educationList,
+    experienceList,
+    languageList,
+    skillList,
+    resumeList,
+  ]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -97,18 +214,10 @@ export default function ProfileMe() {
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 items-center h-[300px]">
           {/* Profile Picture */}
           <div className="flex justify-center md:justify-start">
-            <img
-              src={
-                profile.profile_picture
-                  ? `${import.meta.env.VITE_API_URL}${profile.profile_picture}`
-                  : "/default-avatar.png"
-              }
-              alt={profile.full_name || "Profile Picture"}
-              className="w-36 h-36 rounded-full object-cover border-4 border-white shadow-md"
-            />
+            <ProfilePhoto profile={profile} setProfile={setProfile} />
           </div>
 
-          {/* Profile Info */}
+          {/* Info */}
           <div className="space-y-3 text-center md:text-left">
             <h1 className="text-3xl md:text-4xl font-bold">
               {profile.full_name || "Full Name"}
@@ -117,7 +226,6 @@ export default function ProfileMe() {
               {profile.bio || "Write something about yourself..."}
             </p>
 
-            {/* Address, Phone & Email */}
             <div className="flex flex-col items-center md:items-start gap-1 text-[#ffffffb0]">
               <div className="flex items-center gap-2">
                 <FaLocationDot />
@@ -135,46 +243,42 @@ export default function ProfileMe() {
           </div>
 
           {/* Social Links */}
-          <div className="flex flex-col items-center md:items-start gap-2 text-[#ffffffb0] w-full overflow-hidden break-words">
-            <div className="flex items-start gap-2 w-full break-all">
-              <CiGlobe className="flex-shrink-0 mt-1" />
+          <div className="flex flex-col items-center md:items-start gap-2 text-[#ffffffb0]">
+            <div className="flex items-start gap-2 w-full">
+              <CiGlobe />
               <a
                 href={profile.website || "#"}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:underline break-words whitespace-normal overflow-hidden text-ellipsis w-full"
+                className="hover:underline"
               >
                 {profile.website || "Website"}
               </a>
             </div>
-
-            <div className="flex items-start gap-2 w-full break-all">
-              <FaLinkedin className="flex-shrink-0 mt-1" />
+            <div className="flex items-start gap-2 w-full">
+              <FaLinkedin />
               <a
                 href={profile.linkedin || "#"}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:underline break-words whitespace-normal overflow-hidden text-ellipsis w-full"
+                className="hover:underline"
               >
                 {profile.linkedin || "LinkedIn"}
               </a>
             </div>
-
-            <div className="flex items-start gap-2 w-full break-all">
-              <FaGithub className="flex-shrink-0 mt-1" />
+            <div className="flex items-start gap-2 w-full">
+              <FaGithub />
               <a
                 href={profile.github || "#"}
                 target="_blank"
                 rel="noreferrer"
-                className="hover:underline break-words whitespace-normal overflow-hidden text-ellipsis w-full"
+                className="hover:underline"
               >
                 {profile.github || "GitHub"}
               </a>
             </div>
           </div>
         </div>
-
-        {/* ✏️ Edit Profile Button */}
         <button
           onClick={() => navigate("/profile/me/edit")}
           className="absolute top-8 right-8 bg-white text-blue-700 font-bold rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-200 transition"
@@ -183,11 +287,23 @@ export default function ProfileMe() {
         </button>
       </section>
 
-      {/* 🧩 Features Section */}
+      {/* 🪧 Profile completeness message */}
+      {profileMessage.text && (
+        <div
+          className={`container mx-auto px-4 py-3 mt-4 rounded ${
+            profileMessage.type === "success"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          {profileMessage.text}
+        </div>
+      )}
+
+      {/* 🧩 Main Section */}
       <section className="container mx-auto px-4 py-12 flex flex-col md:flex-row gap-6">
-        {/* Left Section */}
         <div className="flex-1 space-y-8">
-          {/* Summary Input */}
+          {/* Summary */}
           <div>
             <label className="block text-lg font-semibold mb-2">
               Summary (Job Purpose)
@@ -195,56 +311,132 @@ export default function ProfileMe() {
             <div className="relative" onClick={() => setIsModalOpen(true)}>
               <input
                 type="text"
-                placeholder="Write your job purpose..."
                 value={profile.bio || ""}
-                className="w-full border border-[#0D74CE] rounded-lg px-4 py-2 bg-white cursor-pointer focus:outline-none focus:ring focus:ring-blue-300"
                 readOnly
+                placeholder="Write your job purpose..."
+                className="w-full border border-[#0D74CE] rounded-lg px-4 py-2 bg-white cursor-pointer"
               />
               <span className="absolute right-3 top-2 text-gray-500">✎</span>
             </div>
           </div>
 
-          {/* Other Sections */}
-          {sections.map((item, idx) => (
-            <div key={idx} className="bg-white rounded-lg shadow-sm p-4">
-              <h2 className="text-lg font-semibold">{item.title}</h2>
-              {item.desc && (
-                <p className="text-sm text-gray-500 mb-2">{item.desc}</p>
-              )}
+          {/* ✅ Education */}
+          <div className="bg-white rounded-lg shadow-sm p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-semibold">Education</h2>
               <button
-                className="border border-[#0D74CE] text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition"
-                onClick={item.onClick}
+                className="text-blue-600 hover:underline"
+                onClick={() => {
+                  setEditData(null);
+                  setIsEducationOpen(true);
+                }}
               >
-                {item.btn}
+                + Add
               </button>
             </div>
-          ))}
+            <EducationList
+              profileId={profile.id}
+              educationList={educationList}
+              setEducationList={setEducationList}
+              onEdit={handleEditEducation}
+            />
+          </div>
+
+          {/* ✅ Experience */}
+          <div className="bg-white rounded-lg shadow-sm p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-semibold">Experience</h2>
+              <button
+                className="text-blue-600 hover:underline"
+                onClick={() => {
+                  setEditData(null);
+                  setIsExperienceModalOpen(true);
+                }}
+              >
+                + Add
+              </button>
+            </div>
+            <ExperienceList
+              profileId={profile.id}
+              experienceList={experienceList}
+              setExperienceList={setExperienceList}
+              onEdit={handleEditExperience}
+            />
+          </div>
+
+          {/* ✅ Language */}
+          <div className="bg-white rounded-lg shadow-sm p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-semibold">Languages</h2>
+              <button
+                className="text-blue-600 hover:underline"
+                onClick={() => {
+                  setEditData(null);
+                  setIsLanguageModalOpen(true);
+                }}
+              >
+                + Add
+              </button>
+            </div>
+            <LanguageList
+              profileId={profile.id}
+              languageList={languageList}
+              setLanguageList={setLanguageList}
+              onEdit={handleEditLanguage}
+            />
+          </div>
+
+          {/* ✅ Skill */}
+          {/* ✅ Skill Section */}
+          <div className="bg-white rounded-lg shadow-sm p-4">
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-lg font-semibold">Skills</h2>
+              <button
+                className="text-blue-600 hover:underline"
+                onClick={() => {
+                  setEditData(null);
+                  setIsSkillModalOpen(true);
+                }}
+              >
+                + Add
+              </button>
+            </div>
+            <SkillList
+              profileId={profile.id}
+              skillList={skillList}
+              setSkillList={setSkillList}
+              onEdit={(skill) => {
+                setEditData(skill);
+                setIsSkillModalOpen(true);
+              }}
+            />
+          </div>
         </div>
 
-        {/* Right Section */}
+        {/* Resume Panel */}
         <div className="w-full md:w-1/3 bg-blue-50 rounded-lg p-6 shadow-inner">
-          <h2 className="text-lg font-semibold mb-3 text-blue-900">Resume</h2>
-          <div className="flex flex-col gap-6">
-            <div>
-              <p className="text-sm text-gray-600 mb-2">
-                Upload your resume and cover letter.
-              </p>
-              <button
-                className="border border-blue-400 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-100 transition"
-                onClick={() => setIsResumeModalOpen(true)}
-              >
-                Add Resume
-              </button>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600 mb-2">
-                Create your resume directly from your profile.
-              </p>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-                Create Resume
-              </button>
-            </div>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-lg font-semibold text-blue-900">Resume</h2>
+            <button
+              className="border border-blue-400 text-blue-600 px-4 py-1 rounded-lg hover:bg-blue-100 transition"
+              onClick={() => {
+                setEditData(null);
+                setIsResumeModalOpen(true);
+              }}
+            >
+              + Add
+            </button>
           </div>
+
+          <ResumeList
+            profileId={profile.id}
+            resumeList={resumeList}
+            setResumeList={setResumeList}
+            onEdit={(resume) => {
+              setEditData(resume);
+              setIsResumeModalOpen(true);
+            }}
+          />
         </div>
       </section>
 
@@ -253,35 +445,95 @@ export default function ProfileMe() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
+
       <EducationModal
         isOpen={isEducationOpen}
         onClose={() => setIsEducationOpen(false)}
         profileId={profile.id}
         profileName={profile.full_name}
+        editData={editData}
+        onSuccess={(edu) => {
+          if (editData) {
+            setEducationList((prev) =>
+              prev.map((e) => (e.id === edu.id ? edu : e))
+            );
+          } else {
+            setEducationList((prev) => [...prev, edu]);
+          }
+          handleProfileUpdateMessage();
+        }}
       />
+
       <ExperienceModal
         isOpen={isExperienceModalOpen}
         onClose={() => setIsExperienceModalOpen(false)}
         profileId={profile.id}
         profileName={profile.full_name}
+        editData={editData}
+        onSuccess={(exp) => {
+          if (editData) {
+            setExperienceList((prev) =>
+              prev.map((e) => (e.id === exp.id ? exp : e))
+            );
+          } else {
+            setExperienceList((prev) => [...prev, exp]);
+          }
+          handleProfileUpdateMessage();
+        }}
       />
-      <SkillModal
-        isOpen={isSkillModalOpen}
-        onClose={() => setIsSkillModalOpen(false)}
-        profileId={profile.id}
-        profileName={profile.full_name}
-      />
+
       <LanguageModal
         isOpen={isLanguageModalOpen}
         onClose={() => setIsLanguageModalOpen(false)}
         profileId={profile.id}
         profileName={profile.full_name}
+        editData={editData}
+        onSuccess={(lang) => {
+          if (editData) {
+            setLanguageList((prev) =>
+              prev.map((l) => (l.id === lang.id ? lang : l))
+            );
+          } else {
+            setLanguageList((prev) => [...prev, lang]);
+          }
+          handleProfileUpdateMessage();
+        }}
       />
+
+      <SkillModal
+        isOpen={isSkillModalOpen}
+        onClose={() => setIsSkillModalOpen(false)}
+        profileId={profile.id}
+        profileName={profile.full_name}
+        editData={editData}
+        onSuccess={(skill) => {
+          if (editData) {
+            setSkillList((prev) =>
+              prev.map((s) => (s.id === skill.id ? skill : s))
+            );
+          } else {
+            setSkillList((prev) => [...prev, skill]);
+          }
+          handleProfileUpdateMessage();
+        }}
+      />
+
       <ResumeModal
         isOpen={isResumeModalOpen}
         onClose={() => setIsResumeModalOpen(false)}
         profileId={profile.id}
         profileName={profile.full_name}
+        editData={editData}
+        onSuccess={(newResume) => {
+          if (editData) {
+            setResumeList((prev) =>
+              prev.map((r) => (r.id === newResume.id ? newResume : r))
+            );
+          } else {
+            setResumeList((prev) => [...prev, newResume]);
+          }
+          handleProfileUpdateMessage();
+        }}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, Bookmark, FileText, LogOut } from "lucide-react";
 import { useAuth } from "../../hooks/userAuth";
 
 export default function Navbar() {
@@ -9,18 +9,16 @@ export default function Navbar() {
   const { user, loading, logout } = useAuth();
 
   useEffect(() => {
-    if (loading) return;
-
-    if (user) {
-
+    if (!loading && user) {
       console.log("Navbar user:", user);
     }
   }, [user, loading]);
+
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Jobs", path: "/job-search" },
-    { name: "Profile", path: "/profile" },
     { name: "Companies", path: "/companies" },
+    { name: "Profile", path: "/profile" },
   ];
 
   return (
@@ -28,7 +26,7 @@ export default function Navbar() {
       <header className="fixed top-0 left-0 w-full z-50 bg-white shadow-md">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
-          <NavLink to="/" className="text-2xl font-bold text-blue-600">
+          <NavLink to="/" className="text-2xl font-bold custom-blue-text">
             Jobseeker
           </NavLink>
 
@@ -40,8 +38,8 @@ export default function Navbar() {
                 to={link.path}
                 className={({ isActive }) =>
                   isActive
-                    ? "text-blue-600 border-b-2 border-blue-600 font-semibold"
-                    : "text-gray-700 hover:text-blue-600"
+                    ? "custom-blue-text border-b-2 font-semibold"
+                    : "gray-text-custom nav-hover-blue"
                 }
               >
                 {link.name}
@@ -57,8 +55,8 @@ export default function Navbar() {
                   to="/sign-in"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-blue-600 border-b-2 border-blue-600 font-semibold"
-                      : "text-gray-700 hover:text-blue-600"
+                      ? "custom-blue-text border-b-2 font-semibold"
+                      : "gray-text-custom nav-hover-blue"
                   }
                 >
                   Sign In
@@ -67,8 +65,8 @@ export default function Navbar() {
                   to="/employer/sign-in"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-blue-600 border-b-2 border-blue-600 font-semibold"
-                      : "text-gray-700 hover:text-blue-600"
+                      ? "custom-blue-text border-b-2 font-semibold"
+                      : "gray-text-custom nav-hover-blue"
                   }
                 >
                   Employer Site
@@ -80,32 +78,52 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="text-blue-600 font-semibold flex items-center gap-1 focus:outline-none"
+                    className="custom-blue-text font-semibold flex items-center gap-1 focus:outline-none"
                   >
                     {loading
-                      ? "Loading"
+                      ? "Loading..."
                       : user?.name ||
-                      user?.username ||
-                      (user?.email
-                        ? user.email.split("@")[0]
-                        : "AC Name")}{" "}
+                        user?.username ||
+                        (user?.email
+                          ? user.email.split("@")[0]
+                          : "Account")}{" "}
                     ▼
                   </button>
 
                   {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg py-2">
+                    <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg py-2 z-50">
                       <NavLink
                         to="/profile"
-                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        className="flex items-center gap-2 px-4 py-2 gray-text-custom hover:bg-gray-100"
                         onClick={() => setDropdownOpen(false)}
                       >
-                        Profile
+                        <User size={16} /> Profile
                       </NavLink>
-                      <button
-                        onClick={logout}
-                        className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+
+                      <NavLink
+                        to="/job-search/saved"
+                        className="flex items-center gap-2 px-4 py-2 gray-text-custom hover:bg-gray-100"
+                        onClick={() => setDropdownOpen(false)}
                       >
-                        Logout
+                        <Bookmark size={16} /> Saved Jobs
+                      </NavLink>
+
+                      <NavLink
+                        to="/job-search/applications"
+                        className="flex items-center gap-2 px-4 py-2 gray-text-custom hover:bg-gray-100"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        <FileText size={16} /> Job Applications
+                      </NavLink>
+
+                      <button
+                        onClick={() => {
+                          logout();
+                          setDropdownOpen(false);
+                        }}
+                        className="w-full flex items-center gap-2 text-left px-4 py-2 gray-text-custom hover:bg-gray-100"
+                      >
+                        <LogOut size={16} /> Logout
                       </button>
                     </div>
                   )}
@@ -115,8 +133,8 @@ export default function Navbar() {
                   to="/employer/sign-in"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-blue-600 border-b-2 border-blue-600 font-semibold"
-                      : "text-gray-700 hover:text-blue-600"
+                      ? "custom-blue-text border-b-2 blue-border-color font-semibold"
+                      : "gray-text-custom nav-hover-blue"
                   }
                 >
                   Employer Site
@@ -129,7 +147,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none"
+              className="gray-text-custom nav-hover-blue focus:outline-none"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -147,8 +165,8 @@ export default function Navbar() {
                       to={link.path}
                       className={({ isActive }) =>
                         isActive
-                          ? "block text-blue-600 font-semibold"
-                          : "block text-gray-700 hover:text-blue-600"
+                          ? "block custom-blue-text font-semibold"
+                          : "block gray-text-custom nav-hover-blue"
                       }
                       onClick={() => setIsOpen(false)}
                     >
@@ -164,11 +182,7 @@ export default function Navbar() {
                     <li>
                       <NavLink
                         to="/sign-in"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "block text-blue-600 font-semibold"
-                            : "block text-gray-700 hover:text-blue-600"
-                        }
+                        className="block gray-text-custom nav-hover-blue"
                         onClick={() => setIsOpen(false)}
                       >
                         Sign In
@@ -177,11 +191,7 @@ export default function Navbar() {
                     <li>
                       <NavLink
                         to="/employer/sign-in"
-                        className={({ isActive }) =>
-                          isActive
-                            ? "block text-blue-600 font-semibold"
-                            : "block text-gray-700 hover:text-blue-600"
-                        }
+                        className="block gray-text-custom nav-hover-blue"
                         onClick={() => setIsOpen(false)}
                       >
                         Employer Site
@@ -192,12 +202,12 @@ export default function Navbar() {
                   <>
                     <li>
                       <span
-                        className="block text-blue-600 font-semibold cursor-pointer"
+                        className="block custom-blue-text font-semibold cursor-pointer"
                         onClick={() => setDropdownOpen(!dropdownOpen)}
                       >
                         {loading
-                          ? "Loading"
-                          : user.name || user.username || "AC Name"}{" "}
+                          ? "Loading..."
+                          : user?.name || user?.username || "Account"}{" "}
                         ▼
                       </span>
                       {dropdownOpen && (
@@ -205,18 +215,39 @@ export default function Navbar() {
                           <li>
                             <NavLink
                               to="/profile"
-                              className="block text-gray-700 hover:text-blue-600"
+                              className="flex items-center gap-2 gray-text-custom nav-hover-blue"
                               onClick={() => setIsOpen(false)}
                             >
-                              Profile
+                              <User size={16} /> Profile
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/job-search/saved"
+                              className="flex items-center gap-2 gray-text-custom nav-hover-blue"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              <Bookmark size={16} /> Saved Jobs
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/applications"
+                              className="flex items-center gap-2 gray-text-custom nav-hover-blue"
+                              onClick={() => setIsOpen(false)}
+                            >
+                              <FileText size={16} /> Job Applications
                             </NavLink>
                           </li>
                           <li>
                             <button
-                              onClick={logout}
-                              className="block text-gray-700 hover:text-blue-600"
+                              onClick={() => {
+                                logout();
+                                setIsOpen(false);
+                              }}
+                              className="flex items-center gap-2 gray-text-custom nav-hover-blue"
                             >
-                              Logout
+                              <LogOut size={16} /> Logout
                             </button>
                           </li>
                         </ul>
@@ -227,8 +258,8 @@ export default function Navbar() {
                         to="/employer/sign-in"
                         className={({ isActive }) =>
                           isActive
-                            ? "block text-blue-600 font-semibold"
-                            : "block text-gray-700 hover:text-blue-600"
+                            ? "block custom-blue-text font-semibold"
+                            : "block gray-text-custom nav-hover-blue"
                         }
                         onClick={() => setIsOpen(false)}
                       >
@@ -243,7 +274,7 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* Content spacing */}
+      {/* spacing for fixed navbar */}
       <div className="h-14"></div>
     </>
   );

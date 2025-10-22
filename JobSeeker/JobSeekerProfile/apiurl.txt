@@ -15,14 +15,3 @@ http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/
 
 http://127.0.0.1:8000/accounts-jobseeker/resume/
 
-
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-=======
->>>>>>> 7e3badd25fec1e19969e1a07a042fa140e4e364c
->>>>>>> 0899fb49c3db3f31405b7af66b45eb30b85be48c
-
-
->>>>>>> 1a85d44ec57cf4f66837744eb5e00f6e92626933
- 
