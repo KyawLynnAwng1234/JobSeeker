@@ -1,1 +1,1 @@
-web: gunicorn JobSeeker.wsgi
+web: gunicorn JobSeeker.wsgi:application
