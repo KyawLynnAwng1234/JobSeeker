@@ -15,54 +15,69 @@ from .serializers import *
 @permission_classes([IsAuthenticated])
 @parser_classes([JSONParser, MultiPartParser, FormParser])
 def apply_job(request, job_id):
+    # 1️⃣ Get job seeker profile & job
     profile = get_object_or_404(JobseekerProfile, user=request.user)
     job = get_object_or_404(Jobs, id=job_id)
+    print(job.id)
+    print("Max applicants:", job.max_applicants, type(job.max_applicants))
+    
 
+    # 2️⃣ Duplicate application check
+    if Application.objects.filter(job=job, job_seeker_profile=profile).exists():
+        return Response(
+            {"message": "You have already applied for this job."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # 3️⃣ Max applicants null-safe check
+    max_limit = getattr(job, "max_applicants", None)
+    total = Application.objects.filter(job=job).count()
+
+    # Treat 0 or None as unlimited
+    if max_limit is None or max_limit <= 0:
+        max_limit = None
+
+    if max_limit is not None and total >= max_limit:
+        if job.is_active:
+            job.is_active = False
+            job.save(update_fields=["is_active"])
+        return Response(
+        {"message": "The maximum number of applicants for this job has been reached."},
+        status=status.HTTP_400_BAD_REQUEST
+    )
+    # 4️⃣ Serialize incoming data
     serializer = ApplicationCreateSerializer(data=request.data)
-    if serializer.is_valid(raise_exception=True):
-        # If max_applicants is not set, treat as unlimited
-        if job.max_applicants is not None:
-            total = Application.objects.filter(job=job).count()
-            if total >= job.max_applicants:
-                if job.is_active:  # only save when it changes
-                    job.is_active = False
-                    job.save(update_fields=["is_active"])
-                return Response(
-                    {"message": "The maximum number of applicants for this job has been reached."},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
+    serializer.is_valid(raise_exception=True)
 
-        try:
-            with transaction.atomic():
-                application = Application.objects.create(
-                    job_seeker_profile=profile,
-                    job=job,
-                    status=serializer.validated_data.get("status", "P"),
-                    cover_letter_text=serializer.validated_data.get("cover_letter_text", "")
-                )
-
-                # ✅ Re-count AFTER creating; if we just hit the cap, close the job
-                if job.max_applicants is not None:
-                    total_after = Application.objects.filter(job=job).count()
-                    if total_after >= job.max_applicants and job.is_active:
-                        job.is_active = False
-                        job.save(update_fields=["is_active"])
-
-                s_application = ApplicationDetailSerializer(application).data
-                return Response({
-                    "success": True,
-                    "message": f"You have successfully applied for the job '{job.title}'.",
-                    "data": s_application
-                }, status=status.HTTP_201_CREATED)
-
-        except IntegrityError:
-            return Response(
-                {"message": "You have already applied for this job."},
-                status=status.HTTP_400_BAD_REQUEST
+    # 5️⃣ Create application inside a transaction
+    try:
+        with transaction.atomic():
+            application = Application.objects.create(
+                job_seeker_profile=profile,
+                job=job,
+                status=serializer.validated_data.get("status", "P"),
+                cover_letter_text=serializer.validated_data.get("cover_letter_text", "")
             )
 
-    # DRF already raised on invalid; this branch is rarely reached
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            # ✅ Re-count AFTER creating; close job if hitting limit
+            total_after = Application.objects.filter(job=job).count()
+            if max_limit is not None and total_after >= max_limit and job.is_active:
+                job.is_active = False
+                job.save(update_fields=["is_active"])
+
+            s_application = ApplicationDetailSerializer(application).data
+            return Response({
+                "success": True,
+                "message": f"You have successfully applied for the job '{job.title}'.",
+                "data": s_application
+            }, status=status.HTTP_201_CREATED)
+   
+
+    except IntegrityError:
+        return Response(
+            {"message": "You have already applied for this job."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @api_view(['POST'])

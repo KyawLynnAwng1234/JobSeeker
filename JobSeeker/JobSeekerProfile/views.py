@@ -1,11 +1,6 @@
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
-<<<<<<< HEAD
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
-=======
 from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
->>>>>>> ede09edbd05252ef5526d2edb00d371febbdef98
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -190,9 +185,7 @@ def current_user(request):
 #start jobseekerprofile
 # Create + Read (List)
 @api_view(['GET', 'POST'])
-@parser_classes([ MultiPartParser, FormParser])
 @permission_classes([IsAuthenticated])
-@parser_classes([ MultiPartParser, FormParser])
 def jobseekerprofile(request):
 
     if request.method == 'GET':   # READ all
@@ -207,21 +200,12 @@ def jobseekerprofile(request):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'PATCH':
-        # UPDATE existing profile (important for file uploads)
-        profile = JobseekerProfile.objects.filter(user=request.user).first()
-        if not profile:
-            return Response({"detail": "Profile not found."}, status=404)
-        serializer = JobseekerProfileSerializer(profile, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # Read (Single) + Update + Delete
-@api_view(['GET', 'PUT', 'DELETE'])
-def jobseekerprofile_detail(request, jp_id):
+@api_view(['GET', 'PUT'])
+@parser_classes([ MultiPartParser, FormParser])
+def jobseekerprofile_update(request, jp_id):
     try:
         jobseekerprofile = JobseekerProfile.objects.get(pk=jp_id)
     except JobseekerProfile.DoesNotExist:
@@ -232,15 +216,11 @@ def jobseekerprofile_detail(request, jp_id):
         return Response(serializer.data)
 
     elif request.method == 'PUT':   # UPDATE
-        serializer = JobseekerProfileSerializer(jobseekerprofile, data=request.data)
+        serializer = JobseekerProfileSerializer(jobseekerprofile, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'DELETE':   # DELETE
-        jobseekerprofile.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 #end jobseekerprofile
 
    

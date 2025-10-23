@@ -13,7 +13,7 @@ urlpatterns = [
 
     # start jobseekerprofile
     path('jobseekerprofile/', views.jobseekerprofile, name='jobseeker-profile'),
-    path('jobseekerprofile/<uuid:jp_id>/', views.jobseekerprofile_detail, name='jobseekerprofile-detail'),
+    path('jobseekerprofile/<uuid:jp_id>/', views.jobseekerprofile_update, name='jobseekerprofile-detail'),
     # end JobseekerProfile
     
     # start skills

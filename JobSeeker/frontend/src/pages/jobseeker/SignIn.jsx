@@ -1,21 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaFacebook } from "react-icons/fa";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/userAuth";
 
-
 const SignIn = () => {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState(""); // validation error state
   const { loading, message, signIn } = useAuth();
   const navigate = useNavigate();
 
+  const allowedDomains = ["gmail.com", "outlook.com"]; // ✅ allowed domains
+
+  const validateEmail = (email) => {
+    // basic email format check
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!regex.test(email)) return false;
+
+    // check domain
+    const domain = email.split("@")[1].toLowerCase();
+    return allowedDomains.includes(domain);
+  };
+
   const handleSignIn = async () => {
+    if (!email.trim()) {
+      setError("Email is required");
+      return;
+    } else if (!validateEmail(email)) {
+      setError(
+        "Please enter a valid email address with allowed domain (gmail.com, outlook.com)"
+      );
+      return;
+    } else {
+      setError("");
+    }
+
     try {
       await signIn(email, navigate);
     } catch (error) {
-      console.error('Sign in error:', error);
+      console.error("Sign in error:", error);
     }
   };
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(""), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -38,7 +69,9 @@ const SignIn = () => {
               employer?{" "}
             </Link>
           </p>
-          <h2 className="text-center text-3xl font-extrabold mb-6">Sign In as an JobSeeker</h2>
+          <h2 className="text-center text-3xl font-extrabold mb-6">
+            Sign In as a JobSeeker
+          </h2>
 
           <label htmlFor="email" className="block mb-1 font-medium">
             Email Address
@@ -48,24 +81,33 @@ const SignIn = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSignIn();
+              }
+            }}
             placeholder="Email Address"
-            className="w-full mb-5 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600"
+            className={`w-full mb-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 ${
+              error
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 focus:ring-blue-600"
+            }`}
           />
 
-       
+          {/* ✅ Error message only appears after clicking sign in */}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
           <button
             onClick={handleSignIn}
             disabled={loading}
             className={`w-full py-3 rounded-lg text-lg font-medium transition ${
               loading
-                ? 'bg-gray-400 text-gray-600 cursor-not-allowed opacity-50'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
+                ? "bg-gray-400 text-gray-600 cursor-not-allowed opacity-50"
+                : "bg-blue-600 text-white hover:bg-blue-700"
             }`}
           >
             {loading ? "Sending..." : "Email me sign in code"}
           </button>
-
 
           {/* Social Buttons */}
           <div className="flex items-center my-6 text-sm text-gray-600">
