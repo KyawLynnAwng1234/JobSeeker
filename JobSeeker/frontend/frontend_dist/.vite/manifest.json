@@ -1,11 +1,22 @@
 {
   "index.html": {
+<<<<<<< HEAD
     "file": "assets/index-BKI77Ib4.js",
+=======
+
+    "file": "assets/index-eKbbFqB2.js",
+
+
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "css": [
+<<<<<<< HEAD
       "assets/index-0_Hb_VLQ.css"
+=======
+      "assets/index-D8HDTiiO.css"
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
     ],
     "assets": [
       "assets/companies-CHiPRevC.jpg",

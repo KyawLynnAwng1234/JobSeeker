@@ -1,6 +1,11 @@
 # Create your views here.
 from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
+<<<<<<< HEAD
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.decorators import api_view, permission_classes, throttle_classes,parser_classes
+=======
 from rest_framework.parsers import MultiPartParser, FormParser,JSONParser
+>>>>>>> ede09edbd05252ef5526d2edb00d371febbdef98
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -185,6 +190,7 @@ def current_user(request):
 #start jobseekerprofile
 # Create + Read (List)
 @api_view(['GET', 'POST'])
+@parser_classes([ MultiPartParser, FormParser])
 @permission_classes([IsAuthenticated])
 def jobseekerprofile(request):
 

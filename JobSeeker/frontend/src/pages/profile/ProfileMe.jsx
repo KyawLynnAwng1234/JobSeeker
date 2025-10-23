@@ -17,6 +17,7 @@ import ExperienceList from "./editprofile/ProfileListDetail/ExperienceList";
 import LanguageList from "./editprofile/ProfileListDetail/LanguageList";
 import SkillList from "./editprofile/ProfileListDetail/SkillList";
 import ResumeList from "./editprofile/ProfileListDetail/ResumeList";
+<<<<<<< HEAD
 
 function getCookie(name) {
   let cookieValue = null;
@@ -32,6 +33,9 @@ function getCookie(name) {
   }
   return cookieValue;
 }
+=======
+import ProfilePhoto from "./editprofile/ProfilePhoto";
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
 
 export default function ProfileMe() {
   const { user, loading } = useAuth();
@@ -63,6 +67,7 @@ export default function ProfileMe() {
   const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
 
+<<<<<<< HEAD
   const [profileMessage, setProfileMessage] = useState({ type: "", text: "" });
 
   const fetchEducations = async () => {
@@ -134,6 +139,86 @@ export default function ProfileMe() {
     setIsSkillModalOpen(true);
   };
 
+=======
+  // ✅ Profile completeness message
+  const [profileMessage, setProfileMessage] = useState({ type: "", text: "" });
+
+  // ✅ Fetch Education
+  const fetchEducations = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/education/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setEducationList(res.data);
+    } catch (err) {
+      console.error("Error fetching education:", err);
+    }
+  };
+
+  // ✅ Fetch Experience
+  const fetchExperiences = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/experience/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setExperienceList(res.data);
+    } catch (err) {
+      console.error("Error fetching experience:", err);
+    }
+  };
+
+  // ✅ Fetch Language
+  const fetchLanguages = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/language/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setLanguageList(res.data);
+    } catch (err) {
+      console.error("Error fetching languages:", err);
+    }
+  };
+
+  // ✅ Fetch Skill
+  const fetchSkills = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/skill/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setSkillList(res.data);
+    } catch (err) {
+      console.error("Error fetching skills:", err);
+    }
+  };
+
+  // ✅ Handlers for edit buttons
+  const handleEditEducation = (edu) => {
+    setEditData(edu);
+    setIsEducationOpen(true);
+  };
+  const handleEditExperience = (exp) => {
+    setEditData(exp);
+    setIsExperienceModalOpen(true);
+  };
+  const handleEditLanguage = (lang) => {
+    setEditData(lang);
+    setIsLanguageModalOpen(true);
+  };
+  const handleEditSkill = (skill) => {
+    setEditData(skill);
+    setIsSkillModalOpen(true);
+  };
+
+  // ✅ Fetch profile info
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
   useEffect(() => {
     if (loading) return;
 
@@ -159,6 +244,10 @@ export default function ProfileMe() {
     }
   }, [user, loading, navigate]);
 
+<<<<<<< HEAD
+=======
+  // ✅ When profile loaded, fetch all lists
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
   useEffect(() => {
     if (profile.id) {
       fetchEducations();
@@ -168,6 +257,7 @@ export default function ProfileMe() {
     }
   }, [profile]);
 
+<<<<<<< HEAD
   const handleUpload = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -199,6 +289,9 @@ export default function ProfileMe() {
     }
   };
 
+=======
+  // ✅ Profile completeness checker
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
   const checkProfileCompleteness = () => {
     const missingFields = [];
 
@@ -233,6 +326,10 @@ export default function ProfileMe() {
     }
   };
 
+<<<<<<< HEAD
+=======
+  // ✅ Call message check whenever lists change
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
   useEffect(() => {
     if (profile.id) handleProfileUpdateMessage();
   }, [
@@ -249,6 +346,7 @@ export default function ProfileMe() {
       {/* 🌟 Hero Section */}
       <section className="relative bg-gradient-to-r from-[#002366] to-[#003AB3] text-white py-10 rounded-b-2xl shadow-lg overflow-hidden">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 items-center h-[300px]">
+<<<<<<< HEAD
           {/* Profile Picture with Dropdown */}
           <div className="flex justify-center md:justify-start relative group">
             <Menu as="div" className="relative inline-block">
@@ -326,6 +424,14 @@ export default function ProfileMe() {
             />
           </div>
 
+=======
+          {/* Profile Picture */}
+          <div className="flex justify-center md:justify-start">
+            <ProfilePhoto profile={profile} setProfile={setProfile} />
+          </div>
+
+          {/* Info */}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
           <div className="space-y-3 text-center md:text-left">
             <h1 className="text-3xl md:text-4xl font-bold">
               {profile.full_name || "Full Name"}
@@ -350,6 +456,10 @@ export default function ProfileMe() {
             </div>
           </div>
 
+<<<<<<< HEAD
+=======
+          {/* Social Links */}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
           <div className="flex flex-col items-center md:items-start gap-2 text-[#ffffffb0]">
             <div className="flex items-start gap-2 w-full">
               <CiGlobe />
@@ -394,6 +504,10 @@ export default function ProfileMe() {
         </button>
       </section>
 
+<<<<<<< HEAD
+=======
+      {/* 🪧 Profile completeness message */}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
       {profileMessage.text && (
         <div
           className={`container mx-auto px-4 py-3 mt-4 rounded ${
@@ -492,6 +606,10 @@ export default function ProfileMe() {
             />
           </div>
 
+<<<<<<< HEAD
+=======
+          {/* ✅ Skill */}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
           {/* ✅ Skill Section */}
           <div className="bg-white rounded-lg shadow-sm p-4">
             <div className="flex justify-between items-center mb-2">
@@ -510,7 +628,14 @@ export default function ProfileMe() {
               profileId={profile.id}
               skillList={skillList}
               setSkillList={setSkillList}
+<<<<<<< HEAD
               onEdit={handleEditSkill}
+=======
+              onEdit={(skill) => {
+                setEditData(skill);
+                setIsSkillModalOpen(true);
+              }}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
             />
           </div>
         </div>
