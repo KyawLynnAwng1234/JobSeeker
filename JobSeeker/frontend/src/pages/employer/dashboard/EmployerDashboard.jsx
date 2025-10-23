@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
   Briefcase,
@@ -16,21 +16,44 @@ export const sidebarItems = [
   { route: "dashboard", label: "Dashboard", icon: Briefcase },
   { route: "job-category", label: "Job Category", icon: LayoutGrid },
   { route: "my-jobs", label: "Jobs List", icon: FileText },
-  {
-    route: "applications",
-    label: "Job Application",
-    icon: User,
-  },
+  { route: "applications", label: "Job Application", icon: User },
   { route: "profile", label: "Profile", icon: User },
   { route: "settings", label: "Settings", icon: Settings },
 ];
 
 export default function EmployerDashboardLayout() {
-  const { employer, logout, resendEmail, loading } = useEmployerAuth();
+  const { employer, logout, resendEmail } = useEmployerAuth();
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [showVerificationMessage, setShowVerificationMessage] = useState(
+    employer ? !employer.is_verified : false
+  );
 
-  if (loading) {
+  // ✅ Update local state whenever employer object changes (Sign In)
+  useEffect(() => {
+    if (employer?.is_verified) {
+      setShowVerificationMessage(false); // verified => hide message
+    } else {
+      setShowVerificationMessage(true); // not verified => show message
+    }
+  }, [employer]);
+
+  const handleResendEmail = async () => {
+    setResendLoading(true);
+    try {
+      await resendEmail(); // send verification email
+      setShowVerificationMessage(true); // keep message showing while waiting
+      // auto-hide message after 3 seconds
+      setTimeout(() => setShowVerificationMessage(false), 3000);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
+  if (!employer) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <span>Loading...</span>
@@ -38,7 +61,7 @@ export default function EmployerDashboardLayout() {
     );
   }
 
-  const emailNotVerified = !employer?.is_verified;
+  const emailNotVerified = showVerificationMessage;
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -79,15 +102,11 @@ export default function EmployerDashboardLayout() {
           </NavLink>
 
           <div className="flex items-center space-x-4 relative">
-            {/* 🔔 Notification Button */}
             <Notification />
-
-            {/* 📩 Mail Icon */}
             <button className="p-2 rounded-full hover:bg-gray-200">
               <Mail size={20} />
             </button>
 
-            {/* 👤 User Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -123,17 +142,20 @@ export default function EmployerDashboardLayout() {
         </header>
 
         <main className="">
+          {/* Verification message */}
           {emailNotVerified && (
             <div className="flex justify-between items-center p-4 bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 mb-4">
               <span>Please verify your email to access the dashboard.</span>
               <button
-                onClick={resendEmail}
-                className="ml-4 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                onClick={handleResendEmail}
+                disabled={resendLoading}
+                className="ml-4 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Resend Email
+                {resendLoading ? "Sending..." : "Resend Email"}
               </button>
             </div>
           )}
+
           <Outlet />
         </main>
       </div>

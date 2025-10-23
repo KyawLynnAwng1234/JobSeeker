@@ -12,6 +12,9 @@ http://127.0.0.1:8000/accounts-jobseeker/language/language_id/
 
 http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/
 
+#edit for jobsekerprofile image or text 
+http://127.0.0.1:8000/accounts-jobseeker/jobseekerprofile/jobseekerprofile_id/
+
 
 http://127.0.0.1:8000/accounts-jobseeker/resume/
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { CiMail, CiPhone, CiGlobe } from "react-icons/ci";
 import { FaLocationDot, FaLinkedin, FaGithub } from "react-icons/fa6";
+import { Menu } from "@headlessui/react";
+import { ChevronDown } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import EditSummaryModal from "./editprofile/EditSummaryModal";
@@ -15,7 +17,25 @@ import ExperienceList from "./editprofile/ProfileListDetail/ExperienceList";
 import LanguageList from "./editprofile/ProfileListDetail/LanguageList";
 import SkillList from "./editprofile/ProfileListDetail/SkillList";
 import ResumeList from "./editprofile/ProfileListDetail/ResumeList";
+<<<<<<< HEAD
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.startsWith(name + "=")) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+=======
 import ProfilePhoto from "./editprofile/ProfilePhoto";
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
 
 export default function ProfileMe() {
   const { user, loading } = useAuth();
@@ -47,6 +67,79 @@ export default function ProfileMe() {
   const [isSkillModalOpen, setIsSkillModalOpen] = useState(false);
   const [isResumeModalOpen, setIsResumeModalOpen] = useState(false);
 
+<<<<<<< HEAD
+  const [profileMessage, setProfileMessage] = useState({ type: "", text: "" });
+
+  const fetchEducations = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/education/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setEducationList(res.data);
+    } catch (err) {
+      console.error("Error fetching education:", err);
+    }
+  };
+
+  const fetchExperiences = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/experience/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setExperienceList(res.data);
+    } catch (err) {
+      console.error("Error fetching experience:", err);
+    }
+  };
+
+  const fetchLanguages = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/language/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setLanguageList(res.data);
+    } catch (err) {
+      console.error("Error fetching languages:", err);
+    }
+  };
+
+  const fetchSkills = async () => {
+    if (!profile.id) return;
+    try {
+      const res = await axios.get(
+        `http://127.0.0.1:8000/accounts-jobseeker/skill/?profile=${profile.id}`,
+        { withCredentials: true }
+      );
+      setSkillList(res.data);
+    } catch (err) {
+      console.error("Error fetching skills:", err);
+    }
+  };
+
+  const handleEditEducation = (edu) => {
+    setEditData(edu);
+    setIsEducationOpen(true);
+  };
+  const handleEditExperience = (exp) => {
+    setEditData(exp);
+    setIsExperienceModalOpen(true);
+  };
+  const handleEditLanguage = (lang) => {
+    setEditData(lang);
+    setIsLanguageModalOpen(true);
+  };
+  const handleEditSkill = (skill) => {
+    setEditData(skill);
+    setIsSkillModalOpen(true);
+  };
+
+=======
   // ✅ Profile completeness message
   const [profileMessage, setProfileMessage] = useState({ type: "", text: "" });
 
@@ -125,6 +218,7 @@ export default function ProfileMe() {
   };
 
   // ✅ Fetch profile info
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
   useEffect(() => {
     if (loading) return;
 
@@ -150,7 +244,10 @@ export default function ProfileMe() {
     }
   }, [user, loading, navigate]);
 
+<<<<<<< HEAD
+=======
   // ✅ When profile loaded, fetch all lists
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
   useEffect(() => {
     if (profile.id) {
       fetchEducations();
@@ -160,7 +257,41 @@ export default function ProfileMe() {
     }
   }, [profile]);
 
+<<<<<<< HEAD
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profile_picture", file);
+
+    try {
+      const csrfToken = getCookie("csrftoken");
+      const res = await axios.put(
+        `${import.meta.env.VITE_API_URL}/accounts-jobseeker/jobseekerprofile/${
+          profile.id
+        }/`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "X-CSRFToken": csrfToken, // 🧩 include CSRF token
+          },
+          withCredentials: true,
+        }
+      );
+      setProfile((prev) => ({
+        ...prev,
+        profile_picture: res.data.profile_picture,
+      }));
+    } catch (err) {
+      console.error("Error uploading picture:", err);
+    }
+  };
+
+=======
   // ✅ Profile completeness checker
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
   const checkProfileCompleteness = () => {
     const missingFields = [];
 
@@ -195,7 +326,10 @@ export default function ProfileMe() {
     }
   };
 
+<<<<<<< HEAD
+=======
   // ✅ Call message check whenever lists change
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
   useEffect(() => {
     if (profile.id) handleProfileUpdateMessage();
   }, [
@@ -212,12 +346,92 @@ export default function ProfileMe() {
       {/* 🌟 Hero Section */}
       <section className="relative bg-gradient-to-r from-[#002366] to-[#003AB3] text-white py-10 rounded-b-2xl shadow-lg overflow-hidden">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 items-center h-[300px]">
+<<<<<<< HEAD
+          {/* Profile Picture with Dropdown */}
+          <div className="flex justify-center md:justify-start relative group">
+            <Menu as="div" className="relative inline-block">
+              {({ open }) => (
+                <>
+                  {/* ပုံကို click လုပ်တာနဲ့ menu toggle */}
+                  <Menu.Button className="focus:outline-none">
+                    <img
+                      src={
+                        profile.profile_picture
+                          ? `${import.meta.env.VITE_API_URL}${
+                              profile.profile_picture
+                            }`
+                          : "/default-avatar.png"
+                      }
+                      alt={profile.full_name || "Profile Picture"}
+                      className={`w-36 h-36 rounded-full object-cover border-4 border-white shadow-md cursor-pointer transition ${
+                        open ? "ring-4 ring-blue-400" : ""
+                      }`}
+                    />
+                  </Menu.Button>
+
+                  {/* Dropdown Menu */}
+                  <Menu.Items className="absolute z-10 mt-2 w-32 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 rounded-lg shadow-lg focus:outline-none">
+                    <div className="py-1">
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={() =>
+                              document.getElementById("uploadInput").click()
+                            }
+                            className={`${
+                              active ? "bg-blue-50" : ""
+                            } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                          >
+                            Upload
+                          </button>
+                        )}
+                      </Menu.Item>
+
+                      <Menu.Item>
+                        {({ active }) => (
+                          <button
+                            onClick={() =>
+                              window.open(
+                                profile.profile_picture
+                                  ? `${import.meta.env.VITE_API_URL}${
+                                      profile.profile_picture
+                                    }`
+                                  : "/default-avatar.png",
+                                "_blank"
+                              )
+                            }
+                            className={`${
+                              active ? "bg-blue-50" : ""
+                            } w-full text-left px-4 py-2 text-sm text-gray-700`}
+                          >
+                            View
+                          </button>
+                        )}
+                      </Menu.Item>
+                    </div>
+                  </Menu.Items>
+                </>
+              )}
+            </Menu>
+
+            {/* Hidden File Input */}
+            <input
+              type="file"
+              id="uploadInput"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleUpload(e)}
+            />
+          </div>
+
+=======
           {/* Profile Picture */}
           <div className="flex justify-center md:justify-start">
             <ProfilePhoto profile={profile} setProfile={setProfile} />
           </div>
 
           {/* Info */}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
           <div className="space-y-3 text-center md:text-left">
             <h1 className="text-3xl md:text-4xl font-bold">
               {profile.full_name || "Full Name"}
@@ -242,7 +456,10 @@ export default function ProfileMe() {
             </div>
           </div>
 
+<<<<<<< HEAD
+=======
           {/* Social Links */}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
           <div className="flex flex-col items-center md:items-start gap-2 text-[#ffffffb0]">
             <div className="flex items-start gap-2 w-full">
               <CiGlobe />
@@ -287,7 +504,10 @@ export default function ProfileMe() {
         </button>
       </section>
 
+<<<<<<< HEAD
+=======
       {/* 🪧 Profile completeness message */}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
       {profileMessage.text && (
         <div
           className={`container mx-auto px-4 py-3 mt-4 rounded ${
@@ -386,7 +606,10 @@ export default function ProfileMe() {
             />
           </div>
 
+<<<<<<< HEAD
+=======
           {/* ✅ Skill */}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
           {/* ✅ Skill Section */}
           <div className="bg-white rounded-lg shadow-sm p-4">
             <div className="flex justify-between items-center mb-2">
@@ -405,10 +628,14 @@ export default function ProfileMe() {
               profileId={profile.id}
               skillList={skillList}
               setSkillList={setSkillList}
+<<<<<<< HEAD
+              onEdit={handleEditSkill}
+=======
               onEdit={(skill) => {
                 setEditData(skill);
                 setIsSkillModalOpen(true);
               }}
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
             />
           </div>
         </div>

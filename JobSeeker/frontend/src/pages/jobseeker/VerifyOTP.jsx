@@ -4,11 +4,11 @@ import { useAuth } from "../../hooks/userAuth";
 
 const VerifyOTP = () => {
   const [code, setCode] = useState(["", "", "", "", "", ""]);
+  const [error, setError] = useState(""); // error state
   const { loading, message, verifyOTP } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state?.email || "";
-
   const inputsRef = useRef([]);
 
   useEffect(() => {
@@ -44,24 +44,66 @@ const VerifyOTP = () => {
     }
   };
 
-  const handleVerifyClick = () => {
+  const handleVerifyClick = async () => {
     const otp = code.join("");
-    verifyOTP(email, otp,);
+    if (otp.length < 6) {
+      setError("Enter the 6-digit code");
+      setCode(["", "", "", "", "", ""]);
+      return;
+    }
+
+    try {
+      await verifyOTP(email, otp); // verifyOTP သည် message state ကို update လုပ်မယ်
+      // ✅ message ကို စစ်ပြီး error ပြ
+      if (message && !message.includes("successful")) {
+        setError(message); // message က error ဖြစ်ရင်
+        setCode(["", "", "", "", "", ""]);
+      }
+    } catch (err) {
+      setError("Invalid verification code."); // fallback error
+      setCode(["", "", "", "", "", ""]);
+    }
   };
+
+  // ✅ hide error after 3s
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => setError(""), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (message && !message.includes("successful")) {
+      setError(message);
+      setCode(["", "", "", "", "", ""]);
+    }
+  }, [message]);
+
+  // ✅ auto-submit when all 6 digits are filled
+  useEffect(() => {
+    if (code.every((digit) => digit !== "")) {
+      handleVerifyClick();
+    }
+  }, [code]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-[Inter]">
       <header className="h-16 flex items-center px-6 border-b border-gray-200">
-        <h1 className="text-2xl font-bold text-blue-900 select-none">Jobseeker</h1>
+        <h1 className="text-2xl font-bold text-blue-900 select-none">
+          Jobseeker
+        </h1>
       </header>
 
       <main className="flex-grow flex justify-center items-center px-4">
         <div className="bg-blue-50 rounded-xl p-8 w-full max-w-md shadow-md text-center">
           <p className="mb-4">Check Your email for a code</p>
-          <p className="mb-6 text-sm">Enter the 6-digit code we sent to {email || "your email"}</p>
+          <p className="mb-6 text-sm">
+            Enter the 6-digit code we sent to {email || "your email"}
+          </p>
 
           <div className="flex justify-center gap-2 mb-6">
-            {code.map((digit, index) =>(
+            {code.map((digit, index) => (
               <input
                 key={index}
                 type="text"
@@ -89,11 +131,7 @@ const VerifyOTP = () => {
             {loading ? "Verifying..." : "Sign In"}
           </button>
 
-          {message && (
-            <p className={`mt-3 text-sm ${message.includes("successful") ? "text-green-600" : "text-red-600"}`}>
-              {message}
-            </p>
-          )}
+          {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
           <p className="mt-4 text-sm text-gray-700">Back in sign in options</p>
         </div>
