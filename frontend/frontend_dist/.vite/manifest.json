@@ -1,0 +1,47 @@
+{
+  "index.html": {
+<<<<<<< HEAD
+    "file": "assets/index-DzJ823Zs.js",
+=======
+<<<<<<< HEAD
+    "file": "assets/index-BKI77Ib4.js",
+=======
+
+    "file": "assets/index-eKbbFqB2.js",
+
+
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
+>>>>>>> fe8218c563a794fb8d297e90dd9decbc1f050b57
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "css": [
+<<<<<<< HEAD
+      "assets/index-B8h-4t5S.css"
+=======
+<<<<<<< HEAD
+      "assets/index-0_Hb_VLQ.css"
+=======
+      "assets/index-D8HDTiiO.css"
+>>>>>>> 9e782cb0c97eab8edd7f06d651e5f12788460c84
+>>>>>>> fe8218c563a794fb8d297e90dd9decbc1f050b57
+    ],
+    "assets": [
+      "assets/companies-CHiPRevC.jpg",
+      "assets/ajax-loader-BcnMEykj.gif",
+      "assets/slick-BlzDm7g2.svg"
+    ]
+  },
+  "node_modules/slick-carousel/slick/ajax-loader.gif": {
+    "file": "assets/ajax-loader-BcnMEykj.gif",
+    "src": "node_modules/slick-carousel/slick/ajax-loader.gif"
+  },
+  "node_modules/slick-carousel/slick/fonts/slick.svg": {
+    "file": "assets/slick-BlzDm7g2.svg",
+    "src": "node_modules/slick-carousel/slick/fonts/slick.svg"
+  },
+  "src/assets/images/companies.jpg": {
+    "file": "assets/companies-CHiPRevC.jpg",
+    "src": "src/assets/images/companies.jpg"
+  }
+}
