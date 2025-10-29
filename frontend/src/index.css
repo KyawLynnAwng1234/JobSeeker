@@ -1,0 +1,47 @@
+@import "tailwindcss";
+@import "slick-carousel/slick/slick.css";
+@import "slick-carousel/slick/slick-theme.css";
+
+@layer utilities {
+
+  .custom-blue-border {
+    border-color: var(--blue-11, #0d74ce);
+  }
+  .custom-blue-text {
+    color: var(--blue-11, #0d74ce);
+  }
+  .nav-hover-blue:hover {
+    color: var(--blue-11, #0d74ce);
+  }
+  .hover-blue:hover {
+    color: var(--blue-11, #01549c);
+  }
+  .blue-placeholder::placeholder {
+    color: var(--blue-11, #01549c);
+  }
+  .blue-bg-hover:hover {
+    background-color: var(--blue-11, #0d74ce);
+  }
+  .blue-border-color {
+    border: var(--blue-11, #0d74ce);
+  }
+
+  .gray-text-custom {
+    color: var(--blue-11, #363636);
+  }
+
+  /* ✅ SlideDown Animation */
+  @keyframes slideDown {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+  .animate-slideDown {
+    animation: slideDown 0.3s ease-out;
+  }
+}
