@@ -20,3 +20,4 @@ def about_us(request):
     
     serializer = AboutUsSerializer(about)
     return Response(serializer.data)
+
